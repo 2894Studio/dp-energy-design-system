@@ -1,0 +1,98 @@
+---
+title: Chip
+description: Control secundario compacto para preferencias de la cabecera y para condiciones sí/no que filtran una lista.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="fila">
+		<button class="chip" type="button"><Icon name="visibility" />Tema</button>
+		<button class="chip" type="button" aria-label="Idioma: español">ES</button>
+		<button class="chip" type="button" aria-pressed="false">Solo con saldo</button>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para acciones secundarias de la cabecera que cambian una preferencia: tema, idioma.
+- Para una condición sí/no que filtra una lista («Solo con saldo», «Solo mis órdenes»), como
+  interruptor con `aria-pressed`.
+- Para filtrar por un campo con varios valores (sucursal, estado), usa la
+  [barra de filtros](/componentes/barra-filtros/).
+- Para contar registros por estado, usa el [resumen de estatus](/componentes/resumen-estatus/).
+- Para la acción principal de una vista, usa un [botón](/componentes/boton/) primario.
+
+## Anatomía
+
+<Example noCode center>
+	<button class="chip" type="button"><Icon name="visibility" />Tema</button>
+</Example>
+
+1. **Contenedor** — alto mínimo 34px, ancho mínimo 40px, borde `--border`, radio `--r-ctrl`.
+2. **Ícono** (opcional) — a la izquierda; hereda el color del texto.
+3. **Texto** — `--fs-dense`, peso 600, en `--text-2`.
+
+## Variantes
+
+| Variante | Clase | Úsala para |
+|---|---|---|
+| Acción | `.chip` | Abrir una preferencia o cambiarla en un paso. |
+| Interruptor | `.chip[aria-pressed]` | Activar o desactivar una condición sí/no. |
+
+<Example title="Interruptor">
+	<div class="fila">
+		<button class="chip" type="button" aria-pressed="true">Solo con saldo</button>
+		<button class="chip" type="button" aria-pressed="false">Solo mis órdenes</button>
+	</div>
+</Example>
+
+## Estados
+
+| Estado | Comportamiento |
+|---|---|
+| Sobrevuelo | Fondo `--surface-hover`, texto `--text`, borde `--border-2`. |
+| Pulsado | Borde `--accent` y fondo `--accent-soft`. Solo en la variante interruptor. |
+| Foco | Anillo `--focus-w` en `--accent`, separado `--focus-offset`. |
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Un chip por condición sí/no: se activa y se desactiva en un clic.">
+		<button class="chip" type="button" aria-pressed="true">Solo con saldo</button>
+	</Guideline>
+	<Guideline type="dont" caption="Un chip por valor de un campo: con muchas sucursales la fila no termina y no hay búsqueda.">
+		<button class="chip" type="button" aria-pressed="true">Planta Monterrey</button>
+		<button class="chip" type="button" aria-pressed="false">Planta León</button>
+		<button class="chip" type="button" aria-pressed="false">Planta Saltillo</button>
+	</Guideline>
+	<Guideline type="do" caption="El rótulo del interruptor no cambia: el estado lo dice aria-pressed.">
+		<button class="chip" type="button" aria-pressed="true">Solo mis órdenes</button>
+	</Guideline>
+	<Guideline type="dont" caption="Un rótulo que cambia al pulsar deja la duda de si dice el estado o la acción.">
+		<button class="chip" type="button">Ver todas las órdenes</button>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Usa `<button type="button">`. El interruptor declara `aria-pressed="true"` o `"false"`; el
+  lector anuncia «activado» o «desactivado».
+- Un chip sin texto visible (o con una abreviatura, como «ES») lleva `aria-label` completo:
+  «Idioma: español».
+- El ícono decorativo lleva `aria-hidden="true"`.
+- En [modo táctil](/layout/objetivos-tactiles/) el alto sube al mínimo táctil del sistema.
+
+## Tokens
+
+<TokenTable names={['surface', 'surface-hover', 'border', 'border-2', 'text', 'text-2', 'accent', 'accent-soft', 'r-ctrl', 'fs-dense', 'focus-w', 'focus-offset']} />
+
+## Relacionados
+
+- [Botón](/componentes/boton/)
+- [Barra de filtros](/componentes/barra-filtros/)
+- [Resumen de estatus](/componentes/resumen-estatus/)

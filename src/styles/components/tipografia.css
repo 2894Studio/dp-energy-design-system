@@ -1,0 +1,86 @@
+/* Muestras de la página Fundamentos › Tipografía. */
+.dpe .tipo-escala {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+.dpe .tipo-escala > div {
+	display: grid;
+	grid-template-columns: minmax(7.5rem, 9rem) minmax(0, 1fr);
+	align-items: baseline;
+	gap: var(--sp-4);
+	padding: var(--sp-3) 0;
+	border-bottom: 1px solid var(--border);
+}
+.dpe .tipo-escala > div:last-child {
+	border-bottom: 0;
+}
+.dpe .tipo-escala code {
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+}
+.dpe .tipo-escala small {
+	display: block;
+	font-size: var(--fs-meta);
+	color: var(--text-3);
+}
+.dpe .tipo-escala p {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+.dpe .tipo-familia {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+	gap: var(--sp-4);
+	width: 100%;
+}
+.dpe .tipo-familia > div {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-2);
+	padding: var(--sp-4);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-card);
+}
+.dpe .tipo-familia .glifos {
+	font-size: 34px;
+	line-height: var(--lh-compacto);
+	color: var(--text);
+}
+.dpe .tipo-familia .marca {
+	font-family: var(--font-brand);
+	letter-spacing: 0.06em;
+}
+.dpe .tipo-interlineado {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	gap: var(--sp-4);
+	width: 100%;
+}
+.dpe .tipo-interlineado p {
+	padding: var(--sp-3);
+	font-size: var(--fs-dense);
+	color: var(--text-2);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-ctrl);
+}
+.dpe .tipo-interlineado b {
+	display: block;
+	margin-bottom: var(--sp-1);
+	font-size: var(--fs-meta);
+	color: var(--text);
+}
+.dpe .tipo-cromo {
+	padding: var(--sp-2) var(--sp-3);
+	background: var(--chrome);
+	border-radius: var(--r-ctrl);
+	min-width: 12rem;
+}
+.dpe .tipo-cromo .grp {
+	margin: 0 0 var(--sp-1);
+}
+.dpe .tipo-cromo .it {
+	pointer-events: none;
+}

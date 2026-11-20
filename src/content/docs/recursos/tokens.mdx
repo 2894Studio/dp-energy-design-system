@@ -1,0 +1,133 @@
+---
+title: Tokens
+description: Todos los tokens del sistema con su valor en tema claro y oscuro. Una sola fuente, en formato DTCG.
+---
+
+import TokenTable from '../../../components/TokenTable.astro';
+
+## Fuente única
+
+- **Los tokens viven en `src/tokens/tokens.json`**, en formato [DTCG](https://www.designtokens.org/)
+  (`$type`, `$value`, `$description`).
+- **El valor oscuro** va en `$extensions."com.dpenergy.theme".dark`. Un token sin valor oscuro vale lo
+  mismo en los dos temas.
+- **El CSS se genera** desde ese archivo con `scripts/build-tokens.mjs`. No edites el CSS a mano: el
+  siguiente build lo sobrescribe.
+
+```json
+"accent": {
+  "$type": "color",
+  "$value": "#3E7A4C",
+  "$extensions": {
+    "com.dpenergy.theme": { "light": "#3E7A4C", "dark": "#4A8F5A" }
+  },
+  "$description": "Acción principal. Nunca igual a --ok."
+}
+```
+
+## Cómo consumirlos
+
+1. Enlaza el CSS antes que cualquier otra hoja de estilos. Lo tienes en [Descargas](/recursos/descargas/).
+
+   ```html
+   <link rel="stylesheet" href="/css/dp-energy-tokens.css" />
+   ```
+
+2. Usa siempre `var(--token)`.
+
+   ```css
+   .mi-componente {
+     background: var(--surface);
+     border-radius: var(--r-card);
+     padding: var(--sp-4);
+   }
+   ```
+
+3. El tema claro está en `:root`. El oscuro se activa con `data-theme="dark"` en `<html>` o, sin
+   atributo, según `prefers-color-scheme`.
+
+**Nunca escribas un hexadecimal literal en un componente.** Si algo no tiene token, añádelo a
+`tokens.json` siguiendo el patrón de nombres:
+
+| Familia | Patrón | Ejemplo |
+|---|---|---|
+| Estado | `--{estado}`, `--{estado}-bg`, `--{estado}-ink` | `--warn`, `--warn-bg`, `--warn-ink` |
+| Superficie y texto | `--surface`, `--surface-2`, `--text`, `--text-2`… | `--text-3` |
+| Cromo | `--chrome-{parte}` | `--chrome-hover` |
+| Serie de gráfica | `--serie-{n}` | `--serie-2` |
+| Espaciado | `--sp-{n}` (múltiplos de 4px) | `--sp-4` |
+| Radio | `--r-{uso}` | `--r-card` |
+| Tipografía | `--fs-{uso}`, `--lh-{uso}`, `--font-{uso}` | `--fs-meta` |
+| Sombra | `--sh-{nivel}` | `--sh-float` |
+| Movimiento | `--dur-{uso}`, `--ease-{curva}` | `--dur-base` |
+
+## Buscar un token
+
+<TokenTable filter />
+
+## Color
+
+Superficies, texto, bordes, acción y semáforo. Ver [Color](/fundamentos/color/).
+
+<TokenTable groups={['color']} />
+
+## Cromo
+
+Barra lateral y barra superior de la aplicación. Ver [Cromo](/layout/cromo/).
+
+<TokenTable groups={['chrome']} />
+
+## Marca
+
+Escala verde de la marca y lienzo de la pantalla de entrada. Ver [Logotipo](/fundamentos/logotipo/).
+
+<TokenTable groups={['marca']} />
+
+## Gráfica
+
+Paleta categórica para series. Ver [Series de gráfica](/fundamentos/color/#series-de-gráfica).
+
+<TokenTable groups={['grafica']} />
+
+## Velos
+
+Capas bajo diálogos y paneles. Ver [Velos](/fundamentos/color/#velos).
+
+<TokenTable groups={['velo']} />
+
+## Tipografía
+
+Familias, tamaños e interlineados. Ver [Tipografía](/fundamentos/tipografia/).
+
+<TokenTable groups={['tipografia']} />
+
+## Espaciado
+
+Escala de 4px. Ver [Espaciado](/fundamentos/espaciado/).
+
+<TokenTable groups={['espaciado']} />
+
+## Radios
+
+Ver [Radios](/fundamentos/radios/).
+
+<TokenTable groups={['radio']} />
+
+## Sombra
+
+Ver [Elevación](/fundamentos/elevacion/).
+
+<TokenTable groups={['sombra']} />
+
+## Movimiento
+
+Duraciones y curvas. Bajo `prefers-reduced-motion` las duraciones se acortan solas. Ver
+[Movimiento](/fundamentos/movimiento/).
+
+<TokenTable groups={['movimiento']} />
+
+## Base
+
+Anillo de foco, común a todos los controles.
+
+<TokenTable groups={['base']} />

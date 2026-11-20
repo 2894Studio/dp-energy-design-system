@@ -1,0 +1,22 @@
+---
+/** Ícono del sprite del sistema. En producto el sprite va en línea y se usa href="#i-<nombre>". */
+interface Props {
+	name: string;
+	size?: 'xs' | 'sm' | 'md';
+	label?: string;
+}
+const { name, size = 'md', label } = Astro.props;
+const cls = ['ico', size === 'sm' && 'ico-sm', size === 'xs' && 'ico-xs'].filter(Boolean).join(' ');
+---
+
+{
+	label ? (
+		<svg class={cls} role="img" aria-label={label}>
+			<use href={`/icons.svg#i-${name}`} />
+		</svg>
+	) : (
+		<svg class={cls} aria-hidden="true">
+			<use href={`/icons.svg#i-${name}`} />
+		</svg>
+	)
+}

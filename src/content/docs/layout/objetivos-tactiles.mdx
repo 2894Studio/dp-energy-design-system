@@ -1,0 +1,126 @@
+---
+title: Objetivos táctiles
+description: Todo destino interactivo mide 24×24px como mínimo. En modo táctil, los controles suben a 46px.
+---
+
+import Example from '../../../components/Example.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/objetivos-tactiles.css';
+
+<Example title="Activa el modo dedo para ver los controles a 46px" noCode>
+	<div class="tacto-demo">
+		<div class="fila">
+			<button class="btn tacto-interruptor" type="button" aria-pressed="false"><Icon name="settings" />Modo dedo</button>
+		</div>
+		<div class="tabla-caja">
+			<table>
+				<thead><tr><th scope="col"><label class="selfila"><input type="checkbox" aria-label="Seleccionar todas" /></label></th><th scope="col">Folio</th><th scope="col">Cliente</th><th scope="col" class="col-acc">Acciones</th></tr></thead>
+				<tbody>
+					<tr><td><label class="selfila"><input type="checkbox" aria-label="Seleccionar OT-1042" /></label></td><td><a class="folio" href="#demo-tacto">OT-1042</a></td><td>Solar del Norte</td><td class="col-acc"><span class="grupo-iconos" style="justify-content:flex-end"><button class="iconbtn mini" type="button" aria-label="Editar OT-1042" title="Editar"><Icon name="edit" size="sm" /></button><button class="iconbtn mini" type="button" aria-label="Más acciones para OT-1042" title="Más acciones"><Icon name="more_vert" size="sm" /></button></span></td></tr>
+					<tr><td><label class="selfila"><input type="checkbox" aria-label="Seleccionar OT-1043" /></label></td><td><a class="folio" href="#demo-tacto">OT-1043</a></td><td>Agrícola San Miguel</td><td class="col-acc"><span class="grupo-iconos" style="justify-content:flex-end"><button class="iconbtn mini" type="button" aria-label="Editar OT-1043" title="Editar"><Icon name="edit" size="sm" /></button><button class="iconbtn mini" type="button" aria-label="Más acciones para OT-1043" title="Más acciones"><Icon name="more_vert" size="sm" /></button></span></td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="fila" id="demo-tacto">
+			<button class="btn p" type="button">Nueva orden</button>
+			<button class="btn" type="button">Exportar</button>
+		</div>
+	</div>
+</Example>
+
+## Tamaños mínimos
+
+| Destino | Mínimo |
+|---|---|
+| Cualquier destino interactivo | 24×24px (WCAG 2.2, criterio 2.5.8) |
+| Acción principal de la pantalla, uso en campo o en tableta | 44px |
+| Cualquier control en modo táctil | 46px |
+
+## Modo táctil
+
+El modo táctil se activa con `data-tacto="dedo"` en `<html>`. Bajo ese atributo, los ítems del
+cromo, los botones y los botones-icono suben a 46px.
+
+```css
+:root[data-tacto='dedo'] .it,
+:root[data-tacto='dedo'] .btn {
+  min-height: 46px;
+}
+:root[data-tacto='dedo'] .iconbtn,
+:root[data-tacto='dedo'] .infob {
+  width: 46px;
+  height: 46px;
+}
+```
+
+- **Pon el atributo de verdad,** por preferencia del usuario o al detectar un puntero grueso. Una
+  regla cuyo atributo nunca aparece en el marcado ni en el JS no hace nada, y leyendo el CSS parece
+  que sí.
+- **Toda regla táctil empieza con `:root`.** Ver el apartado siguiente.
+
+### Por qué `:root`
+
+Con `:root` delante, el selector suma (0,3,0). Sin él se queda en (0,2,0), y lo empata cualquier
+variante de tamaño del propio componente. La que va después en el CSS gana:
+
+```css
+/* Mal: (0,2,0). La variante de fila va después y gana: los botones siguen a 28px */
+[data-tacto='dedo'] .iconbtn { width: 46px; height: 46px; }
+.acciones .iconbtn          { width: 28px; height: 28px; }
+
+/* Bien: (0,3,0). Gana sin importar el orden */
+:root[data-tacto='dedo'] .iconbtn { width: 46px; height: 46px; }
+```
+
+El fallo no da error ni infringe el mínimo (28px supera 24px): la regla simplemente no hace nada.
+Comprueba cada variante de tamaño **midiendo con el modo táctil activado**, no leyendo el archivo.
+
+## Casillas de selección
+
+Una casilla de 16px no llega a 24px. Amplía el área pulsable sin agrandar el dibujo: envuelve la
+casilla en una etiqueta con relleno y margen negativo del mismo valor. Otra opción es hacer
+pulsable toda la celda.
+
+```html
+<label class="selfila"><input type="checkbox" aria-label="Seleccionar OT-1042" /></label>
+```
+
+```css
+.selfila {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 4px;
+  margin: -4px;
+}
+input[type='checkbox'] { width: 16px; height: 16px; accent-color: var(--accent); }
+```
+
+Pasa el puntero sobre una casilla de la demo para ver su área pulsable.
+
+## Otros destinos pequeños
+
+- **Botones de orden en la cabecera de tabla:** `min-height: 24px` real. No compenses el espaciado
+  con un margen negativo que deje el área por debajo.
+- **Enlaces primarios de una fila** (un folio, una miga de pan, «Ver en el mapa»): no son texto en
+  prosa. Llevan relleno hasta llegar a 24px de alto.
+
+<Guidelines>
+	<Guideline type="do" caption="La casilla sigue a 16px, pero su área pulsable mide 24px.">
+		<label class="selfila" style="background:var(--surface-hover)"><input type="checkbox" aria-label="Seleccionar Planta Monterrey" /></label>
+	</Guideline>
+	<Guideline type="dont" caption="Agrandar el dibujo de la casilla para llegar al mínimo: rompe la alineación de la fila.">
+		<input type="checkbox" aria-label="Seleccionar Planta Monterrey" style="width:24px;height:24px" />
+	</Guideline>
+</Guidelines>
+
+## Relacionados
+
+- [Botón](/componentes/boton/)
+- [Botón-icono](/componentes/boton-icono/)
+- [Toggletip](/componentes/toggletip/)
+- [Cromo de aplicación](/layout/cromo/)

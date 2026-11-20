@@ -1,0 +1,55 @@
+---
+title: Sistema de diseño D.P. Energy
+description: Fundamentos, componentes y patrones para construir las herramientas de D.P. Energy con un mismo criterio.
+template: splash
+hero:
+  tagline: Fundamentos, componentes y patrones para construir las herramientas de D.P. Energy con un mismo criterio.
+  image:
+    file: ../../assets/isotipo.svg
+  actions:
+    - text: Primeros pasos
+      link: /empezar/
+      icon: right-arrow
+    - text: Ver componentes
+      link: /componentes/boton/
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<span class="dpe-hero-version">Versión 3.0.0</span>
+
+## Explora el sistema
+
+<CardGrid>
+	<LinkCard title="Fundamentos" description="Color, tipografía, espaciado, elevación, movimiento, iconografía y logotipo." href="/fundamentos/color/" />
+	<LinkCard title="Componentes" description="25 componentes con demo viva, anatomía, estados, accesibilidad y código." href="/componentes/boton/" />
+	<LinkCard title="Patrones" description="Vistas de estado, filtrar y buscar, y la capa de dashboard." href="/patrones/vistas-de-estado/" />
+	<LinkCard title="Diseño de página" description="Composición y grid, cromo de aplicación, entrada y objetivos táctiles." href="/layout/composicion/" />
+	<LinkCard title="Voz de producto" description="Cómo escribe la interfaz: verbos, estados, errores y cifras." href="/contenido/voz/" />
+	<LinkCard title="Tokens" description="93 tokens en una sola fuente, con valores claro y oscuro." href="/recursos/tokens/" />
+</CardGrid>
+
+## Principios
+
+1. **Cada color tiene un solo trabajo.** Un estado no clasifica y una categoría no opina.
+2. **El contraste se mide, no se supone.** Contra cada fondo donde el elemento puede caer, en los
+   dos temas.
+3. **Un componente declara sus mínimos.** Altos, rellenos y suelos de texto se escriben en el CSS;
+   no se confían al contenido.
+4. **La pantalla dice la verdad.** Un resumen no contradice la vista; un filtro que parece activo
+   filtra de verdad.
+5. **Sin dependencias que fallen en silencio.** Fuentes e íconos viajan con el producto.
+
+## Novedades de la versión 3.0
+
+- Documentación reconstruida: una página por recurso, con buscador, demos vivas y tema claro y
+  oscuro.
+- Tokens en una sola fuente (formato DTCG), descargables en CSS y JSON.
+- Íconos como sprite SVG y fuentes autoalojadas.
+- Componentes nuevos: [Agenda](/componentes/agenda/), [Hilo de conversación](/componentes/hilo-conversacion/)
+  y [Botón flotante](/componentes/boton-flotante/).
+- [Escala de interlineado](/fundamentos/tipografia/) y [Logotipo](/fundamentos/logotipo/) como
+  recurso propio.
+
+Detalle en el [historial de cambios](/recursos/historial/).

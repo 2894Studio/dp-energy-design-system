@@ -1,0 +1,114 @@
+---
+title: Elevación
+description: Tres sombras para tres alturas, una superficie translúcida solo para la pantalla de entrada y dos velos.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import '../../../styles/components/elevacion.css';
+
+<Example noCode>
+	<div class="elev-muestras">
+		<figure style="box-shadow:var(--sh-rest)"><code>{'--sh-rest'}</code>Reposo</figure>
+		<figure style="box-shadow:var(--sh-float)"><code>{'--sh-float'}</code>Flota sobre la página</figure>
+		<figure style="box-shadow:var(--sh-modal)"><code>{'--sh-modal'}</code>Diálogo</figure>
+	</div>
+</Example>
+
+## Sombras
+
+| Token | Úsala para |
+|---|---|
+| `--sh-rest` | Elevación en reposo: tarjetas, botón de acceso, resumen de estatus |
+| `--sh-float` | Lo que flota sobre la página: menús, popovers, barra flotante, sobrevuelo del botón de acceso |
+| `--sh-modal` | Diálogos, tarjeta flotante de la pantalla de entrada, vistas de estado |
+
+- Cada sombra cambia de valor con el tema: en oscuro es más densa para que siga separando del
+  fondo.
+- La sombra indica altura, no importancia. No subas una tarjeta a `--sh-float` para destacarla;
+  usa la [variante con acento](/componentes/tarjeta/).
+- Las superficies del producto son opacas. Una sombra nunca sustituye al borde que identifica un
+  control.
+
+## Superficie translúcida
+
+`.glass` es la tarjeta flotante de la [pantalla de entrada](/layout/entrada/): superficie al 66%
+con desenfoque de 16px, borde `--border`, sombra `--sh-modal` y radio `--r-modal`.
+
+<Example title="Superficie translúcida sobre la escena de marca">
+	<div class="elev-fondo">
+		<div class="glass">
+			<h4>Bienvenido a D.P. Energy</h4>
+			<p>Entra con tu cuenta de la empresa.</p>
+			<button class="btn p" type="button">Continuar</button>
+		</div>
+	</div>
+</Example>
+
+```css
+.glass {
+  background: color-mix(in srgb, var(--surface) 66%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: var(--sh-modal);
+  border-radius: var(--r-modal);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .glass { background: var(--surface); }
+}
+```
+
+- **Declara siempre el respaldo `@supports`.** Sin desenfoque, el fondo queda semitransparente y
+  el texto se lee mal sobre lo que haya detrás.
+- **Solo en la pantalla de entrada.** En el resto del producto las superficies son opacas: sobre
+  una tabla densa, un fondo que deja ver lo de detrás resta legibilidad sin aportar nada.
+
+## Una tarjeta no va dentro de otra
+
+Si un grupo necesita subgrupos, la pantalla tiene más de un objeto: divídela, no apiles
+tarjetas. Detalle en [Tarjeta](/componentes/tarjeta/).
+
+<Guidelines>
+	<Guideline type="do" caption="Dentro de la tarjeta, los subgrupos se separan con espacio y un rótulo.">
+		<div class="tarjeta elev-anidada">
+			<header><h4>Planta Monterrey</h4></header>
+			<div class="interior pila"><span><b>Paneles</b> · 24 instalados</span><span><b>Inversor</b> · En revisión</span></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Tarjeta dentro de tarjeta: dos bordes y dos sombras para un solo objeto.">
+		<div class="tarjeta elev-anidada">
+			<header><h4>Planta Monterrey</h4></header>
+			<div class="interior"><div class="tarjeta"><div class="interior">Paneles · 24 instalados</div></div><div class="tarjeta"><div class="interior">Inversor · En revisión</div></div></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Velos
+
+| Token | Úsalo para |
+|---|---|
+| `--velo-suave` | Sombra de una barra flotante |
+| `--velo-modal` | Capa detrás de un diálogo |
+
+<Example title="Velo de diálogo" noCode>
+	<div class="velo-muestra" style="width:100%">
+		<div class="modal-muestra" role="presentation">
+			<header><strong style="flex:1;font-size:var(--fs-sub)">Eliminar orden OT-1042</strong></header>
+			<div class="cuerpo">La orden y sus documentos dejan de estar disponibles.</div>
+			<footer><button class="btn" type="button">Cancelar</button><button class="btn peligro" type="button">Eliminar</button></footer>
+		</div>
+	</div>
+</Example>
+
+## Tokens
+
+<TokenTable groups={['sombra', 'velo']} />
+
+## Relacionados
+
+- [Tarjeta](/componentes/tarjeta/)
+- [Diálogo](/componentes/dialogo/)
+- [Entrada al sistema](/layout/entrada/)

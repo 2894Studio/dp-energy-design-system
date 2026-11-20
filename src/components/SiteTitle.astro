@@ -1,0 +1,38 @@
+---
+import Default from '@astrojs/starlight/components/SiteTitle.astro';
+---
+
+<div class="dpe-site-title">
+	<Default />
+	<span class="dpe-site-tag">Sistema de diseño</span>
+</div>
+
+<style>
+	.dpe-site-title {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+	.dpe-site-title :global(.site-title) {
+		font-family: var(--font-brand);
+		font-size: 1rem;
+		letter-spacing: 0.06em;
+		gap: 0.6rem;
+	}
+	.dpe-site-title :global(.site-title img) {
+		height: 1.6rem;
+		width: auto;
+	}
+	.dpe-site-tag {
+		font-size: var(--fs-meta);
+		color: var(--sl-color-gray-3);
+		border-inline-start: 1px solid var(--sl-color-hairline);
+		padding-inline-start: 0.75rem;
+		white-space: nowrap;
+	}
+	@media (max-width: 50rem) {
+		.dpe-site-tag {
+			display: none;
+		}
+	}
+</style>

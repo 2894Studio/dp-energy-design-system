@@ -1,0 +1,91 @@
+---
+title: Toggletip
+description: Un botón de información que revela una aclaración corta en un globo. Se abre con clic o teclado y se queda abierto hasta que se cierra.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example minHeight="180px">
+	<div class="fila">
+		<span class="muted">Cerrado sin facturar</span>
+		<span class="con-tip"><span class="tnum">$184,500</span><button class="infob" type="button" aria-expanded="false" aria-controls="tip-cerrado" aria-describedby="tip-cerrado" aria-label="Más información sobre cerrado sin facturar"><Icon name="info" size="xs" /></button><span class="tip" id="tip-cerrado" role="status" hidden>No suma a lo por cobrar: son 9 órdenes que aún no se facturan.</span></span>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para aclarar una cifra o un dato cuando el texto siempre visible desordenaría una fila de ficha
+  que vive en una sola línea.
+- No para el dato protagonista de la pantalla: su aclaración va como texto corriente debajo. Si la
+  frase explica una consecuencia para quien mira y cabe, va en pantalla. Ver
+  [fila de cifras](/componentes/fila-cifras/).
+- No para esconder texto que sí cabría. Para un mensaje que califica una sección, usa un
+  [aviso](/componentes/aviso/).
+- No es un tooltip de sobrevuelo: el tooltip nativo no es operable con teclado ni con el dedo de
+  forma fiable.
+
+## Anatomía
+
+<Example noCode minHeight="160px">
+	<span class="con-tip"><span class="tnum">5,4 kWp</span><button class="infob" type="button" aria-describedby="tip-anat" aria-label="Más información sobre la potencia instalada"><Icon name="info" size="xs" /></button><span class="tip" id="tip-anat" role="status">Potencia pico de los 12 paneles, sin pérdidas del inversor.</span></span>
+</Example>
+
+1. **Dato** — la cifra o el texto que se aclara.
+2. **Botón de información** — `.infob`, 24×24px, ícono `info` a 12px en `--text-3`.
+3. **Globo** — `.tip`: 220px de ancho, texto de 12px (`--fs-meta`) en `--surface` sobre `--text`,
+   radio `--r-ctrl`, sombra `--sh-float`.
+
+## Comportamiento
+
+- Se abre con **clic**, `Intro` o `Espacio`; nunca con el sobrevuelo.
+- Se queda abierto hasta que se cierra a propósito.
+- Se cierra con `Escape`, con un clic fuera y al tabular hacia el siguiente control. Sin la última
+  salida, el globo queda flotando sobre contenido que ya no tiene el foco.
+- `Escape` devuelve el foco al botón.
+- **Un solo toggletip abierto a la vez** en toda la pantalla: abrir uno cierra el anterior.
+
+### Modo táctil
+
+El botón mide 24×24px como mínimo y sube a 46px con el modo táctil. El ícono puede medir 12px; el
+botón, nunca.
+
+```css
+:root[data-tacto='dedo'] .infob { width: 46px; height: 46px; }
+```
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="La aclaración de una cifra secundaria, detrás de un botón, sin romper la fila.">
+		<span class="con-tip"><span class="tnum">$184,500</span><button class="infob" type="button" aria-label="Más información sobre el monto"><Icon name="info" size="xs" /></button></span>
+	</Guideline>
+	<Guideline type="dont" caption="La cifra principal de un resumen con su explicación escondida: si cabe, va en pantalla.">
+		<span class="con-tip"><span class="tnum" style="font-size:var(--fs-kpi);font-weight:600">$2,644,180</span><button class="infob" type="button" aria-label="Más información sobre el total"><Icon name="info" size="xs" /></button></span>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- `<button type="button">` con `aria-label` que nombra el dato: «Más información sobre cerrado sin
+  facturar».
+- `aria-expanded` refleja si el globo está abierto; `aria-controls` apunta al globo.
+- `aria-describedby` va **siempre puesto**, no solo mientras está abierto: `aria-controls` declara
+  la relación, pero no hace que el lector lea el contenido.
+- El globo lleva `role="status"` para que el contenido se anuncie al abrir.
+- Contraste: el texto del globo (`--surface` sobre `--text`) cumple 4,5:1 y el ícono en reposo
+  (`--text-3`) cumple 3:1 como elemento gráfico. Mide los dos temas.
+
+## Tokens
+
+<TokenTable names={['text', 'text-2', 'text-3', 'surface', 'surface-2', 'r-ctrl', 'sh-float', 'fs-meta', 'sp-2', 'sp-3']} />
+
+## Relacionados
+
+- [Botón-icono](/componentes/boton-icono/)
+- [Ficha de detalle](/componentes/ficha-detalle/)
+- [Aviso](/componentes/aviso/)
+- [Objetivos táctiles](/layout/objetivos-tactiles/)

@@ -1,0 +1,225 @@
+---
+title: Errores comunes
+description: Once trampas que no se ven leyendo el CSS, solo comprobando en el navegador. Cada una con su síntoma, su causa y su corrección.
+---
+
+Ninguna de estas trampas da error ni aviso: la página valida y el CSS parece correcto. Se detectan
+midiendo en el navegador. Todas tienen su pregunta en el [checklist](/recursos/checklist/).
+
+## Tamaños y selectores
+
+### Un texto mide menos de 12px aunque ningún `font-size` lo diga
+
+**Síntoma.** Un texto queda por debajo del suelo de 12px y sobrevive a una revisión de todos los
+`font-size` de la hoja.
+
+**Causa.** La forma abreviada `font:` declara el tamaño sin escribir `font-size`.
+
+**Corrección.** Usa un token de tamaño también en la abreviada y comprueba con el estilo calculado de
+cada elemento con texto.
+
+```css
+/* Mal */
+.avatar { font: 700 11px var(--font-ui); }
+
+/* Bien */
+.avatar { font: 700 var(--fs-meta) var(--font-ui); }
+```
+
+```js
+// En la consola: elementos con texto por debajo de 12px
+[...document.querySelectorAll('body *')]
+  .filter((el) => el.childNodes[0]?.nodeType === 3 && el.textContent.trim())
+  .filter((el) => parseFloat(getComputedStyle(el).fontSize) < 12);
+```
+
+### Un campo de correo o de teléfono colapsa a 19px de alto
+
+**Síntoma.** Al cambiar un campo a `type="email"` o `type="tel"` (lo correcto), pierde su alto y su
+borde.
+
+**Causa.** El estilo de los campos enumera tipos: los que no están en la lista se quedan fuera.
+
+**Corrección.** Escribe por exclusión lo que aplica a todos los campos.
+
+```css
+/* Mal: deja fuera email, tel y cualquier tipo futuro */
+.ctrl input[type='text'],
+.ctrl input[type='date'],
+.ctrl input[type='number'] { min-height: 38px; }
+
+/* Bien */
+.ctrl input:not([type='file']):not([type='checkbox']):not([type='radio']) { min-height: 38px; }
+```
+
+### Un campo de búsqueda no responde al pulsar fuera del texto
+
+**Síntoma.** El campo tiene forma de pastilla de 36px, pero pulsar en el ícono o en el borde no hace
+nada.
+
+**Causa.** El destino táctil es la región que acepta la pulsación, no el elemento que se ve. Un
+`<div>` con forma de pastilla no es pulsable. Al revés, una casilla de 16px dentro de una `<label>` de
+24px sí cumple, porque la etiqueta es el destino.
+
+**Corrección.** El contenedor es una `<label>`.
+
+```html
+<!-- Mal -->
+<div class="buscador"><svg class="ico">…</svg><input type="search" /></div>
+
+<!-- Bien -->
+<label class="buscador"><svg class="ico" aria-hidden="true">…</svg><input type="search" /></label>
+```
+
+## Visibilidad y estado
+
+### Una vista de estado no aparece nunca
+
+**Síntoma.** La pantalla pasa a «vacío» o «error» y la vista no se muestra. No hay error en consola.
+
+**Causa.** La base declara `[hidden] { display: none !important; }`. Una vista con `hidden` en el HTML
+no la puede mostrar ninguna regla de estado.
+
+**Corrección.** Quita `hidden` de las vistas que gobierna el estado. Ver
+[vistas de estado](/patrones/vistas-de-estado/#un-contenedor-vistas-hermanas).
+
+```html
+<!-- Mal -->
+<div class="vista v-vacio" hidden>…</div>
+
+<!-- Bien: la visibilidad la decide data-vista en el contenedor -->
+<div class="vista v-vacio">…</div>
+```
+
+### Un desplegable `<summary>` pierde su flecha
+
+**Síntoma.** Un `<details>` se abre al pulsarlo, pero ya no muestra el marcador que dice que se puede
+abrir.
+
+**Causa.** El marcador viene de `display: list-item`. Cualquier otro valor, incluido `block`, lo borra.
+
+**Corrección.** Para volver a mostrar un `<summary>` que otra regla oculta, usa `list-item`.
+
+```css
+/* Mal */
+.viz.apoyo .viz-tabla > summary { display: block; }
+
+/* Bien */
+.viz.apoyo .viz-tabla > summary { display: list-item; }
+```
+
+### Un texto que solo debía oír el lector de pantalla se ve en la página
+
+**Síntoma.** Un `<caption class="sr">` o un rótulo oculto aparece pintado, repitiendo el título que
+tiene encima.
+
+**Causa.** La utilidad `.sr` se declaró dentro de un componente (`.filtros .sr`) y fuera de él no
+existe.
+
+**Corrección.** Una clase que se usa en más de un componente se declara suelta.
+
+```css
+/* Mal */
+.filtros .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* Bien */
+.sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; }
+```
+
+## Marcado y valores por defecto
+
+### El isotipo sale desplazado y recortado
+
+**Síntoma.** La marca se pinta a la izquierda de su caja y se recorta casi entera.
+
+**Causa.** Un `<symbol>` ya trae su `viewBox`. Repetirlo en el `<svg>` que lo invoca, con un `<use>`
+sin medidas, hace que el `<use>` tome el 100% del lienzo empezando en x=0, mientras la marca vive en
+otro origen.
+
+**Corrección.** Las medidas van en el `<use>`; el `<svg>` envoltorio no lleva `viewBox`. Comprueba que
+la caja del `<use>` empieza donde empieza la del `<svg>`.
+
+```html
+<!-- Mal -->
+<svg viewBox="740 0 970 932" width="44" height="42"><use href="#dpe-isotipo" /></svg>
+
+<!-- Bien -->
+<svg width="44" height="42" aria-hidden="true">
+  <use href="#dpe-isotipo" width="44" height="42" />
+</svg>
+```
+
+### Una gráfica sale 80px más estrecha que su widget
+
+**Síntoma.** La figura queda centrada y más estrecha que la tarjeta que la contiene. No hay desborde
+ni scroll.
+
+**Causa.** `<figure>` trae `margin: 1em 40px` del navegador, y el reset solo estaba dentro de un
+componente.
+
+**Corrección.** Repón el valor por defecto sobre el elemento, no sobre la clase del componente, para
+que la siguiente figura no repita el fallo.
+
+```css
+/* Mal */
+.viz { margin: 0; }
+
+/* Bien */
+figure { margin: 0; }
+```
+
+## Cascada y nombres
+
+### Una regla copiada de otra pantalla no hace nada
+
+**Síntoma.** Una declaración que funciona en su archivo de origen no tiene efecto al copiarla.
+
+**Causa.** Usa un token que allí existe y aquí no. Una sola `var()` sin definir invalida la
+declaración entera, sin aviso.
+
+**Corrección.** Todo `var(--x)` debe existir en `tokens.json`. Compruébalo restando los declarados a
+los usados:
+
+```sh
+# Tokens usados en el componente que no existen en los tokens del sistema
+comm -23 \
+  <(grep -oh 'var(--[a-z0-9-]*' componente.css | sed 's/var(//' | sort -u) \
+  <(grep -oE '^\s*--[a-z0-9-]+' dp-energy-tokens.css | tr -d ' \t' | sort -u)
+```
+
+El resultado tiene que salir vacío, salvo las propiedades propias que el componente declare.
+
+### Cambiar un componente rompe otro sin relación
+
+**Síntoma.** Un ajuste pensado para un componente descompone otro en otra parte de la pantalla, por
+ejemplo un texto que se parte en celdas sueltas.
+
+**Causa.** Dos componentes sin relación comparten un nombre de clase corto (`.resumen`, `.nota`,
+`.f`), o el mismo selector se declara dos veces en el archivo con reglas distintas.
+
+**Corrección.** Antes de escribir `.algo { … }`, búscalo. Si existe, añade la regla a la declaración
+existente o usa un nombre más específico si el elemento es conceptualmente distinto.
+
+```sh
+grep -n '^\.resumen\b' estilos.css
+```
+
+### Un elemento nuevo aparece con un `display` y un `gap` que nadie escribió
+
+**Síntoma.** Un modificador recién creado se comporta como contenedor flexible, con un espacio entre
+hijos que no está en su regla.
+
+**Causa.** Su nombre corto (`.cuerpo`, `.caja`, `.fila`) ya existía como contenedor en el mismo
+archivo, y las dos reglas se suman.
+
+**Corrección.** Busca el nombre antes de usarlo. Con nombres de una sola palabra genérica, prefiere
+uno compuesto que diga qué es.
+
+```css
+/* Mal: .fila ya es el contenedor de la página */
+.tarjeta .fila { font-weight: 600; }
+
+/* Bien */
+.tarjeta .fila-destacada { font-weight: 600; }
+```

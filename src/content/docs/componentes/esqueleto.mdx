@@ -1,0 +1,114 @@
+---
+title: Esqueleto
+description: Ocupa el sitio del contenido mientras carga, con su misma forma y su mismo alto, para que nada salte al llegar los datos.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+
+<Example>
+	<div class="tabla-caja" aria-busy="true">
+		<div class="sk-tabla" role="status" aria-label="Cargando la lista de clientes">
+			<div class="sk-fila sk-cab" style="grid-template-columns:2fr 1fr 1fr 1.2fr"><span class="skel" style="width:40%"></span><span class="skel" style="width:55%"></span><span class="skel" style="width:50%"></span><span class="skel" style="width:35%"></span></div>
+			<div class="sk-fila" style="grid-template-columns:2fr 1fr 1fr 1.2fr"><span class="celda"><span class="skel" style="width:68%;height:12px"></span><span class="skel" style="width:38%;height:8px"></span></span><span class="skel" style="width:60%;height:12px"></span><span class="skel" style="width:45%;height:18px"></span><span class="skel" style="width:52%;height:12px"></span></div>
+			<div class="sk-fila" style="grid-template-columns:2fr 1fr 1fr 1.2fr"><span class="celda"><span class="skel" style="width:82%;height:12px"></span><span class="skel" style="width:34%;height:8px"></span></span><span class="skel" style="width:45%;height:12px"></span><span class="skel" style="width:58%;height:18px"></span><span class="skel" style="width:70%;height:12px"></span></div>
+			<div class="sk-fila" style="grid-template-columns:2fr 1fr 1fr 1.2fr"><span class="celda"><span class="skel" style="width:55%;height:12px"></span><span class="skel" style="width:40%;height:8px"></span></span><span class="skel" style="width:70%;height:12px"></span><span class="skel" style="width:40%;height:18px"></span><span class="skel" style="width:44%;height:12px"></span></div>
+		</div>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Mientras carga el contenido de una región cuya forma ya conoces: una tabla, una tarjeta, una
+  ficha.
+- Para una acción puntual (guardar, iniciar sesión), usa el estado ocupado del botón. Ver
+  [botón de acceso](/componentes/boton-acceso/#estados).
+- Detrás de un [diálogo](/componentes/dialogo/) va la pantalla real atenuada, nunca un esqueleto.
+- Para una carga que falla o termina vacía, usa las [vistas de estado](/patrones/vistas-de-estado/).
+
+## Anatomía
+
+<Example noCode>
+	<div class="pila" style="max-width:360px" role="status" aria-label="Cargando la tarjeta de contacto">
+		<span class="skel" style="width:45%;height:14px"></span>
+		<span class="skel" style="width:80%;height:10px"></span>
+		<span class="skel" style="width:62%;height:10px"></span>
+	</div>
+</Example>
+
+1. **Contenedor** — la misma región que recibirá el contenido, con `role="status"` y un
+   `aria-label` que dice qué carga.
+2. **Barra** — `.skel`, vacía, radio `--r-ctrl`, degradado de `--surface-2` a `--border` que se
+   desplaza en 1,4 s.
+
+## Reglas de forma
+
+El esqueleto **imita la forma de lo que va a llegar**: mismas columnas, mismos anchos y mismo
+alto. Si no, la pantalla salta al aparecer los datos.
+
+| Parte de la tabla | En el esqueleto |
+|---|---|
+| Cabecera de 35px sobre `--surface-2` | Una banda igual (`.sk-cab`) con barras de 8px. |
+| Alto de fila | `min-height` igual al de la fila real, no el alto de la barra. |
+| Celda de dos líneas (razón social y RFC) | Dos barras apiladas en una `.celda`. |
+| Anchos de columna | En `fr`, con la misma proporción que la tabla, para que nunca desborde. |
+
+- **Mismo punto de ruptura.** Si la tabla pasa a modo tarjeta a cierto ancho, el esqueleto cambia
+  de forma en ese mismo ancho, y oculta su cabecera si la tabla oculta el `thead`.
+- **Anchos irregulares.** Barras al 100% de su columna se leen como papel cuadriculado: ningún dato
+  real tiene siempre el mismo largo.
+- **Sin texto dentro.** Un texto oculto con `color: transparent` sigue en el árbol de
+  accesibilidad y se anuncia.
+
+## Comportamiento
+
+### Movimiento reducido
+
+Con `prefers-reduced-motion: reduce`, **aplana el fondo**, no solo detengas la animación.
+`animation: none` congela el degradado y deja cada barra con una rampa visible a medio pintar.
+
+```css
+@media (prefers-reduced-motion: reduce) {
+	.skel {
+		animation: none;
+		background: var(--surface-2);
+	}
+}
+```
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Anchos irregulares, como los datos reales.">
+		<div class="pila" style="width:100%"><span class="skel" style="width:72%;height:10px"></span><span class="skel" style="width:48%;height:10px"></span><span class="skel" style="width:60%;height:10px"></span></div>
+	</Guideline>
+	<Guideline type="dont" caption="Todas las barras al mismo ancho: parece una rejilla vacía, no datos.">
+		<div class="pila" style="width:100%"><span class="skel" style="width:100%;height:10px"></span><span class="skel" style="width:100%;height:10px"></span><span class="skel" style="width:100%;height:10px"></span></div>
+	</Guideline>
+	<Guideline type="do" caption="Dos barras apiladas donde la celda real tiene dos líneas.">
+		<span class="celda pila" style="width:60%;gap:7px"><span class="skel" style="width:80%;height:12px"></span><span class="skel" style="width:45%;height:8px"></span></span>
+	</Guideline>
+	<Guideline type="dont" caption="Una barra delgada por fila: el esqueleto mide un tercio de la tabla y la pantalla salta al cargar.">
+		<span class="skel" style="width:60%;height:8px"></span>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- La región que espera los datos lleva `aria-busy="true"` mientras carga y `false` al terminar.
+- El esqueleto lleva `role="status"` y un `aria-label` que dice qué carga: «Cargando la lista de
+  clientes».
+- Las barras van vacías: sin texto, ni siquiera oculto.
+- Con movimiento reducido, las barras quedan planas en `--surface-2`.
+
+## Tokens
+
+<TokenTable names={['surface-2', 'border', 'r-ctrl', 'sp-4']} />
+
+## Relacionados
+
+- [Tabla](/componentes/tabla/)
+- [Vistas de estado](/patrones/vistas-de-estado/)
+- [Movimiento](/fundamentos/movimiento/)

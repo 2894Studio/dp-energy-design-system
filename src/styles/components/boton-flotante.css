@@ -1,0 +1,35 @@
+/* Demo del botón flotante: un panel que desplaza bajo el botón y reserva la zona segura. */
+.dpe .marco-fab {
+	position: relative;
+	height: 240px;
+	border: 1px solid var(--border);
+	border-radius: var(--r-card);
+	overflow: hidden;
+	background: var(--surface);
+}
+.dpe .marco-fab .panel {
+	height: 100%;
+	overflow-y: auto;
+	padding-bottom: 90px;
+	/* La franja rayada marca el relleno reservado al final del contenido. */
+	background:
+		repeating-linear-gradient(
+				-45deg,
+				color-mix(in srgb, var(--accent) 14%, transparent) 0 6px,
+				transparent 6px 12px
+			)
+			bottom / 100% 90px no-repeat local,
+		var(--surface);
+}
+.dpe .marco-fab .renglon {
+	display: flex;
+	align-items: center;
+	gap: var(--sp-3);
+	min-height: 44px;
+	padding: 0 var(--sp-4);
+	border-bottom: 1px solid var(--border);
+	font-size: var(--fs-dense);
+}
+.dpe .marco-fab .renglon > :last-child {
+	margin-left: auto;
+}

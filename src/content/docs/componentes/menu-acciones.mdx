@@ -1,0 +1,109 @@
+---
+title: Menú de acciones
+description: Agrupa las acciones de una fila detrás de un botón «Más acciones», con cada opción escrita.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example minHeight="300px">
+	<div style="display:inline-flex;flex-direction:column;align-items:flex-end;gap:6px">
+		<button class="iconbtn mini" type="button" title="Más acciones" aria-haspopup="menu" aria-expanded="true" aria-controls="menu-sdn" aria-label="Más acciones para Solar del Norte"><Icon name="more_vert" size="sm" /></button>
+		<div class="menu" id="menu-sdn" role="menu" aria-label="Acciones para Solar del Norte">
+			<button role="menuitem" type="button">Ver detalle</button>
+			<button role="menuitem" type="button" tabindex="-1">Editar</button>
+			<button role="menuitem" type="button" tabindex="-1">Exportar la ficha</button>
+			<div role="separator"></div>
+			<button role="menuitem" type="button" tabindex="-1" class="destructiva">Dar de baja</button>
+		</div>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Con **más de dos** acciones por fila, o cuando las acciones cambian según la fila.
+- Con una o dos acciones estables en todas las filas, usa [botones-icono](/componentes/boton-icono/)
+  con `aria-label`. Si el ancho lo permite, pon texto junto al ícono de la acción principal.
+- Para acciones sobre varias filas a la vez, usa la [barra de selección](/componentes/barra-seleccion/).
+
+## Anatomía
+
+<Example noCode minHeight="260px">
+	<div class="menu" role="menu" aria-label="Acciones para Grupo Industrial Bajío" style="max-width:240px">
+		<button role="menuitem" type="button"><Icon name="visibility" size="sm" />Ver detalle</button>
+		<button role="menuitem" type="button" tabindex="-1"><Icon name="edit" size="sm" />Editar</button>
+		<button role="menuitem" type="button" tabindex="-1"><Icon name="download" size="sm" />Exportar la ficha</button>
+		<div role="separator"></div>
+		<button role="menuitem" type="button" tabindex="-1" class="destructiva"><Icon name="delete" size="sm" />Dar de baja</button>
+	</div>
+</Example>
+
+1. **Disparador** — [botón-icono](/componentes/boton-icono/) con `more_vert`, `aria-haspopup="menu"`
+   y un `aria-label` que nombra la fila.
+2. **Panel** — `.menu`, superficie con sombra `--sh-float`, mínimo 200px de ancho.
+3. **Opción** — `role="menuitem"`, texto escrito con verbo; ícono opcional a la izquierda.
+4. **Separador** — `role="separator"`; aparta la opción destructiva del resto.
+5. **Opción destructiva** — `.destructiva`, en `--err-ink`, siempre la última.
+
+## Comportamiento
+
+- El disparador alterna `aria-expanded` entre `false` y `true`; el panel lleva `hidden` mientras
+  está cerrado.
+- Al abrir, el foco va a la primera opción.
+- Una opción ejecuta su acción y cierra el menú. Una opción destructiva pide confirmación en un
+  [diálogo](/componentes/dialogo/).
+- Un clic fuera del menú lo cierra.
+
+### Teclado
+
+| Tecla | Acción |
+|---|---|
+| `Intro` / `Espacio` / `↓` en el disparador | Abre el menú y enfoca la primera opción. |
+| `↓` / `↑` | Mueve el foco entre opciones; salta el separador. |
+| `Inicio` / `Fin` | Primera y última opción. |
+| `Intro` / `Espacio` | Ejecuta la opción enfocada. |
+| `Escape` | Cierra el menú y devuelve el foco al disparador. |
+| `Tab` | Cierra el menú y sigue al siguiente control. |
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Cada opción escrita con un verbo; la destructiva al final, tras un separador.">
+		<div class="menu" role="menu" aria-label="Acciones de ejemplo">
+			<button role="menuitem" type="button">Ver detalle</button>
+			<button role="menuitem" type="button" tabindex="-1">Editar</button>
+			<div role="separator"></div>
+			<button role="menuitem" type="button" tabindex="-1" class="destructiva">Dar de baja</button>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="La acción destructiva arriba recibe el clic apresurado, y sin separador se confunde con las demás.">
+		<div class="menu" role="menu" aria-label="Acciones de ejemplo">
+			<button role="menuitem" type="button" class="destructiva">Dar de baja</button>
+			<button role="menuitem" type="button" tabindex="-1">Ver detalle</button>
+			<button role="menuitem" type="button" tabindex="-1">Editar</button>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Disparador: `aria-haspopup="menu"`, `aria-expanded`, `aria-controls` con el `id` del panel y un
+  `aria-label` con el nombre de la fila: «Más acciones para Solar del Norte».
+- Panel: `role="menu"`; opciones `role="menuitem"`; separador `role="separator"`.
+- Foco itinerante: solo la opción activa tiene `tabindex="0"`; el resto, `tabindex="-1"`.
+- `Escape` cierra y devuelve el foco al disparador, nunca al `body`.
+- La opción destructiva no depende solo del color: su texto nombra la consecuencia.
+
+## Tokens
+
+<TokenTable names={['surface', 'surface-hover', 'border', 'text', 'err-ink', 'r-card', 'r-ctrl', 'sh-float', 'fs-dense']} />
+
+## Relacionados
+
+- [Botón-icono](/componentes/boton-icono/)
+- [Tabla](/componentes/tabla/)
+- [Barra de selección](/componentes/barra-seleccion/)
+- [Diálogo](/componentes/dialogo/)

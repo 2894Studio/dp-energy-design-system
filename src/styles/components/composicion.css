@@ -1,0 +1,157 @@
+/* Esquemas de la página Diseño de página › Composición y grid. */
+.dpe .comp-caja {
+	display: flex;
+	align-items: center;
+	gap: var(--sp-2);
+	min-height: 36px;
+	padding: var(--sp-2) var(--sp-3);
+	background: var(--surface);
+	border: 1px solid var(--border-ctrl);
+	border-radius: var(--r-ctrl);
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+	min-width: 0;
+}
+.dpe .comp-caja b {
+	color: var(--text);
+	font-weight: 600;
+}
+.dpe .comp-caja.a {
+	background: var(--accent-soft);
+	border-color: var(--accent);
+}
+.dpe .comp-caja.alto {
+	min-height: 120px;
+	align-items: flex-start;
+}
+.dpe .comp-pila {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-2);
+	width: 100%;
+}
+.dpe .comp-fila {
+	display: flex;
+	gap: var(--sp-2);
+	width: 100%;
+}
+.dpe .comp-grid {
+	display: grid;
+	gap: var(--sp-2);
+	width: 100%;
+}
+.dpe .comp-rotulo {
+	font-size: var(--fs-meta);
+	color: var(--text-3);
+}
+
+/* Contenedor redimensionable: arrastra la esquina para ver cómo responde cada caso. */
+.dpe .comp-redim {
+	resize: horizontal;
+	overflow: auto;
+	width: 100%;
+	min-width: 220px;
+	max-width: 100%;
+	padding: var(--sp-3);
+	border: 1px dashed var(--border-ctrl);
+	border-radius: var(--r-card);
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-4);
+}
+
+/* Contenedor que no cede el ancho */
+.dpe .comp-tarjeta {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-2);
+	width: 100%;
+	padding: var(--sp-4);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-card);
+}
+.dpe .comp-barra {
+	display: flex;
+	height: 12px;
+	border-radius: 3px;
+	overflow: hidden;
+}
+.dpe .comp-barra i {
+	display: block;
+}
+
+/* Cadena de min-height: 0 */
+.dpe .comp-marcos {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	gap: var(--sp-6);
+	width: 100%;
+	padding-bottom: var(--sp-12);
+}
+.dpe .comp-marco {
+	display: flex;
+	flex-direction: column;
+	height: 168px;
+	border: 2px solid var(--border-fuerte);
+	border-radius: var(--r-card);
+	background: var(--surface);
+}
+.dpe .comp-marco > header {
+	flex-shrink: 0;
+	padding: var(--sp-2) var(--sp-3);
+	border-bottom: 1px solid var(--border);
+	font-size: var(--fs-meta);
+	font-weight: 600;
+}
+.dpe .comp-marco > .medio {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+.dpe .comp-marco .lista {
+	flex: 1;
+	overflow: auto;
+	margin: 0;
+	padding: var(--sp-2) var(--sp-3);
+	list-style: none;
+	font-size: var(--fs-dense);
+	line-height: 1.9;
+}
+.dpe .comp-marco.cadena > .medio {
+	min-height: 0;
+}
+
+/* Alto que viene del dato */
+.dpe .comp-agenda {
+	display: flex;
+	align-items: flex-start;
+	gap: var(--sp-3);
+	width: 100%;
+	flex-wrap: wrap;
+}
+.dpe .comp-evento {
+	display: flex;
+	flex-direction: column;
+	width: 168px;
+	padding: var(--sp-1) var(--sp-2);
+	background: var(--accent-soft);
+	border-left: 3px solid var(--accent);
+	border-radius: var(--r-ctrl);
+	font-size: var(--fs-meta);
+	line-height: var(--lh-compacto);
+	color: var(--text);
+	overflow: hidden;
+}
+.dpe .comp-evento > span {
+	flex-shrink: 0;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.dpe .comp-evento > span:first-child {
+	font-weight: 600;
+}
+.dpe .comp-evento.aplasta > span {
+	flex-shrink: 1;
+}

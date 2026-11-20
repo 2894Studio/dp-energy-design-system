@@ -1,0 +1,105 @@
+---
+title: Ámbito de datos
+description: Dice de qué conjunto habla una cifra (toda la empresa, una sucursal, lo que alcanza quien mira). Es un dato sobre el dato, no un aviso.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<section class="tarjeta" aria-labelledby="amb-t1" style="max-width:360px">
+		<header><h3 id="amb-t1">Órdenes abiertas</h3><span class="ambito"><Icon name="visibility" />de toda la empresa</span></header>
+		<div class="interior"><span class="tnum" style="font-size:var(--fs-kpi);font-weight:600;color:var(--text)">845</span></div>
+	</section>
+</Example>
+
+## Cuándo usarlo
+
+- Junto a una cifra o una lista cuyo conjunto no es obvio: «de toda la empresa», «Planta
+  Monterrey», «tus órdenes».
+- Cuando dos cifras parecidas en la misma pantalla hablan de conjuntos distintos.
+- Para decir que falta algo o que algo va mal, usa un [aviso](/componentes/aviso/) o una
+  [etiqueta](/componentes/etiqueta/) de estado. El ámbito no emite juicios.
+
+## Anatomía
+
+<Example noCode center>
+	<span class="ambito"><Icon name="visibility" />de toda la empresa</span>
+</Example>
+
+1. **Ícono** — 14px, decorativo.
+2. **Texto** — `--fs-meta`, peso 600, en `--text-3`. Sin relleno y sin borde.
+
+**Sin token de color propio.** `--text-3` pasa 4,5:1 sobre las tres superficies donde puede caer, en
+los dos temas. Un relleno `--surface-2` queda a 1,08:1 del fondo de página y desaparece sobre una
+tarjeta de esa misma superficie.
+
+## Comportamiento
+
+Dos vacíos que no son el mismo:
+
+| Caso | Qué pasa | Cómo se dice |
+|---|---|---|
+| Sin permiso | El dato existe, pero no es de quien mira. | [Vista vacía](/patrones/vistas-de-estado/), con el ámbito diciendo qué sí alcanza. **Nunca un 0**: un cero afirma que se midió. |
+| Conjunto vacío | Quien mira alcanza el dato, y vale cero. | La cifra con su cero, sin color de falta. |
+
+<Example title="Sin permiso y conjunto vacío">
+	<div class="fila" style="align-items:stretch">
+		<section class="tarjeta" aria-labelledby="amb-t2" style="flex:1;min-width:220px">
+			<header><h3 id="amb-t2">Órdenes vencidas</h3></header>
+			<div class="interior pila" style="gap:8px">
+				<p>Nada en tu alcance.</p>
+				<span class="ambito"><Icon name="visibility" />Ves solo Planta Monterrey</span>
+			</div>
+		</section>
+		<section class="tarjeta" aria-labelledby="amb-t3" style="flex:1;min-width:220px">
+			<header><h3 id="amb-t3">Órdenes vencidas</h3><span class="ambito"><Icon name="visibility" />Planta Monterrey</span></header>
+			<div class="interior"><span class="tnum" style="font-size:var(--fs-kpi);font-weight:600;color:var(--text)">0</span></div>
+		</section>
+	</div>
+</Example>
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Tinta auxiliar, sin relleno: pesa menos que el dato que describe.">
+		<span class="ambito"><Icon name="visibility" />de toda la empresa</span>
+	</Guideline>
+	<Guideline type="dont" caption="En ámbar se lee como aviso; cuatro por pantalla desgastan el aviso de verdad.">
+		<span class="pill p-warn"><Icon name="warning" />de toda la empresa</span>
+	</Guideline>
+	<Guideline type="do" caption="Sin permiso: la vista vacía y lo que sí alcanza quien mira.">
+		<div class="pila" style="gap:8px">
+			<p style="font-size:var(--fs-dense)">Nada en tu alcance.</p>
+			<span class="ambito"><Icon name="visibility" />Ves solo Planta Monterrey</span>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Un 0 por falta de permiso afirma una medición que no ocurrió, y «Ver la lista» lleva a una lista que no se puede ver.">
+		<div class="pila" style="gap:8px">
+			<span class="tnum" style="font-size:var(--fs-kpi);font-weight:600">0</span>
+			<a class="btn mini" href="#amb-t1">Ver la lista</a>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Contraste de `--text-3` en claro: 5,65:1 sobre `--surface`, 5,31:1 sobre `--bg`, 4,93:1 sobre
+  `--surface-2`. En oscuro: 5,53:1, 6,06:1 y 5,03:1.
+- El ícono es decorativo (`aria-hidden="true"`); el texto dice el ámbito completo.
+- Va junto al título o la cifra que describe, en el orden de lectura: quien usa lector lo oye antes
+  del valor.
+- No ofrezcas acciones sobre un conjunto que quien mira no alcanza.
+
+## Tokens
+
+<TokenTable names={['text-3', 'surface', 'surface-2', 'bg', 'fs-meta']} />
+
+## Relacionados
+
+- [Fila de cifras](/componentes/fila-cifras/)
+- [Vistas de estado](/patrones/vistas-de-estado/)
+- [Color](/fundamentos/color/#elegir-un-color)

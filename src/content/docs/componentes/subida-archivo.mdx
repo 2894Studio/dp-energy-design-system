@@ -1,0 +1,147 @@
+---
+title: Subida de archivo
+description: Pide un documento con una zona para soltarlo o elegirlo, dice de entrada qué formatos y peso acepta, y muestra el archivo cargado.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/subida-archivo.css';
+
+<Example>
+	<div class="pila" style="max-width:520px">
+		<div class="ctrl">
+			<label for="sub-csf">Constancia de situación fiscal</label>
+			<div class="subida">
+				<Icon name="upload" />
+				<span>Arrastra el archivo aquí o</span>
+				<input type="file" class="sr" id="sub-csf" accept=".pdf,.jpg,.jpeg,.png" aria-describedby="sub-csf-a" />
+				<label for="sub-csf" class="btn mini">Elegir archivo</label>
+				<small id="sub-csf-a">PDF, JPG o PNG, hasta 10 MB.</small>
+			</div>
+		</div>
+		<div class="ctrl">
+			<label for="sub-id">Identificación del representante</label>
+			<div class="archivo">
+				<Icon name="description" />
+				<span class="rz">identificacion-representante.pdf<small>1,2 MB · subido hoy 10:31</small></span>
+				<span class="grupo-iconos">
+					<input type="file" class="sr" id="sub-id" accept=".pdf,.jpg,.jpeg,.png" />
+					<label for="sub-id" class="btn mini">Reemplazar</label>
+					<button class="iconbtn mini" type="button" aria-label="Quitar identificacion-representante.pdf"><Icon name="delete" size="sm" /></button>
+				</span>
+			</div>
+		</div>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para pedir un documento dentro de un [formulario](/componentes/formulario/): constancia fiscal,
+  identificación, comprobante de domicilio, fotos de la instalación.
+- Un documento nunca se pide con un campo de texto: no hay forma de adjuntar nada.
+- Para exportar o descargar, usa un [botón](/componentes/boton/) con el ícono de descarga.
+
+## Anatomía
+
+<Example noCode>
+	<div class="pila" style="max-width:420px">
+		<div class="subida">
+			<Icon name="upload" />
+			<span>Arrastra el archivo aquí o</span>
+			<span class="btn mini">Elegir archivo</span>
+			<small>PDF, JPG o PNG, hasta 10 MB.</small>
+		</div>
+		<div class="archivo">
+			<Icon name="description" />
+			<span class="rz">constancia-fiscal.pdf<small>842 KB · subido hoy 10:31</small></span>
+			<span class="grupo-iconos"><span class="btn mini">Reemplazar</span><span class="iconbtn mini"><Icon name="delete" size="sm" /></span></span>
+		</div>
+	</div>
+</Example>
+
+1. **Zona** (`.subida`) — borde discontinuo `--border-ctrl` de 1,5px, fondo `--bg`, radio
+   `--r-card`.
+2. **Ícono** — 28px en `--text-3`.
+3. **Instrucción y botón** — «Arrastra el archivo aquí o» + «Elegir archivo». Arrastrar es un atajo;
+   el botón es la vía principal.
+4. **Formatos y peso** (`small`) — qué acepta, antes de elegir.
+5. **Archivo cargado** (`.archivo`) — nombre, peso y fecha; acciones «Reemplazar» y «Quitar» al
+   final.
+
+## Estados
+
+| Estado | Cómo se ve |
+|---|---|
+| Vacío | Zona con instrucción, botón y formatos. |
+| Arrastrando | `data-arrastrando="true"`: borde `--accent` y fondo `--accent-soft`. Arrastra un archivo sobre la demo. |
+| Cargado | La zona cede el sitio a la fila `.archivo`, con nombre, peso, fecha y acciones. |
+| Error | `.ctrl[data-error="true"]` con un mensaje que dice qué falló y qué se acepta. |
+
+<Example title="Error">
+	<div class="ctrl" data-error="true" style="max-width:520px">
+		<label for="sub-err">Comprobante de domicilio</label>
+		<div class="subida">
+			<Icon name="upload" />
+			<span>Arrastra el archivo aquí o</span>
+			<input type="file" class="sr" id="sub-err" accept=".pdf,.jpg,.jpeg,.png" aria-invalid="true" aria-describedby="sub-err-a sub-err-e" />
+			<label for="sub-err" class="btn mini">Elegir archivo</label>
+			<small id="sub-err-a">PDF, JPG o PNG, hasta 10 MB.</small>
+		</div>
+		<span class="mal" id="sub-err-e"><Icon name="error" size="sm" />recibo-luz.pdf pesa 14 MB. Redúcelo a 10 MB o súbelo como imagen.</span>
+	</div>
+</Example>
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Formatos y peso a la vista antes de elegir el archivo.">
+		<div class="subida" style="width:100%">
+			<Icon name="upload" />
+			<span class="btn mini">Elegir archivo</span>
+			<small>PDF, JPG o PNG, hasta 10 MB.</small>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Sin límites declarados, el rechazo llega después de esperar la subida.">
+		<div class="subida" style="width:100%">
+			<Icon name="upload" />
+			<span class="btn mini">Elegir archivo</span>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="El archivo cargado se puede reemplazar o quitar.">
+		<div class="archivo" style="width:100%">
+			<Icon name="description" />
+			<span class="rz">constancia-fiscal.pdf<small>842 KB</small></span>
+			<span class="grupo-iconos"><span class="btn mini">Reemplazar</span><span class="iconbtn mini"><Icon name="delete" size="sm" /></span></span>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Un campo de texto con «PDF o foto» de ayuda: no hay forma de adjuntar.">
+		<div class="ctrl" style="width:100%">
+			<label for="sub-mal">Constancia de situación fiscal</label>
+			<input type="text" id="sub-mal" aria-describedby="sub-mal-a" />
+			<span class="ayuda" id="sub-mal-a">PDF o foto</span>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Usa un `<input type="file">` real con `accept` igual a los formatos que dice el texto. Puede ir
+  oculto a la vista con `.sr`, nunca con `display: none`: tiene que seguir recibiendo foco.
+- El botón visible es un `<label for>` del input; el foco del input se dibuja en él.
+- Formatos y peso se enlazan con `aria-describedby`; el error también.
+- Arrastrar es un atajo: todo se puede hacer con teclado desde el botón.
+- Al terminar la carga, anúncialo en una región `aria-live` («constancia-fiscal.pdf cargado»).
+- «Quitar» nombra el archivo: `aria-label="Quitar constancia-fiscal.pdf"`.
+
+## Tokens
+
+<TokenTable names={['bg', 'surface', 'border', 'border-ctrl', 'accent', 'accent-soft', 'text-2', 'text-3', 'err-ink', 'r-card', 'r-ctrl', 'fs-dense', 'fs-meta', 'sp-2', 'sp-3', 'sp-4', 'sp-6']} />
+
+## Relacionados
+
+- [Formulario](/componentes/formulario/)
+- [Botón-icono](/componentes/boton-icono/)
+- [Botón](/componentes/boton/)

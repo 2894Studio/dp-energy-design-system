@@ -1,0 +1,166 @@
+---
+title: Botón-icono
+description: Botón cuadrado sin texto para acciones que se repiten en cada fila o que viven en el cromo.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="fila">
+		<button class="iconbtn" type="button" title="Notificaciones" aria-label="Notificaciones"><Icon name="notifications" /></button>
+		<div class="grupo-iconos">
+			<button class="iconbtn mini" type="button" title="Copiar" aria-label="Copiar folio OT-1042"><Icon name="content_copy" size="sm" /></button>
+			<button class="iconbtn mini" type="button" title="Editar" aria-label="Editar la orden OT-1042"><Icon name="edit" size="sm" /></button>
+			<button class="iconbtn mini" type="button" title="Retirar" aria-label="Retirar la orden OT-1042"><Icon name="delete" size="sm" /></button>
+		</div>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para una acción que se repite en cada fila de una tabla o lista, donde una etiqueta escrita
+  ocuparía más que la acción.
+- Para una acción del cromo o de la cabecera de pantalla: notificaciones, ajustes, cerrar.
+- Con más de dos acciones por fila, o si cambian según la fila, usa el
+  [menú de acciones](/componentes/menu-acciones/) con las opciones escritas.
+- Si hay espacio para el texto en la acción principal, usa un [botón](/componentes/boton/) con
+  ícono y texto.
+
+## Anatomía
+
+<Example noCode center>
+	<button class="iconbtn" type="button" title="Ajustes" aria-label="Ajustes"><Icon name="settings" /></button>
+</Example>
+
+1. **Contenedor** — cuadrado, borde `--border`, fondo transparente, radio `--r-ctrl`, `padding: 0`.
+2. **Ícono** — centrado; hereda el color del botón (`--text-2` en reposo).
+3. **Nombre accesible** — `aria-label`, más `title` para quien usa ratón. No se ve, pero es
+   obligatorio.
+
+**Declara `padding: 0`.** Un `<button>` trae relleno del navegador; a 28px ese relleno reduce la
+caja de contenido por debajo del ícono y la rejilla lo descentra hacia un lado.
+
+## Variantes
+
+| Variante | Clase | Medida | Úsala para |
+|---|---|---|---|
+| Por defecto | `.iconbtn` | 36px | Suelto: cromo superior, cabecera de pantalla. Es la acción de su zona. |
+| Compacto | `.iconbtn.mini` | 28px | Dentro de una fila densa o de una tarjeta, dos o tres por renglón. |
+| Táctil | `.iconbtn.grande` | 46px | Uso con el dedo. En modo táctil todos los botones-icono suben a 46px. |
+
+<Example title="Tres medidas">
+	<div class="fila">
+		<button class="iconbtn mini" type="button" title="Editar" aria-label="Editar, 28px"><Icon name="edit" size="sm" /></button>
+		<button class="iconbtn" type="button" title="Editar" aria-label="Editar, 36px"><Icon name="edit" /></button>
+		<button class="iconbtn grande" type="button" title="Editar" aria-label="Editar, 46px"><Icon name="edit" /></button>
+	</div>
+</Example>
+
+### Confirmación en el sitio
+
+Una acción que se resuelve sola —copiar, marcar, fijar— confirma en el propio botón en vez de
+abrir un aviso. Confirma tres cosas a la vez:
+
+1. **El ícono cambia** (`content_copy` → `check`), para quien mira.
+2. **El `aria-label` cambia** («Copiado»), para quien recorre los botones con el teclado.
+3. **Se anuncia por `aria-live`**, para quien no percibe ninguna de las dos.
+
+Vuelve al estado inicial en unos 2 s: es una confirmación, no un estado nuevo del dato. Pulsa el
+botón.
+
+<Example title="Copiar con confirmación">
+	<div class="fila">
+		<span class="tnum">OT-1042</span>
+		<button class="iconbtn mini copiar" type="button" title="Copiar" aria-label="Copiar folio OT-1042"><Icon name="content_copy" size="sm" /></button>
+		<span class="sr" aria-live="polite"></span>
+	</div>
+</Example>
+
+**Si falla, dilo.** Una copia fallida en silencio hace que la persona pegue lo que tenía antes.
+La API del portapapeles exige contexto seguro: prevé un respaldo y un mensaje de error para cuando
+tampoco el respaldo funciona.
+
+## Estados
+
+| Estado | Comportamiento |
+|---|---|
+| Reposo | Ícono en `--text-2`, borde `--border`. |
+| Sobrevuelo | Fondo `--surface-hover`, ícono `--text`, borde `--border-2`. |
+| Foco | Anillo `--focus-w` en `--accent`, separado `--focus-offset`. |
+| Confirmado | `.hecho`: fondo `--ok-bg`, borde `--ok`, ícono `--ok-ink`. |
+
+## Comportamiento
+
+### Orden dentro de un grupo
+
+Lo frecuente y reversible primero; lo destructivo al final: copiar · editar · retirar. Quien va
+deprisa pulsa el primero.
+
+### Modo táctil
+
+Toda regla táctil empieza por `:root`. Sin él, la regla empata en especificidad con la variante de
+tamaño y gana la que se declara después: los botones de fila se quedan en 28px con el modo táctil
+activado.
+
+```css
+/* Mal: (0,2,0) — empata con la variante de fila, que va después y gana */
+[data-tacto='dedo'] .iconbtn { width: 46px; height: 46px; }
+.acciones .iconbtn { width: 28px; height: 28px; }
+
+/* Bien: (0,3,0) — gana a cualquier variante de tamaño */
+:root[data-tacto='dedo'] .iconbtn { width: 46px; height: 46px; }
+```
+
+Comprueba cada variante de tamaño midiéndola con el modo táctil activado, no leyendo el CSS. Ver
+[objetivos táctiles](/layout/objetivos-tactiles/).
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="El nombre accesible incluye el dato: cada botón se distingue al tabular.">
+		<button class="iconbtn mini" type="button" title="Copiar" aria-label="Copiar contacto@ejemplo.com"><Icon name="content_copy" size="sm" /></button>
+		<code>aria-label="Copiar contacto@ejemplo.com"</code>
+	</Guideline>
+	<Guideline type="dont" caption="Cuatro botones «Copiar» en una lista son indistinguibles para un lector de pantalla.">
+		<button class="iconbtn mini" type="button" title="Copiar" aria-label="Copiar"><Icon name="content_copy" size="sm" /></button>
+		<code>aria-label="Copiar"</code>
+	</Guideline>
+	<Guideline type="do" caption="Lo frecuente primero, lo destructivo al final.">
+		<div class="grupo-iconos">
+			<button class="iconbtn mini" type="button" title="Copiar" aria-label="Copiar folio OT-1042"><Icon name="content_copy" size="sm" /></button>
+			<button class="iconbtn mini" type="button" title="Editar" aria-label="Editar la orden OT-1042"><Icon name="edit" size="sm" /></button>
+			<button class="iconbtn mini" type="button" title="Retirar" aria-label="Retirar la orden OT-1042"><Icon name="delete" size="sm" /></button>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="La acción destructiva en primer lugar recibe el clic apresurado.">
+		<div class="grupo-iconos">
+			<button class="iconbtn mini" type="button" title="Retirar" aria-label="Retirar la orden OT-1042"><Icon name="delete" size="sm" /></button>
+			<button class="iconbtn mini" type="button" title="Editar" aria-label="Editar la orden OT-1042"><Icon name="edit" size="sm" /></button>
+			<button class="iconbtn mini" type="button" title="Copiar" aria-label="Copiar folio OT-1042"><Icon name="content_copy" size="sm" /></button>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Nunca viaja solo: lleva `aria-label` y `title`. El ícono lleva `aria-hidden="true"`.
+- El `aria-label` nombra el dato concreto: «Copiar folio OT-1042», «Editar la orden OT-1042».
+- El ícono es un elemento gráfico: mínimo 3:1 contra su fondo, en reposo y confirmado.
+- Destino mínimo de 24×24px; 46px en modo táctil.
+- La confirmación en el sitio actualiza a la vez ícono, `aria-label` y una región
+  `aria-live="polite"` hermana del botón.
+
+## Tokens
+
+<TokenTable names={['border', 'border-2', 'surface-hover', 'text', 'text-2', 'r-ctrl', 'ok', 'ok-bg', 'ok-ink', 'focus-w', 'focus-offset']} />
+
+## Relacionados
+
+- [Botón](/componentes/boton/)
+- [Botón flotante](/componentes/boton-flotante/)
+- [Menú de acciones](/componentes/menu-acciones/)
+- [Objetivos táctiles](/layout/objetivos-tactiles/)

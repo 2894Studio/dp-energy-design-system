@@ -1,0 +1,47 @@
+/* Rejilla y muestras de la página Fundamentos › Iconografía. */
+.dpe .ico-rejilla {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+	gap: var(--sp-2);
+	width: 100%;
+	margin: 0;
+	list-style: none;
+}
+.dpe .ico-rejilla li {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--sp-2);
+	padding: var(--sp-4) var(--sp-2) var(--sp-3);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-ctrl);
+	color: var(--text);
+}
+.dpe .ico-rejilla .ico {
+	width: 24px;
+	height: 24px;
+}
+.dpe .ico-rejilla code {
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+	overflow-wrap: anywhere;
+	text-align: center;
+}
+.dpe .ico-tamanos {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: var(--sp-8);
+}
+.dpe .ico-tamanos figure {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--sp-2);
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+}
+.dpe .ico-tamanos code {
+	color: var(--text);
+}

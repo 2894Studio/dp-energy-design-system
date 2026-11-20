@@ -1,0 +1,180 @@
+---
+title: Barra de filtros
+description: Acota las filas de una tabla con un buscador y filtros de selección múltiple; lo aplicado se ve y se quita uno a uno.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/barra-filtros.css';
+
+<Example>
+	<div class="pila">
+		<div class="filtros" role="group" aria-label="Filtros">
+			<div class="buscador"><Icon name="search" size="sm" /><input type="search" aria-label="Buscar orden, cliente o sucursal" placeholder="Buscar orden, cliente o sucursal" /></div>
+			<button class="f" type="button" data-activo="true" aria-haspopup="true" aria-expanded="false">Sucursal: <b>2 seleccionadas</b><Icon name="expand_more" size="sm" /></button>
+			<button class="f" type="button" data-activo="true" aria-haspopup="true" aria-expanded="false">Estado: <b>2 seleccionados</b><Icon name="expand_more" size="sm" /></button>
+			<button class="f" type="button" aria-haspopup="true" aria-expanded="false">Tipo: <b>Todos</b><Icon name="expand_more" size="sm" /></button>
+			<button class="f" type="button" data-activo="true" aria-haspopup="true" aria-expanded="false">Instalador: <b>Laura Méndez</b><Icon name="expand_more" size="sm" /></button>
+			<button class="f agregar" type="button" aria-haspopup="true" aria-expanded="false"><Icon name="add" size="sm" />Agregar filtro</button>
+		</div>
+		<div class="aplicados" role="group" aria-labelledby="fa-titulo">
+			<span class="sr" id="fa-titulo">Filtros aplicados: 5</span>
+			<span class="f">Sucursal: <b>Planta Monterrey</b><button class="quitar" type="button" aria-label="Quitar filtro Sucursal: Planta Monterrey"><Icon name="close" size="xs" /></button></span>
+			<span class="f">Sucursal: <b>Planta Saltillo</b><button class="quitar" type="button" aria-label="Quitar filtro Sucursal: Planta Saltillo"><Icon name="close" size="xs" /></button></span>
+			<span class="f">Estado: <span class="pill p-warn"><Icon name="schedule" />Por vencer</span><button class="quitar" type="button" aria-label="Quitar filtro Estado: Por vencer"><Icon name="close" size="xs" /></button></span>
+			<span class="f">Estado: <span class="pill p-err"><Icon name="error" />Vencida</span><button class="quitar" type="button" aria-label="Quitar filtro Estado: Vencida"><Icon name="close" size="xs" /></button></span>
+			<button class="f" type="button" aria-expanded="false">+1 más</button>
+			<button class="btn mini" type="button">Quitar todos los filtros</button>
+		</div>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para acotar una [tabla](/componentes/tabla/) por campos categóricos con más de un valor posible:
+  sucursal, estado, instalador, tipo. Es el único componente para ese caso.
+- Para una condición sí/no («Solo con saldo»), usa un [chip](/componentes/chip/) con
+  `aria-pressed`: un desplegable de un solo valor booleano añade un paso sin necesidad.
+- Para mostrar cuántos registros hay por estado, usa el [resumen de estatus](/componentes/resumen-estatus/),
+  encima de esta barra.
+
+## Anatomía
+
+<Example noCode minHeight="380px">
+	<div class="fwrap">
+		<button class="f" type="button" data-activo="true" aria-haspopup="true" aria-expanded="true" aria-controls="pop-anatomia">Sucursal: <b>2 seleccionadas</b><Icon name="expand_more" size="sm" /></button>
+		<div class="pop" id="pop-anatomia" role="group" aria-label="Sucursal">
+			<div class="buscador"><Icon name="search" size="sm" /><input type="search" aria-label="Buscar sucursal" placeholder="Buscar sucursal" /></div>
+			<ul>
+				<li><label><input type="checkbox" checked />Planta Monterrey<small>18</small></label></li>
+				<li><label><input type="checkbox" checked />Planta Saltillo<small>9</small></label></li>
+				<li><label><input type="checkbox" />Planta León<small>12</small></label></li>
+				<li><label><input type="checkbox" />Planta Apodaca<small>4</small></label></li>
+				<li><label><input type="checkbox" />Nave 3 Silao<small>7</small></label></li>
+			</ul>
+			<div class="pop-pie"><span>2 seleccionadas</span><button class="btn mini" type="button">Limpiar</button></div>
+		</div>
+	</div>
+</Example>
+
+1. **Botón de filtro** (`.f`) — dimensión + valor + chevron. Resaltado con `data-activo="true"`
+   solo si el valor difiere del predeterminado.
+2. **Panel** (`.pop`) — se abre bajo el botón; `role="group"` con el nombre de la dimensión.
+3. **Buscador del panel** — filtra la lista mientras se escribe.
+4. **Opciones** — casillas `<input type="checkbox">` reales, con su conteo a la derecha.
+5. **Pie** — cuántos hay seleccionados y «Limpiar», que vacía solo esta dimensión.
+
+## Variantes
+
+| Pieza | Clase | Úsala para |
+|---|---|---|
+| Buscador | `.buscador` | Texto libre. Va en la misma fila que los filtros. |
+| Filtro | `.f` | Una dimensión categórica. Tres visibles como máximo. |
+| Agregar filtro | `.f.agregar` | Abre la lista de dimensiones que no están a la vista. |
+| Filtro aplicado | `.aplicados .f` + `button.quitar` | Una pastilla por valor aplicado, con su «×». |
+| Filtro registrado | `.f.registro` | Con qué se filtró antes: una exportación, una bitácora. Sin «×» ni puntero. |
+
+<Example title="Filtro registrado">
+	<p class="muted">Exportación del 18 de noviembre, filtrada por:</p>
+	<div class="fila" style="margin-top:8px">
+		<span class="f registro">Sucursal: <b>Planta Monterrey y Planta Saltillo</b></span>
+		<span class="f registro">Estado: <span class="pill p-warn"><Icon name="schedule" />Por vencer</span></span>
+	</div>
+</Example>
+
+## Comportamiento
+
+### Botón
+
+- Sin selección muestra el valor por omisión («Todos») y va sin resalte: «Todos» no filtra nada.
+- Con una opción, muestra esa opción. Con varias, «2 seleccionadas»: enumerarlas estira el botón
+  hasta romper la fila.
+- El resalte y el chevron en `--accent` aparecen solo cuando hay algo puesto.
+- Si la dimensión tiene [etiqueta](/componentes/etiqueta/) en la tabla (estado, plazo), la
+  etiqueta viaja al panel, al botón y a la pastilla aplicada. Las dimensiones sin juicio (sucursal,
+  instalador) van en texto plano.
+
+### Dimensiones
+
+- Tres filtros visibles: los de uso diario. El resto entra por «Agregar filtro», de borde
+  discontinuo.
+- El filtro que se agrega queda en la barra con su panel abierto: se pidió para usarlo ahora.
+
+### Panel
+
+- Siempre igual: buscador arriba, casillas en medio, pie con la cuenta y «Limpiar».
+- Si la búsqueda no coincide con nada, lo dice («Ninguna sucursal coincide con “Torreón”») en vez
+  de dejar el hueco en blanco.
+- Es un menú de un control, no un modal: no atrapa el foco ni oscurece la pantalla. La tabla sigue
+  legible mientras se decide.
+
+### Filtros aplicados
+
+- Bajan a su propia fila, como pastillas que nombran dimensión y valor: «Sucursal: Planta
+  Monterrey».
+- **Cuatro pastillas visibles como máximo**; el resto detrás de «+N más». Sin tope, seis filtros
+  empujan la tabla fuera de la pantalla.
+- Al final, «Quitar todos los filtros». La fila desaparece cuando no hay nada aplicado.
+
+### Teclado
+
+| Tecla | Acción |
+|---|---|
+| `Enter` / `Espacio` en el botón | Abre el panel y lleva el foco al buscador. |
+| `Tab` | Recorre buscador, casillas y «Limpiar». |
+| `Espacio` en una casilla | Marca o desmarca la opción. |
+| `Escape` | Cierra el panel y devuelve el foco al botón. |
+| Clic fuera | Cierra el panel. |
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Sin valor puesto, sin resalte: el acento significa «aquí hay algo».">
+		<button class="f" type="button">Tipo: <b>Todos</b><Icon name="expand_more" size="sm" /></button>
+		<button class="f" type="button" data-activo="true">Sucursal: <b>Planta León</b><Icon name="expand_more" size="sm" /></button>
+	</Guideline>
+	<Guideline type="dont" caption="«Todos» resaltado se lee como filtro aplicado y no filtra nada.">
+		<button class="f" type="button" data-activo="true">Tipo: <b>Todos</b><Icon name="expand_more" size="sm" /></button>
+		<button class="f" type="button" data-activo="true">Sucursal: <b>Planta León</b><Icon name="expand_more" size="sm" /></button>
+	</Guideline>
+	<Guideline type="do" caption="Lo registrado se escribe literal: se lee sin reconstruir nada.">
+		<span class="f registro">Sucursal: <b>Planta Monterrey y Planta Saltillo</b></span>
+	</Guideline>
+	<Guideline type="dont" caption="«2 de 5» obliga a adivinar cuáles y cambia de sentido si cambian las opciones.">
+		<span class="f registro">Sucursal: <b>2 de 5</b></span>
+	</Guideline>
+	<Guideline type="do" caption="Un filtro histórico es texto: sin «×» y sin puntero.">
+		<span class="f registro">Estado: <span class="pill p-warn"><Icon name="schedule" />Por vencer</span></span>
+	</Guideline>
+	<Guideline type="dont" caption="Con «×», un registro promete quitar un filtro que ya no está activo.">
+		<span class="f registro">Estado: <span class="pill p-warn"><Icon name="schedule" />Por vencer</span><button class="quitar" type="button" aria-label="Quitar filtro Estado: Por vencer"><Icon name="close" size="xs" /></button></span>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- El botón de filtro declara `aria-haspopup`, `aria-expanded` y, mientras el panel existe,
+  `aria-controls` con su `id`. Nunca apuntes a un `id` que no está en la página.
+- El panel lleva `role="group"` con el nombre de la dimensión, no `role="dialog"`.
+- Al abrir, el foco entra al buscador del panel; `Escape` lo devuelve al botón, no al principio de
+  la página.
+- El buscador muestra un solo anillo de foco, en el contenedor (`.buscador:focus-within`); el
+  `<input>` interior no dibuja el suyo.
+- La fila de aplicados empieza con un texto solo para lector: «Filtros aplicados: 5».
+- Cada «×» dice qué quita: `aria-label="Quitar filtro Sucursal: Planta Monterrey"`. Seis «Quitar»
+  iguales no se distinguen al tabular.
+- Un filtro registrado no lleva `aria-pressed`, ni `button`, ni `cursor: pointer`.
+
+## Tokens
+
+<TokenTable names={['surface', 'surface-2', 'accent', 'accent-soft', 'border', 'border-2', 'border-ctrl', 'text', 'text-2', 'text-3', 'r-pill', 'r-card', 'sh-float', 'fs-meta', 'focus-w', 'focus-offset']} />
+
+## Relacionados
+
+- [Resumen de estatus](/componentes/resumen-estatus/)
+- [Chip](/componentes/chip/)
+- [Tabla densa](/componentes/tabla/)
+- [Filtrar y buscar](/patrones/filtrar-y-buscar/)

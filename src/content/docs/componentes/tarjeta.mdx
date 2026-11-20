@@ -1,0 +1,175 @@
+---
+title: Tarjeta
+description: Agrupa un objeto o un flujo autocontenido en una superficie con borde, radio y sombra de reposo. Una sola receta para todo el producto.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<section class="tarjeta" style="max-width:420px">
+		<header><Icon name="folder" size="sm" /><h3>Órdenes de instalación</h3><span class="n">3 abiertas</span></header>
+		<div class="interior">OT-1042 en programación; OT-1043 y OT-1044 esperan la visita técnica de Planta Monterrey.</div>
+	</section>
+</Example>
+
+## Cuándo usarlo
+
+Hay dos razones para usar una tarjeta:
+
+1. **Contener un flujo pequeño y autocontenido.** Un solo contenedor cuyo contenido cambia de
+   estado (acceso, cargando, vacío, error). Nunca una tarjeta nueva por estado. Ver
+   [vistas de estado](/patrones/vistas-de-estado/).
+2. **Agrupar información con identidad propia** para que no quede suelta: «Órdenes de
+   instalación», «Documentos», «Contacto» en una ficha. Un `<details class="tarjeta">` agrupa y
+   pliega lo valioso pero no esencial.
+
+No la uses:
+
+- Para la tabla o la lista principal de la pantalla. La tarjeta dice «esto es un grupo aparte», y
+  el objeto principal no lo es: va en su propio contenedor. Ver [tabla](/componentes/tabla/).
+- Como contenedor por defecto de todo lo que hay en pantalla.
+- Dentro de otra tarjeta. Si un grupo necesita subgrupos, la pantalla tiene más de un objeto:
+  divídela.
+
+## Anatomía
+
+<Example noCode>
+	<section class="tarjeta" style="max-width:420px">
+		<header><Icon name="description" size="sm" /><h3>Documentos</h3><span class="n">4 de 5</span></header>
+		<div class="interior">Falta la constancia de situación fiscal.</div>
+		<footer class="pie"><button class="btn mini" type="button"><Icon name="upload" />Subir documento</button></footer>
+	</section>
+</Example>
+
+1. **Contenedor** — `.tarjeta`: `--surface`, borde `--border`, radio `--r-card`, sombra
+   `--sh-rest`, `overflow: hidden`.
+2. **Cabecera** (opcional) — `header` hijo directo, banda `--surface-2` con borde inferior. Ícono,
+   título (`h2`, `h3` o `h4`, todos a `--fs-base`) y contador `.n` alineado a la derecha.
+3. **Interior** — `.interior`, con su propio relleno `--sp-4`.
+4. **Pie** (opcional) — `.pie`, banda `--surface-2` con borde superior. Ver
+   [tarjeta con pie](#tarjeta-con-pie).
+
+El selector del título cubre `h2`, `h3` y `h4` porque las tarjetas aparecen a distinta
+profundidad del documento; usa el nivel que corresponda al esquema de la página.
+
+## Variantes
+
+| Variante | Clase | Úsala para |
+|---|---|---|
+| Base | `.tarjeta` | Cualquier grupo con identidad propia. |
+| Acento | `.tarjeta.tarjeta--acento` | Un resumen o una recomendación que debe destacar sin alarmar. Fondo `--accent-soft`, sin borde ni sombra. |
+| Marcada | `.tarjeta.tarjeta--marcada` | La opción elegida en un grupo de tarjetas comparables. Borde de 2px en `--accent`. |
+
+Una variante se declara como modificador de `.tarjeta`. No escribas otra clase con la misma
+receta: dos definiciones que se ven casi iguales acaban divergiendo en los detalles.
+
+<Example title="Acento y marcada">
+	<div class="fila" style="align-items:stretch">
+		<section class="tarjeta tarjeta--acento" style="flex:1;min-width:220px">
+			<div class="interior">Tres órdenes pueden agruparse en una sola visita a Planta Monterrey.</div>
+		</section>
+		<section class="tarjeta tarjeta--marcada" style="flex:1;min-width:220px">
+			<header><h3>Plan anual</h3></header>
+			<div class="interior">Mantenimiento trimestral y monitoreo de generación.</div>
+		</section>
+	</div>
+</Example>
+
+## Tarjeta con pie
+
+El cuerpo y el pie son **dos zonas hermanas, cada una con su propio relleno**. El pie es una
+banda `--surface-2` con borde superior, como la cabecera pero al final.
+
+Un pie dice una sola cosa:
+
+| Propósito | Forma | Ejemplo |
+|---|---|---|
+| Procedencia: de dónde salió | Enlaces de lectura | «Fuente: OT-1042 · Contrato de servicio» |
+| Paso a seguir: para hacerlo | Botones `.btn.mini` | «Subir documento», «Programar visita» |
+
+Se distinguen por la forma, no solo por el rótulo: dos pies con el mismo aspecto para dos
+propósitos distintos se confunden.
+
+<Example title="Pie de procedencia y pie de paso a seguir">
+	<div class="pila" style="max-width:420px">
+		<section class="tarjeta">
+			<div class="interior">La generación de octubre quedó 8% por debajo de lo estimado.</div>
+			<footer class="pie">Fuente: <a href="#tarjeta-con-pie">OT-1042</a> · <a href="#tarjeta-con-pie">Contrato de servicio</a></footer>
+		</section>
+		<section class="tarjeta">
+			<div class="interior">Revisa los inversores antes de la próxima lectura.</div>
+			<footer class="pie"><button class="btn mini" type="button">Programar visita</button><button class="btn mini" type="button">Ver lecturas</button></footer>
+		</section>
+	</div>
+</Example>
+
+**Nunca sangres el pie con márgenes negativos** para alcanzar el borde de una tarjeta que ya tiene
+relleno: la franja se monta sobre la última línea del cuerpo. El relleno vive en cada zona, no en
+la tarjeta.
+
+```css
+.tarjeta > .pie {
+	padding: var(--sp-3) var(--sp-4);
+	background: var(--surface-2);
+	border-top: 1px solid var(--border);
+}
+```
+
+## Composición
+
+- **Si la tarjeta crece, su contenido crece con ella.** Un hijo que debe ocupar el ancho de la
+  tarjeta se declara con `flex: 1` (o `width: 100%` en una rejilla), nunca con un `max-width` fijo
+  que sobrevive a un cambio de layout y deja una franja vacía.
+- **Tarjetas lado a lado.** El valor por omisión de una fila de tarjetas es `align-items: start`:
+  cada una a su alto real. Cuando se comparan entre sí —mismo criterio, mismos campos— la fila
+  lleva `align-items: stretch` y el mismo número de columnas por tarjeta, porque alturas distintas
+  sugieren importancias distintas.
+
+<Example title="Tarjetas que se comparan: misma altura">
+	<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--sp-3);align-items:stretch">
+		<section class="tarjeta"><header><h3>Solar del Norte</h3></header><div class="interior">12 paneles · 5,4 kWp</div></section>
+		<section class="tarjeta"><header><h3>Agrícola San Miguel</h3></header><div class="interior">40 paneles · 18 kWp · bombeo solar para riego en dos pozos</div></section>
+		<section class="tarjeta"><header><h3>Planta Monterrey</h3></header><div class="interior">96 paneles · 43 kWp</div></section>
+	</div>
+</Example>
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Un grupo, una tarjeta. Los subgrupos se separan con encabezados dentro, o se dividen en tarjetas hermanas.">
+		<section class="tarjeta" style="width:100%"><header><h3>Contacto</h3></header><div class="interior">contacto@ejemplo.com · 81 5555 0142</div></section>
+	</Guideline>
+	<Guideline type="dont" caption="Una tarjeta dentro de otra: la pantalla tiene más de un objeto y conviene dividirla.">
+		<section class="tarjeta" style="width:100%"><header><h3>Cliente</h3></header><div class="interior"><section class="tarjeta"><header><h4>Contacto</h4></header><div class="interior">contacto@ejemplo.com</div></section></div></section>
+	</Guideline>
+	<Guideline type="do" caption="Cada pie dice una sola cosa: aquí, de dónde salió el dato.">
+		<section class="tarjeta" style="width:100%"><div class="interior">Lectura de octubre registrada.</div><footer class="pie">Fuente: <a href="#tarjeta-con-pie">OT-1042</a></footer></section>
+	</Guideline>
+	<Guideline type="dont" caption="Enlaces y botones mezclados en el mismo pie: no se sabe si informa o pide actuar.">
+		<section class="tarjeta" style="width:100%"><div class="interior">Lectura de octubre registrada.</div><footer class="pie">Fuente: <a href="#tarjeta-con-pie">OT-1042</a><button class="btn mini" type="button">Programar visita</button></footer></section>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Usa `<section>` con encabezado cuando la tarjeta agrupa contenido con nombre propio. El
+  encabezado respeta el esquema de la página: no saltes niveles.
+- La tarjeta no es pulsable en sí misma. Si lleva a otra vista, el enlace va en el título o en el
+  pie, no en todo el contenedor.
+- `<details class="tarjeta">` con `<summary>` da el pliegue accesible sin JS.
+- Los enlaces del pie usan `--link`; los botones del pie son botones reales, con verbo.
+
+## Tokens
+
+<TokenTable names={['surface', 'surface-2', 'border', 'accent', 'accent-soft', 'text-2', 'link', 'r-card', 'sh-rest', 'sp-3', 'sp-4', 'fs-base']} />
+
+## Relacionados
+
+- [Vistas de estado](/patrones/vistas-de-estado/)
+- [Ficha de detalle](/componentes/ficha-detalle/)
+- [Diálogo](/componentes/dialogo/)
+- [Composición](/layout/composicion/)

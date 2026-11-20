@@ -1,0 +1,133 @@
+---
+title: Logotipo
+description: Isotipo y wordmark «D.P. Energy». Una variante de color por fondo, área de seguridad, tamaño mínimo y usos incorrectos.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import '../../../styles/components/logotipo.css';
+
+<Example title="Lockup de producto">
+	<div class="logo-lienzo logo-claro" style="width:100%">
+		<div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark">D.P. Energy</span></div>
+	</div>
+</Example>
+
+## Anatomía
+
+1. **Isotipo** — el símbolo con el gradiente de marca (`--marca-1` a `--marca-7`). Siempre el
+   archivo oficial: `/marca/dp-energy-isotipo.svg`.
+2. **Wordmark** — «D.P. Energy» en `--font-brand` (Michroma), con `letter-spacing: 0.06em`.
+
+El lockup vive en el cromo de la aplicación (barra lateral) y en la pantalla de entrada. El
+isotipo lleva `alt=""` porque el wordmark ya da el nombre; si el isotipo va solo, lleva
+`alt="D.P. Energy"`.
+
+El archivo oficial del lockup, con el wordmark trazado, se publicará en
+[Descargas](/recursos/descargas/) cuando esté disponible. Mientras tanto, compón el lockup con el
+isotipo y el texto vivo, como en la demo.
+
+## Color por fondo
+
+Una variante por fondo, nunca a ojo.
+
+<Example noCode>
+	<div class="logo-fondos">
+		<figure>
+			<div class="logo-lienzo logo-claro"><div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark">D.P. Energy</span></div></div>
+			<figcaption>Color · sobre fondo claro</figcaption>
+		</figure>
+		<figure>
+			<div class="logo-lienzo logo-cromo"><div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark">D.P. Energy</span></div></div>
+			<figcaption>Reversa · sobre el cromo</figcaption>
+		</figure>
+		<figure>
+			<div class="logo-lienzo logo-marca"><div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark">D.P. Energy</span></div></div>
+			<figcaption>Reversa · sobre el lienzo de marca</figcaption>
+		</figure>
+	</div>
+</Example>
+
+| Variante | Isotipo | Wordmark | Sobre |
+|---|---|---|---|
+| Color | Gradiente de marca | `--marca-azul` | Fondos claros: `--surface`, `--bg`, blanco |
+| Reversa | Gradiente de marca, igual | Blanco (`--marca-lienzo-ink`) | Fondos oscuros: `--chrome`, `--marca-lienzo`, negro |
+
+**El gradiente del isotipo nunca cambia.** No tiene versión monocromática ni invertida: es la firma
+de color de la marca. Solo el wordmark cambia con el fondo.
+
+### Fondos
+
+- **Sí:** fondos limpios de un solo color, claros u oscuros, o con una textura muy sutil que no
+  compita con el símbolo.
+- **No:** fondos saturados, multicolor o con patrones geométricos ajenos a la marca. Generan ruido,
+  restan legibilidad y rompen la consistencia.
+
+## Área de seguridad
+
+El espacio libre alrededor del lockup nunca es menor que la altura del isotipo. Nada entra en esa
+franja: ni texto, ni bordes, ni otro elemento.
+
+<Example noCode center>
+	<div class="logo-zona"><div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark" style="color:var(--marca-azul)">D.P. Energy</span></div></div>
+</Example>
+
+## Tamaño mínimo
+
+**24px de alto** para el isotipo en pantalla. Por debajo, el pico pierde su curva y se lee como un
+triángulo genérico.
+
+<Example noCode center>
+	<div class="logo-lienzo logo-claro" style="min-height:0">
+		<div class="logo-lockup" style="gap:8px"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:24px" /><span class="logo-wordmark" style="font-size:13px">D.P. Energy</span></div>
+	</div>
+</Example>
+
+## Usos incorrectos
+
+<Guidelines>
+	<Guideline type="dont" caption="No estires ni deformes el lockup en un solo eje.">
+		<div class="logo-lienzo logo-claro logo-estirado"><div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark">D.P. Energy</span></div></div>
+	</Guideline>
+	<Guideline type="dont" caption="No recolorees el isotipo: ni un color plano ni otra paleta.">
+		<div class="logo-lienzo logo-claro logo-recolor"><div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark">D.P. Energy</span></div></div>
+	</Guideline>
+	<Guideline type="dont" caption="No partas el gradiente en franjas sólidas: deja de ser el mismo símbolo.">
+		<div class="logo-lienzo logo-claro"><div class="logo-lockup"><span class="logo-bandas" aria-hidden="true"></span><span class="logo-wordmark">D.P. Energy</span></div></div>
+	</Guideline>
+	<Guideline type="dont" caption="No lo pongas sobre un fondo con menos de 3:1: el isotipo se funde.">
+		<div class="logo-lienzo logo-bajo"><div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark">D.P. Energy</span></div></div>
+	</Guideline>
+	<Guideline type="dont" caption="No lo pongas sobre un fondo saturado o multicolor.">
+		<div class="logo-lienzo logo-multicolor"><div class="logo-lockup"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:40px" /><span class="logo-wordmark">D.P. Energy</span></div></div>
+	</Guideline>
+</Guidelines>
+
+1. No estires ni deformes el lockup. El isotipo es una forma geométrica precisa.
+2. No recolorees el isotipo fuera de su gradiente.
+3. No partas el gradiente en bloques sólidos.
+4. No lo coloques sobre un fondo que no cumpla 3:1 para elementos gráficos.
+5. No redibujes el isotipo a mano ni con íconos del sistema. Usa siempre el archivo oficial.
+
+## Tipografía de marca y de producto
+
+| | Tipografía | Dónde |
+|---|---|---|
+| Marca | Michroma (`--font-brand`) | Wordmark y titulares de piezas de marca |
+| Producto | Inter (`--font-ui`) | Todo el texto de la interfaz |
+
+Michroma no entra en la interfaz más allá del wordmark. Si una pieza de comunicación externa usa
+una tipografía de texto propia, esa tipografía se queda fuera del producto. Ver
+[Tipografía](/fundamentos/tipografia/).
+
+## Tokens
+
+<TokenTable groups={['marca']} />
+
+## Relacionados
+
+- [Color](/fundamentos/color/)
+- [Cromo de aplicación](/layout/cromo/)
+- [Entrada al sistema](/layout/entrada/)

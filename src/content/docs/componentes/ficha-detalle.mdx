@@ -1,0 +1,149 @@
+---
+title: Ficha de detalle
+description: Cabecera de una pantalla de detalle. El bloque de identidad abre la página y fija el orden de lectura y de tabulación.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/ficha-detalle.css';
+
+<Example>
+	<header class="cab">
+		<div class="id">
+			<span class="muted tnum">Cliente CL-2087</span>
+			<h3>Solar del Norte</h3>
+			<div class="fila"><span class="p-type p-s1">Empresa</span><span class="pill p-ok"><Icon name="check_circle" />Expediente completo</span></div>
+			<div class="meta"><span>Monterrey, N.L.</span><span>4 instalaciones</span><span class="tnum">Por cobrar $184,500</span></div>
+		</div>
+		<div class="contacto">
+			<b>Responsable de compras</b>
+			<span>contacto@ejemplo.com</span>
+			<span class="tnum">81 5555 0142</span>
+		</div>
+	</header>
+</Example>
+
+## Cuándo usarlo
+
+- Al abrir cualquier pantalla de detalle: un cliente, una orden, un expediente.
+- Para una fila de una lista que solo necesita un vistazo, usa una
+  [fila desplegable](/componentes/fila-desplegable/).
+- Para agrupar las secciones que siguen a la cabecera (documentos, bitácora), usa
+  [tarjetas](/componentes/tarjeta/).
+
+## Anatomía
+
+<Example noCode>
+	<header class="cab">
+		<div class="id">
+			<span class="muted tnum">Cliente CL-2087</span>
+			<h3>Solar del Norte</h3>
+			<div class="fila"><span class="p-type p-s1">Empresa</span><span class="pill p-ok"><Icon name="check_circle" />Expediente completo</span></div>
+			<div class="meta"><span>Monterrey, N.L.</span><span>4 instalaciones</span></div>
+		</div>
+		<div class="contacto"><b>Responsable de compras</b><span>contacto@ejemplo.com</span></div>
+	</header>
+</Example>
+
+1. **Bloque de identidad** — `.id`: folio, nombre (`--fs-title`), etiquetas de clasificación y de
+   estado, y una línea de metadatos `.meta`.
+2. **Columna derecha** — `.contacto` o el indicador de urgencia. Declara su ancho:
+   `minmax(240px, 320px)`.
+3. **Contenedor** — `.cab`, rejilla de dos columnas con `align-items: center`.
+
+## Comportamiento
+
+### El bloque de identidad manda el orden
+
+El bloque de identidad va primero en el documento y a la izquierda. Lo que sigue en la página
+—contacto, bitácora, documentos— se ordena a partir de él, y ese orden es también el del recorrido
+con teclado.
+
+### La columna derecha declara su ancho
+
+Con `flex`, la columna derecha recibe lo que sobra y se lee apretada. Con rejilla, su ancho es una
+decisión:
+
+```css
+.cab {
+	display: grid;
+	grid-template-columns: minmax(0, 1.6fr) minmax(240px, 320px);
+	gap: var(--sp-6);
+	align-items: center;
+	padding: var(--sp-5) var(--sp-6);
+}
+@media (max-width: 1080px) {
+	.cab { grid-template-columns: 1fr; align-items: start; }
+}
+```
+
+`align-items: center` equilibra las dos columnas cuando una es más corta. **Por debajo de 1080px
+se apilan**, alineadas arriba: la columna derecha pasa bajo la identidad, con borde superior en
+lugar del lateral.
+
+### Indicador de urgencia
+
+Cuando el registro tiene un plazo que decide qué se atiende primero, el indicador de urgencia
+ocupa la columna derecha. El contacto pasa entonces **inmediatamente bajo la cabecera**, a ancho
+completo y con los datos en fila, antes de la bitácora y los documentos. Nunca al final de una
+columna secundaria: para llamar a la persona no hay que recorrer la pantalla entera.
+
+<Example title="Con indicador de urgencia">
+	<div class="pila">
+		<header class="cab">
+			<div class="id">
+				<span class="muted tnum">OT-1042</span>
+				<h3>Instalación · Solar del Norte</h3>
+				<div class="fila"><span class="p-type p-s2">Instalación</span><span class="pill p-warn"><Icon name="warning" />Falta un documento</span></div>
+				<div class="meta"><span>12 paneles · 5,4 kWp</span><span>Cuadrilla norte</span></div>
+			</div>
+			<div class="urgencia" role="group" aria-label="Plazo"><span>Vence en</span><span class="cifra">3 días</span><span>Fecha límite: 28 nov 2026</span></div>
+		</header>
+		<div class="contacto-fila"><b>Responsable de compras</b><span>contacto@ejemplo.com</span><span class="tnum">81 5555 0142</span></div>
+	</div>
+</Example>
+
+El indicador respira con el espaciado del sistema (`--sp-4` `--sp-5` de relleno, `--sp-3` entre
+partes), no con el mínimo que cabe.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="El contacto va justo bajo la identidad, en una fila de ancho completo.">
+		<div class="pila" style="width:100%">
+			<div class="contacto-fila" style="padding:var(--sp-2) var(--sp-3)"><b>Solar del Norte</b><span class="muted">Cliente CL-2087</span></div>
+			<div class="contacto-fila" style="padding:var(--sp-2) var(--sp-3)"><b>Contacto</b><span>contacto@ejemplo.com</span></div>
+			<span class="muted">Bitácora · Documentos</span>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="El contacto al final de la columna secundaria obliga a recorrer toda la pantalla para llamar.">
+		<div class="pila" style="width:100%">
+			<div class="contacto-fila" style="padding:var(--sp-2) var(--sp-3)"><b>Solar del Norte</b><span class="muted">Cliente CL-2087</span></div>
+			<span class="muted">Bitácora · Documentos</span>
+			<div class="contacto-fila" style="padding:var(--sp-2) var(--sp-3)"><b>Contacto</b><span>contacto@ejemplo.com</span></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- La cabecera es un `<header>` y el nombre es el encabezado principal de la pantalla (`h1` en
+  producto).
+- El orden del DOM es el orden visual: identidad, columna derecha, contacto, resto. Nunca
+  reordenes con `order` o `grid-area`: el teclado seguiría el DOM.
+- Las etiquetas de estado llevan ícono y texto, no solo color. Ver [etiqueta](/componentes/etiqueta/).
+- El indicador de urgencia dice el plazo en texto («Vence en 3 días»); el color lo refuerza.
+
+## Tokens
+
+<TokenTable names={['surface', 'border', 'text', 'text-2', 'warn-bg', 'warn-ink', 'r-card', 'fs-title', 'fs-dense', 'fs-kpi', 'sp-3', 'sp-4', 'sp-5', 'sp-6']} />
+
+## Relacionados
+
+- [Etiqueta](/componentes/etiqueta/)
+- [Tarjeta](/componentes/tarjeta/)
+- [Toggletip](/componentes/toggletip/)
+- [Composición](/layout/composicion/)

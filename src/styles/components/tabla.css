@@ -1,0 +1,162 @@
+/*
+ * Tabla densa: ordenar, densidad compacta, cabecera fija y modo tarjeta.
+ * Se importa desde componentes/tabla.mdx.
+ */
+
+.dpe .tabla-caja .ordenar {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	letter-spacing: inherit;
+	text-transform: inherit;
+	cursor: pointer;
+}
+.dpe .tabla-caja tbody tr[data-navega] {
+	cursor: pointer;
+}
+
+/* Densidad compacta: menos alto y menos contenido */
+.dpe .tabla-caja[data-densidad='compacta'] tbody :is(th, td) {
+	height: 32px;
+}
+.dpe .tabla-caja[data-densidad='compacta'] .rz small {
+	display: none;
+}
+
+/* Cabecera fija: la caja declara max-height y desplaza en los dos ejes */
+.dpe .tabla-caja.cab-fija {
+	overflow: auto;
+}
+.dpe .tabla-caja.cab-fija thead th {
+	position: sticky;
+	top: 0;
+	z-index: 3;
+}
+.dpe .tabla-caja.cab-fija thead :is(th:first-child, .col-acc) {
+	z-index: 4;
+}
+
+/* Modo tarjeta por debajo de 860px (solo en tablas .apilable) */
+@media (max-width: 860px) {
+	.dpe .tabla-caja.apilable {
+		overflow: visible;
+		background: none;
+		border: 0;
+		border-radius: 0;
+	}
+	.dpe .tabla-caja.apilable thead {
+		display: none;
+	}
+	.dpe .tabla-caja.apilable :is(table, tbody) {
+		display: block;
+	}
+	.dpe .tabla-caja.apilable tbody tr {
+		display: block;
+		margin-bottom: var(--sp-3);
+		overflow: hidden;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--r-card);
+	}
+	.dpe .tabla-caja.apilable tbody tr > :is(th, td) {
+		position: static;
+		display: grid;
+		grid-template-columns: minmax(88px, 34%) 1fr;
+		align-items: center;
+		gap: var(--sp-2);
+		width: auto;
+		height: auto;
+		min-height: 40px;
+		padding: var(--sp-2) var(--sp-3);
+		white-space: normal;
+		text-align: left;
+		border-bottom: 1px solid var(--border);
+	}
+	.dpe .tabla-caja.apilable tbody tr > :last-child {
+		border-bottom: 0;
+	}
+	.dpe .tabla-caja.apilable tbody tr > th {
+		display: block;
+		background: var(--surface-2);
+		font-weight: 600;
+	}
+	.dpe .tabla-caja.apilable tbody td[data-et]::before {
+		content: attr(data-et);
+		font-size: var(--fs-meta);
+		font-weight: 700;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--text-2);
+	}
+	.dpe .tabla-caja.apilable tbody td.num {
+		text-align: left;
+	}
+	.dpe .tabla-caja.apilable tbody .col-acc {
+		display: flex;
+		justify-content: flex-end;
+	}
+}
+
+/* La misma vista, forzada para la demo de la documentación */
+.dpe .tabla-caja.apilable.ver-tarjetas {
+	overflow: visible;
+	background: none;
+	border: 0;
+	border-radius: 0;
+}
+.dpe .tabla-caja.apilable.ver-tarjetas thead {
+	display: none;
+}
+.dpe .tabla-caja.apilable.ver-tarjetas :is(table, tbody) {
+	display: block;
+}
+.dpe .tabla-caja.apilable.ver-tarjetas tbody tr {
+	display: block;
+	margin-bottom: var(--sp-3);
+	overflow: hidden;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-card);
+}
+.dpe .tabla-caja.apilable.ver-tarjetas tbody tr > :is(th, td) {
+	position: static;
+	display: grid;
+	grid-template-columns: minmax(88px, 34%) 1fr;
+	align-items: center;
+	gap: var(--sp-2);
+	width: auto;
+	height: auto;
+	min-height: 40px;
+	padding: var(--sp-2) var(--sp-3);
+	white-space: normal;
+	text-align: left;
+	border-bottom: 1px solid var(--border);
+}
+.dpe .tabla-caja.apilable.ver-tarjetas tbody tr > :last-child {
+	border-bottom: 0;
+}
+.dpe .tabla-caja.apilable.ver-tarjetas tbody tr > th {
+	display: block;
+	background: var(--surface-2);
+	font-weight: 600;
+}
+.dpe .tabla-caja.apilable.ver-tarjetas tbody td[data-et]::before {
+	content: attr(data-et);
+	font-size: var(--fs-meta);
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--text-2);
+}
+.dpe .tabla-caja.apilable.ver-tarjetas tbody td.num {
+	text-align: left;
+}
+.dpe .tabla-caja.apilable.ver-tarjetas tbody .col-acc {
+	display: flex;
+	justify-content: flex-end;
+}

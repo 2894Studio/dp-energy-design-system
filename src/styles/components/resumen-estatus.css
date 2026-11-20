@@ -1,0 +1,18 @@
+/* Resumen de estatus: una cifra sin filtrado detrás se presenta como lectura, no como botón. */
+.dpe .schip:not(button) {
+	cursor: default;
+}
+.dpe .resumen .grupo-et {
+	font-size: var(--fs-meta);
+	font-weight: 600;
+	color: var(--text-2);
+}
+.dpe .resumen [role='group'] {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--sp-2);
+}
+.dpe .resumen [role='group'] + [role='group'] {
+	margin-left: var(--sp-4);
+}

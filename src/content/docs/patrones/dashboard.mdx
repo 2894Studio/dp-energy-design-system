@@ -1,0 +1,234 @@
+---
+title: Dashboard
+description: Piezas de dato visual, reglas de lectura y rejilla para componer tableros.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/dashboard.css';
+
+<Example>
+	<div class="dash">
+		<section class="widget w-8" aria-labelledby="db-plazo">
+			<header><h4 class="t" id="db-plazo">Órdenes con plazo corriendo</h4></header>
+			<div class="kpi"><div><span class="cifra">26</span><span class="unidad">órdenes</span></div></div>
+			<div class="barra" role="img" aria-label="18 en plazo, 5 por vencer y 3 vencidas, de 26 órdenes con plazo corriendo"><span class="s-ok" style="width:69.2%"></span><span class="s-warn" style="width:19.2%"></span><span class="s-err" style="width:11.6%"></span></div>
+			<div class="leyenda"><span><i class="mu s-ok"></i>En plazo <b>18</b></span><span><i class="mu s-warn"></i>Por vencer <b>5</b></span><span><i class="mu s-err"></i>Vencidas <b>3</b></span></div>
+			<p class="pie">No incluye las 10 órdenes sin plazo: aún sin programar o ya cerradas.</p>
+		</section>
+		<section class="widget w-4" aria-labelledby="db-meta">
+			<header><h4 class="t" id="db-meta">Meta del mes</h4></header>
+			<div class="progreso"><div class="via"><i style="width:67%"></i></div><div class="lectura"><span><b>20</b> de <b>30</b> instalaciones</span><span><b>67%</b></span></div></div>
+			<p class="pie">Quedan 9 días hábiles.</p>
+		</section>
+	</div>
+</Example>
+
+## Qué se dibuja con librería y qué no
+
+| Si la pieza… | Dibújala con | Ejemplos |
+|---|---|---|
+| Es un rectángulo proporcional | CSS | Barra apilada de estado, barra de progreso, leyenda, cifra |
+| Tiene ejes, curvas o sectores | Librería de gráficas, versión fijada, en `<canvas>` | Tendencia, ranking, dona, sparkline |
+
+Cargar una librería para pintar tres rectángulos es coste sin beneficio, y una barra en CSS hereda los
+tokens sin envoltura.
+
+## Las cuatro reglas de la envoltura
+
+Una librería de gráficas no obedece al sistema por sí sola. Estas cuatro condiciones la integran:
+
+1. **Los colores se leen de los tokens en tiempo de ejecución.** La librería no entiende variables
+   CSS: pásale valores resueltos con `getComputedStyle`.
+2. **Los gráficos se repintan al cambiar de tema**, destruyéndolos y reconstruyéndolos con los tokens
+   nuevos. Actualizar solo las series deja fuera leyenda, ejes y rejilla. Repinta **solo en el
+   cambio**: hacerlo también al arrancar construye cada gráfico dos veces.
+3. **Sin animación bajo `prefers-reduced-motion`.** La mayoría de las librerías anima por defecto.
+4. **El conmutador de tema no depende de la librería.** Si el script de gráficos falla, el resto del
+   cromo sigue funcionando.
+
+```js
+const css = getComputedStyle(document.documentElement);
+const token = (n) => css.getPropertyValue(`--${n}`).trim();
+const quieto = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const opciones = {
+  animation: quieto ? false : undefined,
+  layout: { padding: 4 }, // la mitad de un punto de 8px
+  color: token('text-2'),
+  borderColor: token('border'),
+};
+```
+
+## Cada gráfico lleva su tabla
+
+El `<canvas>` no es accesible. Cada gráfico lleva **su tabla equivalente, y esa tabla es la fuente de
+verdad del dato**: es lo que hace que la información exista para quien no ve el lienzo.
+
+- **Si la librería no carga, el lienzo desaparece y la tabla se abre**, con un aviso. Un tablero sin
+  conexión enseña datos, no un rectángulo vacío.
+- **El total va en un `<tfoot>`**, con línea encima y peso. Sin esa separación se lee como un valor
+  más de la serie, y es la fila que permite comprobar que la serie cuadra con la cifra del widget.
+- **El `<caption>` va oculto** con `.sr`: nombra la tabla para el lector de pantalla; visualmente ya
+  la nombra la cabecera del widget.
+- **Excepción: el gráfico de apoyo no abre su tabla.** Un sparkline acompaña a una cifra. Márcalo
+  `.viz.apoyo`: sin librería, su tabla queda plegada tras su resumen, que sigue siendo pulsable.
+  Prueba: si al quitar el gráfico el widget sigue diciendo lo que tiene que decir, es de apoyo.
+  Ranking, dona y tendencia no lo son.
+
+<Example title="Gráfico sin librería: la tabla toma su lugar">
+	<section class="widget" aria-labelledby="db-gen" style="max-width:420px">
+		<header><h4 class="t" id="db-gen">Generación por planta este mes</h4></header>
+		<figure class="viz sin-libreria">
+			<div class="viz-lienzo"><canvas aria-label="Generación por planta este mes, en MWh"></canvas></div>
+			<p class="aviso-cdn">Sin conexión con la librería de gráficos. Los datos siguen abajo.</p>
+			<details class="viz-tabla" open>
+				<summary>Ver los datos en tabla</summary>
+				<table>
+					<caption class="sr">Generación por planta este mes, en MWh</caption>
+					<thead><tr><th scope="col">Planta</th><th scope="col">MWh</th></tr></thead>
+					<tbody><tr><th scope="row">Planta Monterrey</th><td>412</td></tr><tr><th scope="row">Planta Bajío</th><td>268</td></tr><tr><th scope="row">Planta Saltillo</th><td>155</td></tr></tbody>
+					<tfoot><tr><th scope="row">Total</th><td>835</td></tr></tfoot>
+				</table>
+			</details>
+		</figure>
+	</section>
+</Example>
+
+## Piezas
+
+| Pieza | Clase | Para qué |
+|---|---|---|
+| Rejilla | `.dash` | Doce columnas; cada widget declara cuántas ocupa (`.w-3`, `.w-4`, `.w-6`, `.w-8`). |
+| Tarjeta de widget | `.widget` | Contenedor común, con la receta de superficie de la [tarjeta](/componentes/tarjeta/). No se anidan tarjetas. |
+| KPI con variación | `.kpi` | Una cifra en `--fs-kpi` y su variación debajo. Una por widget: el rótulo lo pone la cabecera. |
+| Fila de cifras | `.cifras` | Varias cifras compactas en un solo widget, cada una con su rótulo. Ver [fila de cifras](/componentes/fila-cifras/). |
+| Barra apilada de estado | `.barra` | Reparto de un total entre estados del semáforo. |
+| Leyenda inline | `.leyenda` | Marca de color + rótulo en tinta de texto + cifra. |
+| Barra de progreso | `.progreso` | Avance contra una meta declarada. |
+| Dona | `canvas` | Proporción sobre un total, con hueco central. |
+| Ranking horizontal | `canvas` | Comparar entidades entre sí. |
+| Tendencia | `canvas` | Evolución en el tiempo, una o dos series. |
+| Sparkline | `canvas` | Tendencia dentro de una tarjeta, sin ejes. Es gráfico de apoyo. |
+
+### Barra apilada de estado
+
+<Example>
+	<div class="pila" style="max-width:420px">
+		<div class="barra" role="img" aria-label="31 instalaciones vigentes, 6 por vencer y 2 vencidas, de 39"><span class="s-ok" style="width:79.5%"></span><span class="s-warn" style="width:15.4%"></span><span class="s-err" style="width:5.1%"></span></div>
+		<div class="leyenda"><span><i class="mu s-ok"></i>Vigentes <b>31</b></span><span><i class="mu s-warn"></i>Por vencer <b>6</b></span><span><i class="mu s-err"></i>Vencidas <b>2</b></span></div>
+	</div>
+</Example>
+
+- **Colores del [semáforo](/fundamentos/color/#semáforo)**: `.s-ok`, `.s-warn`, `.s-err`, `.s-block`,
+  `.s-pause`. Cada segmento declara su ancho en porcentaje.
+- **Segmentos separados con superficie**, no con hueco: `border-left: 2px solid var(--surface)`. Un
+  hueco transparente deja ver el carril y parece un valor más.
+- **Un conteo medido en cero no se pinta.** Si no hay vencidas, no hay segmento rojo ni etiqueta en
+  la leyenda: con el total declarado, la ausencia se lee como cero.
+- **La barra es una imagen con texto**: `role="img"` y un `aria-label` con todos los valores y el
+  total.
+
+### Barra de progreso
+
+<Example>
+	<div class="progreso" style="max-width:320px">
+		<div class="via"><i style="width:67%"></i></div>
+		<div class="lectura"><span><b>20</b> de <b>30</b> instalaciones</span><span><b>67%</b></span></div>
+	</div>
+</Example>
+
+- Úsala solo contra una **meta declarada**. Sin meta, la cifra va sola.
+- La lectura dice las dos cifras y el porcentaje: el relleno solo no se puede leer con precisión.
+
+### Leyenda inline
+
+<Example>
+	<div class="leyenda"><span><i class="mu s-1"></i>Industrial <b>14</b></span><span><i class="mu s-2"></i>Agrícola <b>8</b></span><span><i class="mu s-3"></i>Comercial <b>5</b></span></div>
+</Example>
+
+- **El texto nunca va del color de la serie.** Rótulo en `--text-2` y cifra en `--text`; el color lo
+  lleva la marca de 9px. Así se lee sobre cualquier superficie.
+- Con estados, usa las clases del semáforo (`.s-ok`…); con categorías, las de serie (`.s-1` a `.s-4`).
+
+## Reglas de lectura
+
+- **Un solo eje.** Nunca dos escalas verticales en la misma gráfica: dos medidas de magnitud distinta
+  son dos gráficas.
+- **Un conteo medido en cero no se pinta.** Es distinto de un dato que no se puede medir: aquí el dato
+  existe y vale cero; un dato sin permiso va como [vista vacía](/patrones/vistas-de-estado/#tipos-de-vacío).
+- **Un grupo entero en cero se pinta como vacío.** Cuatro tarjetas marcando 0 son cuatro cajas para
+  decir que no hay nada: usa la vista vacía del widget.
+- **El texto nunca se pinta del color de la serie.** Valores, rótulos y leyendas van en tinta de
+  texto.
+- **Marcas finas y rejilla discreta.** Línea de 2px, punto de 8px o más, rejilla en `--border`, y 2px
+  de superficie entre segmentos contiguos.
+- **El lienzo reserva la mitad de la marca más gruesa** (`layout.padding: 4`). Sin ese margen, una
+  línea que toca el máximo se ve cortada por la mitad en el borde.
+- **La serie y la cifra del mismo widget miden lo mismo y cuadran.** «Instalaciones este mes» trae
+  las semanas de este mes, y si la serie descompone la cifra, suma la cifra. Compruébalo sumando en la
+  tabla equivalente.
+- **Color según el trabajo del dato.** Si el dato emite un juicio, [semáforo](/fundamentos/color/#semáforo);
+  si solo distingue categorías, [series de gráfica](/fundamentos/color/#series-de-gráfica). Un color de
+  estado nunca se reutiliza como serie.
+- **La forma no cambia la regla de color.** Un reparto entre estados dibujado como lista de barras
+  horizontales sigue llevando el color de cada estado, no el mismo color para todas.
+
+<Guidelines>
+	<Guideline type="do" caption="El texto en tinta de texto; el color, en la marca.">
+		<div class="leyenda"><span><i class="mu s-ok"></i>Vigentes <b>31</b></span><span><i class="mu s-err"></i>Vencidas <b>2</b></span></div>
+	</Guideline>
+	<Guideline type="dont" caption="Texto del color de la serie: pierde contraste según la superficie.">
+		<div class="leyenda"><span style="color:var(--ok)"><i class="mu s-ok"></i>Vigentes 31</span><span style="color:var(--err)"><i class="mu s-err"></i>Vencidas 2</span></div>
+	</Guideline>
+</Guidelines>
+
+## Rejilla
+
+`.dash` es una rejilla de doce columnas. Cada widget declara cuántas ocupa.
+
+| Clase | Contenedor ≥ 640px | 480–639px | Menos de 480px |
+|---|---|---|---|
+| `.w-3` | 3 columnas | 6 | 12 |
+| `.w-4` | 4 columnas | 6 | 12 |
+| `.w-6` | 6 columnas | 12 | 12 |
+| `.w-8` | 8 columnas | 12 | 12 |
+
+- **Responde al ancho de su contenedor** (`container-type: inline-size`), no al de la ventana: el
+  mismo tablero funciona con la barra lateral abierta o cerrada.
+- **`align-items: start` por omisión.** Una tarjeta alta no estira a sus vecinas; igualar alturas
+  obliga a las tarjetas cortas a inventar relleno.
+- **`.dash.pares`** pasa a `align-items: stretch`. Úsala solo cuando una fila son widgets
+  equivalentes que se leen como conjunto, por ejemplo tres cifras del día.
+
+## Composiciones
+
+Combinaciones fijas de piezas. Repítelas en lugar de reinventarlas.
+
+| Composición | Qué es |
+|---|---|
+| Tarjeta de entidad | Nombre + total + `.barra` + solo los conteos accionables. En reposo, cuatro cifras como máximo. |
+| Desglose en cascada | El eje secundario (dónde está cada orden) detrás de un botón con `aria-expanded`, dentro de la tarjeta de su entidad. |
+| Contador de marca | Una marca que convive con la barra sin ser uno de sus estados («observadas»). Va en `--block`, nunca en `--err`. |
+| Nota de método | Explica cómo se mide lo que muestra la tarjeta. Usa el [aviso](/componentes/aviso/) `.note`: es explicación, nunca caja roja. |
+
+## Accesibilidad
+
+- Cada widget es una `<section>` con `aria-labelledby` apuntando al encabezado de su cabecera.
+- La barra apilada lleva `role="img"` y un `aria-label` con todos los valores y el total.
+- Cada `<canvas>` lleva `aria-label` y su tabla equivalente en un `<details>`.
+- La tabla equivalente usa `<th scope="row">` para la categoría y un `<caption>` oculto.
+
+## Tokens
+
+<TokenTable names={['ok', 'warn', 'err', 'block', 'pause', 'serie-1', 'serie-2', 'serie-3', 'serie-4', 'surface', 'surface-2', 'border', 'border-2', 'accent', 'fs-kpi', 'fs-meta', 'r-card', 'r-pill', 'sh-rest']} />
+
+## Relacionados
+
+- [Fila de cifras](/componentes/fila-cifras/)
+- [Tarjeta](/componentes/tarjeta/)
+- [Vistas de estado](/patrones/vistas-de-estado/)
+- [Color](/fundamentos/color/)

@@ -1,0 +1,33 @@
+/* Ficha de detalle: indicador de urgencia en la columna derecha y contacto en fila bajo la cabecera. */
+.dpe .cab .urgencia {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-3);
+	padding: var(--sp-4) var(--sp-5);
+	border-radius: var(--r-card);
+	background: var(--warn-bg);
+	color: var(--warn-ink);
+	font-size: var(--fs-dense);
+}
+.dpe .cab .urgencia .cifra {
+	font-size: var(--fs-kpi);
+	font-weight: 600;
+	line-height: 1.1;
+	font-variant-numeric: tabular-nums;
+}
+.dpe .contacto-fila {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--sp-2) var(--sp-6);
+	padding: var(--sp-3) var(--sp-6);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-card);
+	font-size: var(--fs-dense);
+	color: var(--text-2);
+}
+.dpe .contacto-fila b {
+	color: var(--text);
+	font-weight: 600;
+}

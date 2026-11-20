@@ -1,0 +1,221 @@
+---
+title: Composición y grid
+description: Cómo se ordenan varias piezas en una pantalla, qué proporción toma cada columna y qué pasa cuando el contenido de un bloque crece más que el de otro.
+---
+
+import Example from '../../../components/Example.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/composicion.css';
+
+## Lectura, control, objeto
+
+El orden de una pantalla es fijo:
+
+1. **Lectura** — lo que se lee primero: el [resumen de estatus](/componentes/resumen-estatus/).
+2. **Control** — lo que decide qué se ve: buscador y filtros, en la misma fila.
+3. **Objeto** — aquello sobre lo que se actúa: la [tabla](/componentes/tabla/).
+
+<Guidelines>
+	<Guideline type="do" caption="El buscador va en la fila de los filtros: hace el mismo trabajo, acotar qué filas se ven.">
+		<div class="comp-pila">
+			<div class="comp-caja"><b>Resumen</b></div>
+			<div class="comp-fila"><div class="comp-caja a" style="flex:1"><Icon name="search" size="sm" />Buscador</div><div class="comp-caja a"><Icon name="filter_list" size="sm" />Filtros</div></div>
+			<div class="comp-caja alto"><b>Tabla</b></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="El buscador en su propia fila parece un cuarto bloque sin relación con nada.">
+		<div class="comp-pila">
+			<div class="comp-caja"><b>Resumen</b></div>
+			<div class="comp-caja a"><Icon name="search" size="sm" />Buscador</div>
+			<div class="comp-caja a"><Icon name="filter_list" size="sm" />Filtros</div>
+			<div class="comp-caja alto"><b>Tabla</b></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+El buscador acota por texto libre; los filtros, por valor exacto. Ver
+[Filtrar y buscar](/patrones/filtrar-y-buscar/).
+
+## Proporción de columna
+
+Hay tres casos, no dos. Elegir el que no corresponde produce el comportamiento correcto para el
+caso equivocado.
+
+| Caso | Ejemplo | Úsalo para |
+|---|---|---|
+| px fijo | `240px 1fr` | Una columna que nunca cambia: navegación lateral, un elemento de tamaño constante |
+| fr puro | `1.6fr 1fr` | Dos bloques que crecen juntos y conservan su proporción: detalle y acciones |
+| fr acotado | `minmax(0, 1.6fr) minmax(300px, 360px)` | Una columna con contenido de ancho variable que no debe aplastarse ni crecer sin límite: una ficha, una lista de eventos |
+
+<Example title="Arrastra la esquina inferior derecha para cambiar el ancho">
+	<div class="comp-redim">
+		<div class="comp-pila"><span class="comp-rotulo">px fijo · 240px 1fr</span><div class="comp-grid" style="grid-template-columns:240px 1fr"><div class="comp-caja a">A · 240px</div><div class="comp-caja">B · 1fr</div></div></div>
+		<div class="comp-pila"><span class="comp-rotulo">fr puro · 1.6fr 1fr</span><div class="comp-grid" style="grid-template-columns:1.6fr 1fr"><div class="comp-caja a">A · 1.6fr</div><div class="comp-caja">B · 1fr</div></div></div>
+		<div class="comp-pila"><span class="comp-rotulo">fr acotado · minmax(0, 1.6fr) minmax(300px, 360px)</span><div class="comp-grid" style="grid-template-columns:minmax(0,1.6fr) minmax(300px,360px)"><div class="comp-caja">A · fluye</div><div class="comp-caja a">B · entre 300 y 360px</div></div></div>
+	</div>
+</Example>
+
+El mismo criterio aplica en filas apiladas: una cabecera de alto fijo sobre contenido que fluye
+(`40px 1fr`), dos paneles en proporción fija (`1.6fr 1fr`), o una lista que fluye junto a un
+resumen acotado (`1fr minmax(64px, 96px)`). Para que varios grupos repartan todo el ancho de una
+fila, usa `repeat(3, minmax(200px, 1fr))`.
+
+## Un contenedor no cede su tamaño a un descendiente
+
+**Ancho.** Si la tarjeta crece porque el layout le da más espacio, su contenido crece con ella. Un
+`max-width` heredado de otro layout deja la tarjeta ancha y el dato atrapado en su ancho viejo,
+con una franja vacía al lado.
+
+<Guidelines>
+	<Guideline type="do" caption="El hijo ocupa el ancho de la tarjeta con flex: 1.">
+		<div class="comp-tarjeta">
+			<span class="comp-rotulo">Cartera vencida</span>
+			<b class="tnum" style="font-size:var(--fs-title)">$184,500</b>
+			<div class="comp-barra" style="flex:1"><i style="width:57%;background:var(--serie-1)"></i><i style="width:23%;background:var(--serie-2)"></i><i style="width:20%;background:var(--serie-3)"></i></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Un max-width copiado de otro layout: la tarjeta creció, la barra no.">
+		<div class="comp-tarjeta">
+			<span class="comp-rotulo">Cartera vencida</span>
+			<b class="tnum" style="font-size:var(--fs-title)">$184,500</b>
+			<div class="comp-barra" style="max-width:120px"><i style="width:57%;background:var(--serie-1)"></i><i style="width:23%;background:var(--serie-2)"></i><i style="width:20%;background:var(--serie-3)"></i></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+- Declara el hijo con `flex: 1` (o `width: 100%` en grid), nunca con un límite fijo.
+- **Cómo se comprueba:** compara el `getBoundingClientRect()` del hijo con el de la tarjeta. Si el
+  hijo no llega al borde interior, algo lo limita.
+- **Excepción:** una lista de renglones cortos sobre una banda (la
+  [fila desplegable](/componentes/fila-desplegable/)) no crece con el contenedor: se acota al área
+  visible con `width: 100cqw` y `container-type: inline-size` en el ancestro. Nunca a un ancho fijo,
+  que deja las líneas a medias y la acción del final fuera de la vista.
+
+**Alto.** Lo mismo en el eje vertical: una columna con `height: auto` se queda con el alto de su
+contenido y se corta antes de tiempo aunque haya espacio debajo. Con `height: 100%` llena el carril
+que le dio el layout.
+
+## Comparar exige igualar
+
+En una fila de tarjetas, el valor por omisión es `align-items: start`: cada tarjeta a su alto
+real.
+
+- Usa `align-items: stretch` solo cuando las tarjetas **se comparan entre sí**: mismo criterio,
+  mismo campo. Ahí, alturas distintas sugieren importancias distintas. Dales también el mismo
+  número de columnas.
+- Fuera de ese caso, `stretch` obliga a las tarjetas cortas a inventar un relleno vacío que no
+  significa nada.
+
+<Example title="Tres plantas comparadas: stretch" noCode>
+	<div class="comp-grid" style="grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch">
+		<div class="comp-caja" style="align-items:flex-start;flex-direction:column"><b>Planta Monterrey</b><span>24 paneles</span></div>
+		<div class="comp-caja" style="align-items:flex-start;flex-direction:column"><b>Agrícola San Miguel</b><span>18 paneles</span><span>Inversor en revisión</span></div>
+		<div class="comp-caja" style="align-items:flex-start;flex-direction:column"><b>Grupo Industrial Bajío</b><span>40 paneles</span></div>
+	</div>
+</Example>
+
+## La cadena de `min-height: 0`
+
+Un contenedor con scroll interno dentro de un flex o un grid necesita `min-height: 0` en **cada**
+eslabón, desde el marco hasta el elemento con scroll. El `min-height` por omisión de un ítem flex
+es `auto`: «no me encojas por debajo de mi contenido». Basta un eslabón sin `min-height: 0` para
+que el contenido empuje el marco hacia afuera en vez de hacer scroll dentro.
+
+<Example noCode>
+	<div class="comp-marcos">
+		<div class="comp-pila"><span class="comp-rotulo">Con la cadena completa</span><div class="comp-marco cadena"><header>Bitácora</header><div class="medio"><ul class="lista"><li>OT-1042 creada</li><li>Visita agendada</li><li>Paneles entregados</li><li>Inversor instalado</li><li>Prueba de arranque</li><li>Orden cerrada</li></ul></div></div></div>
+		<div class="comp-pila"><span class="comp-rotulo">Falta un eslabón</span><div class="comp-marco"><header>Bitácora</header><div class="medio"><ul class="lista"><li>OT-1042 creada</li><li>Visita agendada</li><li>Paneles entregados</li><li>Inversor instalado</li><li>Prueba de arranque</li><li>Orden cerrada</li></ul></div></div></div>
+	</div>
+</Example>
+
+```css
+.marco  { display: flex; flex-direction: column; height: 100%; min-height: 0; }
+.medio  { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.lista  { flex: 1; overflow: auto; min-height: 0; }
+```
+
+## Cierre garantizado y su límite
+
+Dos columnas que no se comparan (una columna principal y una barra lateral) a veces deben terminar
+en el mismo punto. Un cierre casi igual, por coincidencia de contenido, se lee como un error.
+
+Cierra por construcción: `align-items: stretch` en el contenedor y `flex: 1` en el último bloque de
+la columna más corta.
+
+**Aplícalo solo si se cumplen las dos condiciones a la vez:**
+
+1. La diferencia de alto es chica: unos pocos píxeles, no decenas.
+2. El espacio sobrante cae donde no se nota: el relleno al final de una lista, el margen bajo una
+   tabla.
+
+Si falta cualquiera, deja el desnivel natural con `align-items: start`. Un bloque estructurado
+(una tabla, un formulario) estirado muchos píxeles deja un rectángulo vacío dentro de su borde, y
+se lee como una tarjeta rota.
+
+<Guidelines>
+	<Guideline type="do" caption="Diferencia chica, absorbida por el final de una lista: el cierre no se nota.">
+		<div class="comp-grid" style="grid-template-columns:1.6fr 1fr;align-items:stretch">
+			<div class="comp-caja alto" style="min-height:150px"><b>Solicitud</b></div>
+			<div class="comp-pila"><div class="comp-caja" style="min-height:80px;align-items:flex-start"><b>La cuenta</b></div><div class="comp-caja" style="flex:1;align-items:flex-start"><b>Bitácora</b></div></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Una tabla estirada mucho más que su contenido deja un hueco vacío dentro del borde.">
+		<div class="comp-grid" style="grid-template-columns:1.6fr 1fr;align-items:stretch">
+			<div class="comp-caja" style="flex-direction:column;align-items:stretch;justify-content:flex-start;padding:0"><b style="padding:var(--sp-2) var(--sp-3);border-bottom:1px solid var(--border)">Partidas</b><span style="padding:var(--sp-2) var(--sp-3)">3 partidas</span></div>
+			<div class="comp-caja alto" style="min-height:150px"><b>Traza de la decisión</b></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Un alto que viene del dato necesita un plan de contenido
+
+Algunos bloques miden lo que vale un dato: un evento de la [agenda](/componentes/agenda/) mide su
+duración. Ese alto no puede crecer para que quepa el contenido: dejaría de comunicar la duración.
+El contenido es el que se reduce, con un orden de prioridad explícito.
+
+<Guidelines>
+	<Guideline type="do" caption="Cada línea con flex-shrink: 0; las que no caben se retiran completas, de menor a mayor prioridad.">
+		<div class="comp-agenda">
+			<div class="comp-evento" style="height:24px"><span>09:00 · Solar del Norte</span></div>
+			<div class="comp-evento" style="height:48px"><span>10:00 · Planta Monterrey</span><span>Instalación</span></div>
+			<div class="comp-evento" style="height:72px"><span>12:00 · Agrícola San Miguel</span><span>Mantenimiento</span><span>Cuadrilla 2</span><span>Confirmada</span></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Sin plan: las líneas se encogen por debajo de su alto y el texto se corta a media línea.">
+		<div class="comp-agenda">
+			<div class="comp-evento aplasta" style="height:48px"><span>10:00 · Planta Monterrey</span><span>Instalación</span><span>Cuadrilla 2</span><span>Confirmada</span></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+Dos fallas aparecen si no lo planeas:
+
+- **`overflow: hidden` recorta a medias.** El texto se corta a mitad de línea en vez de mostrarse
+  completo o retirarse.
+- **El encogido no se detecta.** En una columna flex de alto fijo, cada línea tiene
+  `flex-shrink: 1`. Si no caben, el navegador no desborda: encoge cada línea por debajo de su
+  `line-height` y el texto se superpone consigo mismo. Como ya «cabe», `scrollHeight` no lo
+  detecta. Una línea con su propio `overflow: hidden` (para truncar con elipsis) pierde además su
+  alto mínimo y se aplasta hasta donde haga falta.
+
+**El mecanismo, en dos partes:**
+
+1. `flex-shrink: 0` en cada línea del bloque. Sin esto el desborde ni siquiera se puede medir.
+2. Con el encogido desactivado, mide `scrollHeight > clientHeight` y retira **líneas completas**,
+   de menor a mayor prioridad, hasta que quepa. Nunca recortes una línea a la mitad.
+
+La información retirada no desaparece: sigue en el `aria-label` y el `title` del bloque, y en el
+detalle que abre al pulsarlo.
+
+Ejecuta el ajuste **después** de insertar el bloque y sus ancestros en el documento. Antes de eso
+el subárbol no tiene su ancho final, y `clientHeight` y `scrollHeight` devuelven medidas que el
+navegador descartará en el siguiente reflujo.
+
+## Relacionados
+
+- [Espaciado](/fundamentos/espaciado/)
+- [Tarjeta](/componentes/tarjeta/)
+- [Dashboard](/patrones/dashboard/)
+- [Cromo de aplicación](/layout/cromo/)

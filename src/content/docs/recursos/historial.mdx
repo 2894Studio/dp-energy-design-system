@@ -1,0 +1,48 @@
+---
+title: Historial de cambios
+description: Versiones publicadas del sistema de diseño D.P. Energy y qué cambia en cada una.
+---
+
+## 3.0.0 — 20 de noviembre de 2026
+
+Primera versión del sistema de diseño de D.P. Energy.
+
+**Documentación**
+
+- Una página por recurso: fundamentos, componentes, patrones, diseño de página, contenido y recursos.
+- Búsqueda en todo el sitio.
+- Demos vivas con su código, generado del mismo marcado que se pinta.
+- Temas claro y oscuro en toda la documentación y en cada demo.
+
+**Recursos**
+
+- [Tokens](/recursos/tokens/) en una sola fuente con formato DTCG, de la que se generan el CSS y la
+  tabla de esta documentación.
+- [Íconos](/fundamentos/iconografia/) como sprite SVG.
+- [Fuentes](/recursos/descargas/#fuentes) autoalojadas: Inter Variable y Michroma, sin CDN.
+
+**Reglas incluidas**
+
+Todas las reglas vigentes del sistema base, entre ellas:
+
+- Estado por eje en las [etiquetas](/componentes/etiqueta/) y la variante neutra `.p-neutro`.
+- Escala de interlineado en la [tipografía](/fundamentos/tipografia/).
+- Zona segura del [botón flotante](/componentes/boton-flotante/).
+- Diseño de la [fila desplegable](/componentes/fila-desplegable/).
+- [Tarjeta](/componentes/tarjeta/) con pie.
+- [Agenda](/componentes/agenda/).
+- [Hilo de conversación](/componentes/hilo-conversacion/).
+- [Logotipo](/fundamentos/logotipo/) como sección propia.
+
+## Versionado
+
+El número de versión sigue la forma `mayor.menor.parche`.
+
+| Sube | Cuando | Ejemplo |
+|---|---|---|
+| Parche | Se aclara una regla sin cambiar el comportamiento. | Un ejemplo nuevo, una redacción más precisa. |
+| Menor | Se añade una regla o un componente. | Un componente nuevo, una regla de lectura nueva. |
+| Mayor | Cambia el valor de un token que ya está en uso. | `--accent` pasa a otro verde. |
+
+Un cambio mayor obliga a revisar todas las pantallas que consumen el token: el valor cambia aunque
+nadie toque su CSS.

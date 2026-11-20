@@ -1,0 +1,93 @@
+---
+title: Primeros pasos
+description: Cómo instalar los tokens, las fuentes y los íconos, y cómo usar esta documentación.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import Example from '../../components/Example.astro';
+import Icon from '../../components/Icon.astro';
+
+El sistema son tres piezas: **tokens** (colores, medidas, tiempos), **recursos** (fuentes e
+íconos) y **componentes** (marcado y CSS). Los componentes solo usan tokens; ningún valor se
+escribe a mano.
+
+## Instalar
+
+<Steps>
+
+1. **Tokens.** Descarga [`dp-energy-tokens.css`](/descargas/dp-energy-tokens.css) y cárgalo antes que
+   cualquier otra hoja de estilos. Define los dos temas: el claro en `:root` y el oscuro con
+   `data-theme="dark"` en `<html>` o, sin atributo, según `prefers-color-scheme`.
+
+   ```html
+   <link rel="stylesheet" href="/css/dp-energy-tokens.css" />
+   ```
+
+2. **Fuentes.** Inter para la interfaz y Michroma para el wordmark, autoalojadas. Nunca desde un
+   CDN: si el CDN no responde, la pantalla cae a la fuente del sistema sin ningún error visible.
+
+   ```css
+   @font-face {
+     font-family: 'Inter Variable';
+     font-weight: 100 900;
+     font-display: swap;
+     src: url('/fuentes/inter-variable.woff2') format('woff2');
+   }
+   @font-face {
+     font-family: 'Michroma';
+     font-weight: 400;
+     font-display: swap;
+     src: url('/fuentes/michroma.woff2') format('woff2');
+   }
+   ```
+
+3. **Íconos.** Pega el contenido de [`dp-energy-icons.svg`](/descargas/dp-energy-icons.svg) una sola
+   vez al inicio del `<body>` y oculto. Cada ícono se usa por referencia:
+
+   ```html
+   <svg class="ico" aria-hidden="true"><use href="#i-search" /></svg>
+   ```
+
+4. **Componentes.** Copia el marcado y el CSS de la página de cada componente. Todos los ejemplos
+   de esta documentación son el código real: abre «Código» bajo cualquier demo.
+
+</Steps>
+
+## Cómo leer una página de componente
+
+Todas siguen el mismo orden, para que encuentres lo mismo en el mismo lugar:
+
+| Sección | Qué responde |
+|---|---|
+| Demo | Cómo se ve y cómo se comporta. Es interactiva. |
+| Cuándo usarlo | Cuándo sí, cuándo no y qué usar en su lugar. |
+| Anatomía | Las partes y su nombre. |
+| Variantes | Qué clase usar para cada caso. |
+| Estados | Sobrevuelo, foco, desactivado, ocupado, error. |
+| Uso | Pares Hacer / No hacer. |
+| Accesibilidad | Roles, atributos, teclado y contraste. |
+| Tokens | Qué tokens consume. |
+
+<Example title="Pruébalo: abre «Código» debajo" >
+	<div class="fila">
+		<button class="btn p" type="button"><Icon name="search" />Buscar</button>
+		<span class="pill p-ok"><Icon name="check_circle" />Vigente</span>
+		<span class="ambito"><Icon name="location_on" />Planta Monterrey</span>
+	</div>
+</Example>
+
+## Buscar
+
+Pulsa <kbd>Ctrl</kbd> + <kbd>K</kbd> (o <kbd>⌘</kbd> + <kbd>K</kbd>) para buscar en toda la
+documentación: componentes, reglas y nombres de token.
+
+## Tema
+
+El selector de la barra superior cambia entre claro, oscuro o automático. Las demos y las muestras
+de color cambian con él: lo que ves es el valor real de cada token en ese tema.
+
+## Proponer un cambio
+
+1. Aplica el cambio en la página del recurso y, si toca un valor, en `src/tokens/tokens.json`.
+2. Repasa el [checklist de componente nuevo](/recursos/checklist/).
+3. Anota el cambio en el [historial](/recursos/historial/) con su versión.

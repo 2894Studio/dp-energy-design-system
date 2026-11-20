@@ -1,0 +1,27 @@
+/* Muestras de la página Fundamentos › Radios. */
+.dpe .radio-muestras {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+	gap: var(--sp-4);
+	width: 100%;
+}
+.dpe .radio-muestras figure {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-2);
+}
+.dpe .radio-muestras .forma {
+	height: 72px;
+	background: var(--surface);
+	border: 1px solid var(--border-ctrl);
+}
+.dpe .radio-muestras figcaption {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+}
+.dpe .radio-muestras figcaption code {
+	color: var(--text);
+}

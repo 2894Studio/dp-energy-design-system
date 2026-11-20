@@ -1,0 +1,38 @@
+/*
+ * Patrón filtrar y buscar: composición resumen → buscador + filtros → tabla.
+ * Se importa desde patrones/filtrar-y-buscar.mdx.
+ * El filtrado de la demo es real: CSS con :has() sobre el aria-pressed de cada control.
+ */
+
+.dpe .fyb {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-4);
+}
+
+/* Filtro rápido de tipo interruptor: mismo resalte que un filtro aplicado */
+.dpe .f[aria-pressed='true'] {
+	border-color: var(--accent);
+	background: var(--accent-soft);
+	color: var(--text);
+}
+
+/* Cifra de lectura: misma forma que el chip de resumen, sin promesa de clic */
+.dpe .schip.solo-lectura {
+	cursor: default;
+}
+
+/* Resumen: con algún chip pulsado, solo quedan las filas de los estados pulsados */
+.dpe .fyb:has(.schip[aria-pressed='true']) tbody tr {
+	display: none;
+}
+.dpe .fyb:has(.schip[data-estado='ok'][aria-pressed='true']) tbody tr[data-estado='ok'],
+.dpe .fyb:has(.schip[data-estado='warn'][aria-pressed='true']) tbody tr[data-estado='warn'] {
+	display: table-row;
+}
+
+/* Filtros: cada uno acota además del resumen (van después para ganar en empate) */
+.dpe .fyb:has(.f[data-solo='corp'][aria-pressed='true']) tbody tr:not([data-tipo='corp']),
+.dpe .fyb:has(.f[data-solo='mty'][aria-pressed='true']) tbody tr:not([data-planta='mty']) {
+	display: none;
+}

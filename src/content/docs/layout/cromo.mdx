@@ -1,0 +1,116 @@
+---
+title: Cromo de aplicación
+description: Barra lateral de navegación, barra superior y zona de contenido. El cromo es estructura y tiene paleta propia.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="app" id="demo-cromo">
+		<nav class="side" aria-label="Principal">
+			<div class="marca"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:24px" />D.P. Energy</div>
+			<p class="grp">PRINCIPAL</p>
+			<a class="it" href="#demo-cromo" aria-current="page"><Icon name="home" />Inicio</a>
+			<a class="it" href="#demo-cromo"><Icon name="group" />Clientes</a>
+			<p class="grp">OPERACIÓN</p>
+			<a class="it" href="#demo-cromo"><Icon name="description" />Órdenes<span class="cuenta">3<span class="sr"> pendientes</span></span></a>
+			<a class="it" href="#demo-cromo"><Icon name="calendar_month" />Agenda</a>
+			<a class="it" href="#demo-cromo"><Icon name="settings" />Configuración</a>
+		</nav>
+		<div class="main">
+			<header class="barra-sup">
+				<strong style="font-size:var(--fs-sub);flex:1">Inicio</strong>
+				<button class="iconbtn" type="button" aria-label="Avisos, 3 sin leer" title="Avisos"><Icon name="notifications" /></button>
+				<button class="iconbtn" type="button" aria-label="Mi cuenta" title="Mi cuenta"><Icon name="person" /></button>
+			</header>
+			<div class="pila" style="padding:var(--sp-6)">
+				<span class="muted">Zona de contenido</span>
+			</div>
+		</div>
+	</div>
+</Example>
+
+## Anatomía
+
+1. **Barra lateral** (`.side`) — fondo `--chrome`, ancho fijo, `flex-shrink: 0`.
+2. **Marca** (`.side .marca`) — isotipo y wordmark «D.P. Energy». Ver [Logotipo](/fundamentos/logotipo/).
+3. **Rótulo de grupo** (`.grp`) — 10,5px con espaciado de letra: la única excepción al suelo de
+   12px. Ver [Tipografía](/fundamentos/tipografia/).
+4. **Ítem** (`.it`) — ícono y texto, 38px de alto mínimo.
+5. **Contador** (`.cuenta`) — avisos pendientes de esa sección.
+6. **Zona principal** (`.main`) — `flex: 1` y `min-width: 0`, para que una tabla ancha haga scroll
+   dentro y no empuje la página.
+7. **Barra superior** (`.barra-sup`) — título de la pantalla y acciones globales.
+
+```css
+.app  { display: flex; min-height: 100vh; }
+.side { width: 220px; flex-shrink: 0; background: var(--chrome); color: var(--chrome-ink); }
+.main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+```
+
+## Estados del ítem
+
+| Estado | Comportamiento |
+|---|---|
+| Reposo | Texto `--chrome-dim` |
+| Sobrevuelo | Fondo `--chrome-hover`, texto `--chrome-ink` |
+| Actual | `aria-current="page"`: fondo `--chrome-activo`, texto `--chrome-ink` en 600 y filete izquierdo de 3px en `--ok` |
+| Foco | Anillo en `--chrome-focus` |
+
+El ítem actual se marca con `aria-current="page"`, no con una clase: el mismo atributo da el estilo
+y lo anuncia al lector de pantalla.
+
+## Paleta del cromo
+
+El cromo es oscuro en los dos temas y tiene tokens propios, para que un cambio en las superficies
+del contenido no lo arrastre.
+
+- `--chrome` es solo estructura. Nunca es fondo de página ni de una tarjeta.
+- **Foco:** dentro de `.side` el anillo usa `--chrome-focus`. `--accent` no llega a 3:1 sobre el
+  azul del cromo.
+- **Contador:** usa `--chrome-alerta` con `--chrome-alerta-ink`. El rojo de estado (`--err`) está
+  pensado para caer sobre una superficie clara; sobre el cromo en tema oscuro se funde. Un aviso
+  sobre `--surface` sigue usando el [semáforo](/fundamentos/color/#semáforo).
+
+<Guidelines>
+	<Guideline type="do" caption="El contador sobre el cromo usa --chrome-alerta.">
+		<div class="side" style="width:200px;padding:var(--sp-2)"><span class="it"><Icon name="description" />Órdenes<span class="cuenta">3</span></span></div>
+	</Guideline>
+	<Guideline type="dont" caption="El rojo de estado sobre el cromo: en tema oscuro se funde con el fondo.">
+		<div class="side" style="width:200px;padding:var(--sp-2)"><span class="it"><Icon name="description" />Órdenes<span class="cuenta" style="background:var(--err)">3</span></span></div>
+	</Guideline>
+</Guidelines>
+
+## Anchos
+
+| Ancho de pantalla | Barra lateral |
+|---|---|
+| 1100px o más | Completa: ícono y texto |
+| De 860 a 1100px | Colapsada: solo íconos |
+| Menos de 860px | Cajón que se abre sobre un velo |
+
+En modo colapsado el texto del ítem pasa a etiqueta emergente y a `aria-label`; no desaparece. El
+contador se mantiene sobre el ícono.
+
+## Accesibilidad
+
+- La barra lateral es un `<nav>` con `aria-label`. Si hay más de una navegación, cada una con un
+  nombre distinto.
+- El contador lleva texto para el lector de pantalla: «3 pendientes», no solo «3».
+- Los botones-icono de la barra superior nombran lo que hacen: «Avisos, 3 sin leer».
+- Los íconos de los ítems son decorativos (`aria-hidden="true"`); el nombre es el texto.
+
+## Tokens
+
+<TokenTable groups={['chrome']} />
+
+## Relacionados
+
+- [Color](/fundamentos/color/)
+- [Logotipo](/fundamentos/logotipo/)
+- [Objetivos táctiles](/layout/objetivos-tactiles/)
+- [Composición y grid](/layout/composicion/)

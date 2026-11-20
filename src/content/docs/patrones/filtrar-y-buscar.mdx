@@ -1,0 +1,132 @@
+---
+title: Filtrar y buscar
+description: Cómo se componen el resumen de estatus, el buscador, los filtros y la tabla en una pantalla de lista.
+---
+
+import Example from '../../../components/Example.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/filtrar-y-buscar.css';
+
+<Example title="Pulsa un chip del resumen o un filtro: la tabla se acota">
+	<div class="fyb">
+		<div class="resumen" role="group" aria-label="Resumen por estado">
+			<button class="schip c-ok" type="button" aria-pressed="false" data-estado="ok"><Icon name="check_circle" size="sm" /><b>2</b> vigentes</button>
+			<button class="schip c-warn" type="button" aria-pressed="false" data-estado="warn"><Icon name="schedule" size="sm" /><b>1</b> con documentos pendientes</button>
+			<span class="ambito"><Icon name="location_on" />Todas tus plantas</span>
+		</div>
+		<div class="filtros" role="group" aria-label="Buscar y filtrar clientes">
+			<label class="buscador"><Icon name="search" size="sm" /><span class="sr">Buscar clientes</span><input type="search" placeholder="Buscar cliente o folio" /></label>
+			<button class="f" type="button" aria-pressed="false" data-solo="corp">Solo corporativos</button>
+			<button class="f" type="button" aria-pressed="false" data-solo="mty">Solo Planta Monterrey</button>
+		</div>
+		<div class="tabla-caja">
+			<table>
+				<caption class="sr">Clientes</caption>
+				<thead>
+					<tr><th scope="col">Cliente</th><th scope="col">Tipo</th><th scope="col">Planta</th><th scope="col">Estado</th></tr>
+				</thead>
+				<tbody>
+					<tr data-estado="ok" data-tipo="corp" data-planta="mty"><th scope="row"><span class="rz"><a class="folio" href="/componentes/ficha-detalle/">Solar del Norte</a><small>CLI-1042</small></span></th><td><span class="p-type p-s1">Corporativo</span></td><td>Planta Monterrey</td><td><span class="pill p-ok"><Icon name="check_circle" />Vigente</span></td></tr>
+					<tr data-estado="warn" data-tipo="corp" data-planta="mty"><th scope="row"><span class="rz"><a class="folio" href="/componentes/ficha-detalle/">Grupo Industrial Bajío</a><small>CLI-1057</small></span></th><td><span class="p-type p-s1">Corporativo</span></td><td>Planta Monterrey</td><td><span class="pill p-warn"><Icon name="schedule" />Documentos pendientes</span></td></tr>
+					<tr data-estado="ok" data-tipo="part" data-planta="bajio"><th scope="row"><span class="rz"><a class="folio" href="/componentes/ficha-detalle/">Agrícola San Miguel</a><small>CLI-1063</small></span></th><td><span class="p-type p-s2">Particular</span></td><td>Planta Bajío</td><td><span class="pill p-ok"><Icon name="check_circle" />Vigente</span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</Example>
+
+## Orden de la pantalla
+
+El orden es fijo: **lectura → control → objeto**.
+
+1. **[Resumen de estatus](/componentes/resumen-estatus/)** — qué hay. Es lectura, por eso encabeza.
+2. **Buscador + [filtros](/componentes/barra-filtros/), en una sola fila** — con qué se acota.
+3. **[Tabla](/componentes/tabla/)** — el objeto sobre el que se actúa.
+
+- **El buscador va en la fila de los filtros.** Hace el mismo trabajo que ellos (acotar qué filas se
+  ven) por texto libre en lugar de por valor exacto. En su propia fila parece un bloque suelto sin
+  relación con nada; junto a los filtros, «esto controla la tabla» se lee por cercanía.
+- **El buscador cede rigidez.** Lleva `flex: 1` y un ancho mínimo de unos 200px, para no competir con
+  las pastillas de filtro.
+- **La fila de control tiene su propio aire**: relleno vertical completo, `--sp-4` arriba y abajo. Sin
+  él se pega al resumen y a la tabla a la vez.
+- **El [ámbito](/componentes/ambito/)** dice de qué conjunto hablan las cifras del resumen. Va junto a
+  ellas, en tinta auxiliar.
+
+<Guidelines>
+	<Guideline type="do" caption="Buscador y filtros comparten fila: los dos controlan la tabla.">
+		<div class="filtros">
+			<label class="buscador"><Icon name="search" size="sm" /><span class="sr">Buscar</span><input type="search" placeholder="Buscar cliente" /></label>
+			<button class="f" type="button">Tipo <b>Todos</b><Icon name="expand_more" size="sm" /></button>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Un buscador aislado sobre el resumen flota sin relación con la tabla.">
+		<div class="pila">
+			<label class="buscador"><Icon name="search" size="sm" /><span class="sr">Buscar</span><input type="search" placeholder="Buscar cliente" /></label>
+			<div class="resumen"><span class="schip c-ok solo-lectura"><b>2</b> vigentes</span></div>
+			<div class="filtros"><button class="f" type="button">Tipo <b>Todos</b><Icon name="expand_more" size="sm" /></button></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Un control que parece pulsable, filtra
+
+Un `.schip` con `aria-pressed` o un `.f` con `data-activo` promete que al pulsarlo pasa algo. Si no
+existe el filtrado que lo respalda, el control miente por su forma.
+
+- **Con filtrado real:** chip o filtro como `<button>` con `aria-pressed` o `data-activo`.
+- **Sin filtrado real** (una maqueta, una vista de solo lectura): la cifra se presenta como lectura,
+  sin `aria-pressed`, sin `<button>` y sin cursor de puntero. Pasa a control cuando exista el
+  filtrado.
+
+<Guidelines>
+	<Guideline type="do" caption="Sin filtrado detrás, la cifra se presenta como lectura.">
+		<div class="resumen">
+			<span class="schip c-ok solo-lectura"><Icon name="check_circle" size="sm" /><b>2</b> vigentes</span>
+			<span class="schip c-warn solo-lectura"><Icon name="schedule" size="sm" /><b>1</b> con documentos pendientes</span>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Un botón pulsable que no cambia la tabla promete algo que no cumple.">
+		<div class="resumen">
+			<span class="schip c-ok" role="button" tabindex="0" aria-pressed="true"><Icon name="check_circle" size="sm" /><b>2</b> vigentes</span>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Reglas de filtrado
+
+- **Un filtro, un sitio.** Si un chip del resumen y un desplegable filtran el mismo campo, pulsar el
+  chip actualiza el desplegable, y al revés. El estado del filtro se ve en un único lugar.
+- **El resumen no sobrevive a su propio filtro.** Si la barra ya tiene un desplegable de estatus,
+  retira los chips de estatus. El resumen se queda solo cuando responde a un criterio que ningún
+  filtro cubre. Sus conteos viven en el [dashboard](/patrones/dashboard/).
+- **Un filtro se resalta solo si su valor difiere del predeterminado.** «Tipo: Todos» no filtra nada
+  y no lleva resalte.
+- **Los filtros aplicados se ven y se quitan uno a uno**, con «×» en cada uno, más «Quitar todos los
+  filtros».
+- **Los contadores se agrupan por criterio.** Cifras que responden a preguntas distintas, presentadas
+  iguales, invitan a compararlas. Agrúpalas con un rótulo o deja un solo criterio en el resumen.
+- **El chip del resumen dice lo mismo que la etiqueta de estado que filtra**, con la misma palabra y el
+  mismo color: «1 con documentos pendientes» filtra las filas con la etiqueta «Documentos
+  pendientes».
+- **La razón de un estado va al detalle del registro.** La celda lleva solo la etiqueta; un motivo de
+  largo variable hace que su fila crezca y la tabla deja de leerse como rejilla.
+- **Sin resultados**, la tabla da paso a la [vista vacía por filtro](/patrones/vistas-de-estado/#tipos-de-vacío),
+  con «Quitar filtros» como acción.
+
+## Accesibilidad
+
+- El buscador es una `<label>` que envuelve al campo: toda la pastilla acepta la pulsación y el campo
+  tiene nombre accesible.
+- Resumen y filtros van en grupos con `role="group"` y `aria-label`.
+- Al cambiar el resultado, anuncia el nuevo total en una región `aria-live="polite"`: «12 clientes».
+- Los chips y filtros de tipo interruptor declaran `aria-pressed`; los desplegables, `aria-expanded`.
+
+## Relacionados
+
+- [Resumen de estatus](/componentes/resumen-estatus/)
+- [Barra de filtros](/componentes/barra-filtros/)
+- [Tabla](/componentes/tabla/)
+- [Ámbito de datos](/componentes/ambito/)

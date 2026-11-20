@@ -1,0 +1,71 @@
+---
+/** Muestras de color vivas: cambian con el tema de la página. */
+import tokens from '../tokens/tokens.flat.json';
+
+interface Props {
+	names: string[];
+}
+const { names } = Astro.props;
+const rows = names.map((n) => tokens.find((t) => t.name === `--${n}`)).filter((t) => !!t);
+---
+
+<ul class="dpe-colores not-content">
+	{
+		rows.map((t) => (
+			<li>
+				<span class="dpe-colores__muestra" style={`background:var(${t!.name})`} />
+				<span class="dpe-colores__texto">
+					<code>{t!.name}</code>
+					<span class="dpe-colores__valor">
+						{t!.light}
+						{t!.dark && <> · {t!.dark}</>}
+					</span>
+					<span class="dpe-colores__uso">{t!.description}</span>
+				</span>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.dpe-colores {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(11.5rem, 1fr));
+		gap: 0.75rem;
+		margin: 1.5rem 0;
+		padding: 0;
+		list-style: none;
+	}
+	li {
+		border: 1px solid var(--sl-color-hairline);
+		border-radius: var(--r-card);
+		overflow: hidden;
+		background: var(--sl-color-black);
+	}
+	.dpe-colores__muestra {
+		display: block;
+		height: 4rem;
+		border-bottom: 1px solid var(--sl-color-hairline);
+	}
+	.dpe-colores__texto {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		padding: 0.6rem 0.75rem 0.75rem;
+	}
+	code {
+		font-size: var(--fs-dense);
+		font-weight: 600;
+		color: var(--sl-color-white);
+	}
+	.dpe-colores__valor {
+		font-family: var(--sl-font-mono);
+		font-size: 0.72rem;
+		color: var(--sl-color-gray-3);
+	}
+	.dpe-colores__uso {
+		font-size: var(--fs-meta);
+		line-height: 1.4;
+		color: var(--sl-color-gray-2);
+	}
+</style>

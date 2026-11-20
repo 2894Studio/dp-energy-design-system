@@ -1,0 +1,106 @@
+---
+title: Movimiento
+description: Tres duraciones con techo de 300ms, tres curvas con un trabajo cada una y reducción de movimiento sin perder el estado.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import '../../../styles/components/movimiento.css';
+
+<Example title="Compara las curvas" noCode>
+	<div class="mov-demo">
+		<div class="fila">
+			<button class="btn p mov-ir" type="button" aria-pressed="false">Mover</button>
+			<button class="btn mov-lento" type="button" aria-pressed="false">Cámara lenta ×5</button>
+		</div>
+		<div class="mov-carril mov-out"><span><code>{'--ease-out'}</code><small>Entradas y respuestas</small></span><div class="mov-pista"><div class="mov-viaje"></div></div></div>
+		<div class="mov-carril mov-in-out"><span><code>{'--ease-in-out'}</code><small>De un punto a otro</small></span><div class="mov-pista"><div class="mov-viaje"></div></div></div>
+		<div class="mov-carril mov-spring"><span><code>{'--ease-spring'}</code><small>Solo lo que el usuario movió</small></span><div class="mov-pista"><div class="mov-viaje"></div></div></div>
+	</div>
+</Example>
+
+Los tres puntos recorren la misma distancia en `--dur-enter` (300ms). Con movimiento reducido no
+se desplazan: solo cambian de color.
+
+## Duración
+
+| Token | Valor | Úsala para |
+|---|---|---|
+| `--dur-micro` | 120ms | Sobrevuelo, pulsación, casilla |
+| `--dur-base` | 200ms | Desplegables, popovers, cambio de tema |
+| `--dur-enter` | 300ms | Entrada de vistas |
+
+**300ms es el techo.** Ninguna entrada de vista pasa de `--dur-enter`. Una interfaz que se usa
+todo el día no hace esperar a nadie para ver lo que pidió.
+
+## Curvas
+
+| Token | Úsala para |
+|---|---|
+| `--ease-out` | Entradas y respuestas a una acción del usuario: arranca rápido y frena al llegar |
+| `--ease-in-out` | Un elemento que ya está en pantalla y se mueve de un punto a otro |
+| `--ease-spring` | Solo la píldora de una pestaña y la tarjeta que se arrastra a otra columna |
+
+`--ease-spring` rebasa el valor final y vuelve. En un elemento que el usuario acaba de mover, ese
+rebote confirma que lo soltó. En cualquier otro sitio se lee como inestabilidad.
+
+## Escalonado
+
+`--stagger` (40ms) es el retardo entre los elementos de una lista que entra. Cada elemento
+conserva su propia duración dentro del techo; el escalonado solo desplaza su arranque.
+
+```css
+.lista > li {
+  animation: entra var(--dur-enter) var(--ease-out) both;
+  animation-delay: calc(var(--i) * var(--stagger));
+}
+```
+
+## Movimiento reducido
+
+Reducir no es quitar toda animación. Con `prefers-reduced-motion: reduce` se conservan opacidad y
+color, y se elimina todo desplazamiento y escala.
+
+Los tokens ya lo resuelven: bajo la consulta, las duraciones se acortan y el resorte pasa a lineal.
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-micro: 1ms;
+    --dur-base: 120ms;
+    --dur-enter: 120ms;
+    --ease-spring: linear;
+    --stagger: 0ms;
+  }
+}
+```
+
+Además, cada componente que desplaza o escala quita su `transform` dentro de la misma consulta.
+Los tokens acortan el tiempo; no quitan el desplazamiento.
+
+## Animaciones que se repiten
+
+Una animación que arranca sola y dura más de cinco segundos debe poder detenerse (WCAG 2.2.2).
+
+- **Se pausa pulsando la propia animación.** El contenedor es un `<button>` con `aria-label` que
+  dice qué es y que se puede pausar, y `aria-pressed` con el estado. Sin botón «Pausar» aparte.
+- Una pista de texto («Pausar» / «Reanudar») aparece al apuntar o al recibir foco, y desaparece al
+  salir. Nunca en color de acento.
+- Con movimiento reducido se congela en un fotograma que siga explicando lo que enseñaba, con
+  todo el contenido visible. Nunca en el fotograma inicial vacío.
+- Nada parpadea más de tres veces por segundo.
+
+<Guidelines>
+	<Guideline type="do" caption="La entrada de una vista en 300ms con --ease-out.">
+		<code>{'animation: entra var(--dur-enter) var(--ease-out)'}</code>
+	</Guideline>
+	<Guideline type="dont" caption="Resorte en un desplegable: el rebote se lee como un fallo.">
+		<code>{'transition: height var(--dur-base) var(--ease-spring)'}</code>
+	</Guideline>
+</Guidelines>
+
+## Tokens
+
+<TokenTable groups={['movimiento']} />

@@ -1,0 +1,368 @@
+---
+title: Tabla densa
+description: Lista registros para compararlos y abrirlos. Filas de 40px, primera columna fija, acciones ancladas a la derecha y modo tarjeta en pantallas estrechas.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/tabla.css';
+
+<Example>
+	<div class="tabla-caja apilable" id="tabla-ordenes" role="region" aria-label="Órdenes de instalación" tabindex="0">
+		<table style="min-width:760px">
+			<caption class="sr">Órdenes de instalación con folio, cliente, sucursal, estado y monto</caption>
+			<thead>
+				<tr>
+					<th scope="col" aria-sort="descending"><button class="ordenar" type="button">Folio<Icon name="sort" size="sm" /></button></th>
+					<th scope="col" aria-sort="none"><button class="ordenar" type="button">Cliente<Icon name="sort" size="sm" /></button></th>
+					<th scope="col">Sucursal</th>
+					<th scope="col">Estado</th>
+					<th scope="col" class="num" aria-sort="none"><button class="ordenar" type="button">Monto<Icon name="sort" size="sm" /></button></th>
+					<th scope="col" class="col-acc"><span class="sr">Acciones</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr data-navega>
+					<th scope="row"><a class="folio" href="#tabla-ordenes">OT-1046</a></th>
+					<td data-et="Cliente"><span class="rz">Grupo Industrial Bajío<small>GIB120304KL7</small></span></td>
+					<td data-et="Sucursal">Nave 3 Silao</td>
+					<td data-et="Estado"><span class="pill p-err"><Icon name="error" />Vencida</span></td>
+					<td data-et="Monto" class="num">$128,900</td>
+					<td class="col-acc"><button class="iconbtn mini" type="button" aria-haspopup="menu" aria-label="Más acciones para OT-1046"><Icon name="more_vert" /></button></td>
+				</tr>
+				<tr data-navega>
+					<th scope="row"><a class="folio" href="#tabla-ordenes">OT-1045</a></th>
+					<td data-et="Cliente"><span class="rz">Solar del Norte<small>SNO180512AB3</small></span></td>
+					<td data-et="Sucursal">Planta Saltillo</td>
+					<td data-et="Estado"><span class="pill p-pause"><Icon name="pause_circle" />En pausa</span></td>
+					<td data-et="Monto" class="num">$56,750</td>
+					<td class="col-acc"><button class="iconbtn mini" type="button" aria-haspopup="menu" aria-label="Más acciones para OT-1045"><Icon name="more_vert" /></button></td>
+				</tr>
+				<tr data-navega>
+					<th scope="row"><a class="folio" href="#tabla-ordenes">OT-1044</a></th>
+					<td data-et="Cliente"><span class="rz">Agrícola San Miguel<small>ASM090221QW1</small></span></td>
+					<td data-et="Sucursal">Rancho El Mezquite</td>
+					<td data-et="Estado"><span class="pill p-ok"><Icon name="check_circle" />Concluida</span></td>
+					<td data-et="Monto" class="num">$310,000</td>
+					<td class="col-acc"><button class="iconbtn mini" type="button" aria-haspopup="menu" aria-label="Más acciones para OT-1044"><Icon name="more_vert" /></button></td>
+				</tr>
+				<tr data-navega>
+					<th scope="row"><a class="folio" href="#tabla-ordenes">OT-1043</a></th>
+					<td data-et="Cliente"><span class="rz">Grupo Industrial Bajío<small>GIB120304KL7</small></span></td>
+					<td data-et="Sucursal">Planta León</td>
+					<td data-et="Estado"><span class="pill p-warn"><Icon name="schedule" />Por vencer</span></td>
+					<td data-et="Monto" class="num">$92,300</td>
+					<td class="col-acc"><button class="iconbtn mini" type="button" aria-haspopup="menu" aria-label="Más acciones para OT-1043"><Icon name="more_vert" /></button></td>
+				</tr>
+				<tr data-navega>
+					<th scope="row"><a class="folio" href="#tabla-ordenes">OT-1042</a></th>
+					<td data-et="Cliente"><span class="rz">Solar del Norte<small>SNO180512AB3</small></span></td>
+					<td data-et="Sucursal">Planta Monterrey</td>
+					<td data-et="Estado"><span class="pill p-neutro"><Icon name="calendar_month" />Programada</span></td>
+					<td data-et="Monto" class="num">$184,500</td>
+					<td class="col-acc"><button class="iconbtn mini" type="button" aria-haspopup="menu" aria-label="Más acciones para OT-1042"><Icon name="more_vert" /></button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para listar registros del mismo tipo que se comparan entre filas y se abren uno a uno: órdenes,
+  clientes, sucursales, cotizaciones.
+- Para mostrar el detalle de un registro sin salir de la lista, añade una
+  [fila desplegable](/componentes/fila-desplegable/).
+- Para una rejilla persona × día, usa la [agenda](/componentes/agenda/): no pasa a modo tarjeta.
+- Para tres o cuatro cifras de resumen, usa la [fila de cifras](/componentes/fila-cifras/), no una
+  tabla de una fila.
+
+## Anatomía
+
+<Example noCode>
+	<div class="tabla-caja">
+		<table>
+			<thead>
+				<tr>
+					<th scope="col">Folio</th>
+					<th scope="col">Cliente</th>
+					<th scope="col" class="num">Monto</th>
+					<th scope="col" class="col-acc"><span class="sr">Acciones</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row"><a class="folio" href="#tabla-ordenes">OT-1042</a></th>
+					<td><span class="rz">Solar del Norte<small>SNO180512AB3</small></span></td>
+					<td class="num">$184,500</td>
+					<td class="col-acc"><button class="iconbtn mini" type="button" aria-label="Más acciones para OT-1042"><Icon name="more_vert" /></button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+1. **Caja** (`.tabla-caja`) — superficie con borde y radio `--r-card`; desplaza en horizontal cuando
+   la tabla no cabe.
+2. **Cabecera** — rótulos en mayúsculas a `--fs-meta`, peso 700, sobre una línea `--border-fuerte`.
+3. **Celda identificadora** — `<th scope="row">` en la primera columna; queda fija al desplazar.
+4. **Celda principal de dos líneas** (`.rz`) — dato a `--fs-dense` en `--text`; dato secundario en
+   `<small>` a `--fs-meta` en `--text-3`.
+5. **Columna numérica** (`.num`) — alineada a la derecha, cifras tabulares.
+6. **Columna de acciones** (`.col-acc`) — anclada a la derecha; un
+   [menú de acciones](/componentes/menu-acciones/) o uno o dos botones-icono.
+
+## Variantes
+
+| Variante | Clase | Úsala para |
+|---|---|---|
+| Estándar | `.tabla-caja` | Cualquier listado. Filas de 40px. |
+| Compacta | `.tabla-caja[data-densidad="compacta"]` | Listados largos que se revisan de corrido. Filas de 32px y sin segunda línea en la celda principal. |
+| Cabecera fija | `.tabla-caja.cab-fija` + `max-height` | Tablas largas que además desplazan en horizontal. |
+| Apilable | `.tabla-caja.apilable` | Tablas que se consultan en teléfono. Pasa a tarjetas por debajo de 860px. |
+
+**La densidad compacta quita contenido, no solo espacio.** Bajar la fila a 32px con la misma
+información aprieta la pantalla y se lee peor. La compacta oculta la segunda línea de `.rz` (pasa a
+etiqueta emergente) y acorta las listas largas dentro de las celdas. Antes de ofrecerla, confirma
+que hace falta: un selector de densidad permanente compite con los controles de uso diario.
+
+<Example title="Compacta">
+	<div class="tabla-caja" data-densidad="compacta">
+		<table>
+			<caption class="sr">Órdenes de instalación, vista compacta</caption>
+			<thead>
+				<tr>
+					<th scope="col">Folio</th>
+					<th scope="col">Cliente</th>
+					<th scope="col">Estado</th>
+					<th scope="col" class="num">Monto</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">OT-1044</th>
+					<td><span class="rz">Agrícola San Miguel<small>ASM090221QW1</small></span></td>
+					<td><span class="pill p-ok"><Icon name="check_circle" />Concluida</span></td>
+					<td class="num">$310,000</td>
+				</tr>
+				<tr>
+					<th scope="row">OT-1043</th>
+					<td><span class="rz">Grupo Industrial Bajío<small>GIB120304KL7</small></span></td>
+					<td><span class="pill p-warn"><Icon name="schedule" />Por vencer</span></td>
+					<td class="num">$92,300</td>
+				</tr>
+				<tr>
+					<th scope="row">OT-1042</th>
+					<td><span class="rz">Solar del Norte<small>SNO180512AB3</small></span></td>
+					<td><span class="pill p-neutro"><Icon name="calendar_month" />Programada</span></td>
+					<td class="num">$184,500</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+## Comportamiento
+
+### Desplazamiento horizontal
+
+- **La primera columna queda fija** (`position: sticky; left: 0`): identifica la fila mientras se
+  leen las demás.
+- **La columna de acciones queda anclada a la derecha** (`.col-acc`). Sin ella, operar una fila
+  obliga a desplazar hasta el final.
+- **Ninguna columna desaparece en silencio.** O la tabla desplaza en horizontal, o un aviso dice
+  cuántas columnas están ocultas y cómo recuperarlas.
+- **La cabecera no se corta.** Si un rótulo no cabe, sobran columnas: reduce las visibles de forma
+  explícita.
+
+### Cabecera fija
+
+`overflow-x: auto` en `.tabla-caja` convierte la caja en el ámbito de cualquier `position: sticky`
+interior. La cabecera queda fija contra la caja, no contra la página; si la que desplaza es la
+página, la cabecera no se fija a nada.
+
+Si la tabla necesita cabecera fija **y** desplazamiento horizontal, declara `max-height` en la caja
+y desplaza la caja entera. Si no puedes fijar esa altura, renuncia a la cabecera fija. La primera
+columna no tiene este problema: no depende del desplazamiento de la página.
+
+<Example title="Cabecera fija con max-height">
+	<div class="tabla-caja cab-fija" style="max-height:180px" role="region" aria-label="Órdenes de instalación, cabecera fija" tabindex="0">
+		<table style="min-width:640px">
+			<caption class="sr">Órdenes de instalación con cabecera fija</caption>
+			<thead>
+				<tr>
+					<th scope="col">Folio</th>
+					<th scope="col">Cliente</th>
+					<th scope="col">Sucursal</th>
+					<th scope="col" class="num">Monto</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr><th scope="row">OT-1046</th><td>Grupo Industrial Bajío</td><td>Nave 3 Silao</td><td class="num">$128,900</td></tr>
+				<tr><th scope="row">OT-1045</th><td>Solar del Norte</td><td>Planta Saltillo</td><td class="num">$56,750</td></tr>
+				<tr><th scope="row">OT-1044</th><td>Agrícola San Miguel</td><td>Rancho El Mezquite</td><td class="num">$310,000</td></tr>
+				<tr><th scope="row">OT-1043</th><td>Grupo Industrial Bajío</td><td>Planta León</td><td class="num">$92,300</td></tr>
+				<tr><th scope="row">OT-1042</th><td>Solar del Norte</td><td>Planta Monterrey</td><td class="num">$184,500</td></tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+### Fila que navega
+
+- La fila entera es la zona pulsable: un clic en cualquier celda abre el registro, y el fondo pasa
+  a `--surface-2` al pasar el cursor.
+- El folio es el enlace (`<a class="folio">`): es la entrada por teclado y lo que anuncia un lector.
+  El clic en la fila se delega en él.
+- El folio va en `--text`, sin color de enlace. Toda la fila se comporta igual; un folio verde
+  sugiere un enlace distinto al resto de la fila.
+- **Nada más dentro de la fila repite esa acción.** Un botón «Ver detalle» o una flecha al final,
+  junto a un folio que ya navega, es la misma acción dos veces y deja la duda de si hacen cosas
+  distintas. Un botón se queda solo si hace algo que la fila no hace: «Aprobar», «Rechazar».
+
+### Modo tarjeta
+
+Por debajo de 860px, una tabla `.apilable` pasa a lista de tarjetas. La cabecera se oculta y cada
+celda muestra su rótulo desde `data-et`. La celda identificadora encabeza la tarjeta y las acciones
+quedan al final.
+
+<Example title="Modo tarjeta, por debajo de 860px" noCode>
+	<div class="tabla-caja apilable ver-tarjetas" style="max-width:380px">
+		<table>
+			<caption class="sr">Órdenes de instalación en modo tarjeta</caption>
+			<thead>
+				<tr>
+					<th scope="col">Folio</th>
+					<th scope="col">Cliente</th>
+					<th scope="col">Estado</th>
+					<th scope="col" class="num">Monto</th>
+					<th scope="col" class="col-acc"><span class="sr">Acciones</span></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row"><a class="folio" href="#tabla-ordenes">OT-1043</a></th>
+					<td data-et="Cliente">Grupo Industrial Bajío</td>
+					<td data-et="Estado"><span class="pill p-warn"><Icon name="schedule" />Por vencer</span></td>
+					<td data-et="Monto" class="num">$92,300</td>
+					<td class="col-acc"><button class="iconbtn mini" type="button" aria-haspopup="menu" aria-label="Más acciones para OT-1043"><Icon name="more_vert" /></button></td>
+				</tr>
+				<tr>
+					<th scope="row"><a class="folio" href="#tabla-ordenes">OT-1042</a></th>
+					<td data-et="Cliente">Solar del Norte</td>
+					<td data-et="Estado"><span class="pill p-neutro"><Icon name="calendar_month" />Programada</span></td>
+					<td data-et="Monto" class="num">$184,500</td>
+					<td class="col-acc"><button class="iconbtn mini" type="button" aria-haspopup="menu" aria-label="Más acciones para OT-1042"><Icon name="more_vert" /></button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+```css
+@media (max-width: 860px) {
+  .tabla-caja.apilable thead { display: none; }
+  .tabla-caja.apilable tbody tr { display: block; border: 1px solid var(--border);
+    border-radius: var(--r-card); margin-bottom: var(--sp-3); }
+  .tabla-caja.apilable tbody td { display: grid;
+    grid-template-columns: minmax(88px, 34%) 1fr; height: auto; white-space: normal; }
+  .tabla-caja.apilable tbody td[data-et]::before { content: attr(data-et); }
+}
+```
+
+### Paginación
+
+Ofrece 10, 25, 50 y 100 registros por página, y recuerda la elección entre sesiones. Un pie fijo
+de seis registros obliga a pasar páginas para cualquier revisión.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="En la celda va la etiqueta; el motivo se lee en el detalle del registro.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr><th scope="row">OT-1045</th><td><span class="pill p-pause"><Icon name="pause_circle" />En pausa</span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Un párrafo en la celda vuelve la fila más alta que sus vecinas y la tabla deja de escanearse.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr><th scope="row">OT-1045</th><td style="white-space:normal;height:auto;padding-block:8px">En pausa porque el cliente pidió mover la visita hasta que llegue el inversor de reemplazo</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="La fila navega por el folio; la columna de acciones guarda solo lo que la fila no hace.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr><th scope="row"><a class="folio" href="#tabla-ordenes">OT-1042</a></th><td>Solar del Norte</td><td class="col-acc"><button class="iconbtn mini" type="button" aria-label="Más acciones para OT-1042"><Icon name="more_vert" /></button></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="«Ver detalle» repite lo que ya hace el folio: dos entradas para la misma acción.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr><th scope="row"><a class="folio" href="#tabla-ordenes">OT-1042</a></th><td>Solar del Norte</td><td class="col-acc"><button class="btn mini" type="button">Ver detalle<Icon name="chevron_right" size="sm" /></button></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="Montos a la derecha con cifras tabulares: las unidades quedan en columna.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr><th scope="row">OT-1044</th><td class="num">$310,000</td></tr>
+					<tr><th scope="row">OT-1045</th><td class="num">$56,750</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Montos a la izquierda: comparar magnitudes obliga a contar dígitos.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr><th scope="row">OT-1044</th><td>$310,000</td></tr>
+					<tr><th scope="row">OT-1045</th><td>$56,750</td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Lleva `<caption>` siempre, aunque vaya oculto con `.sr`: dice de qué es la tabla a quien no la ve.
+- La primera celda de cada fila es `<th scope="row">`; las de cabecera, `<th scope="col">`.
+- Declara `aria-sort` en **todas** las columnas ordenables, también en las que no ordenan ahora
+  (`aria-sort="none"`). Si solo lo lleva la activa, las demás no se anuncian como ordenables. El
+  rótulo ordenable es un `<button>` dentro del `<th>`.
+- La celda principal se corta con puntos suspensivos: expón el texto completo con `title` o una
+  etiqueta emergente.
+- Si la caja desplaza, dale `role="region"`, un `aria-label` y `tabindex="0"` para que se pueda
+  desplazar con teclado.
+- Cada botón de acción nombra su fila: `aria-label="Más acciones para OT-1042"`. Seis «Más acciones»
+  iguales no se distinguen al tabular.
+- En modo tarjeta, algunos navegadores retiran la semántica de tabla al cambiar `display`. Si el
+  modo tarjeta se usa con lector de pantalla, declara `role="table"`, `role="row"` y `role="cell"`
+  en el marcado.
+
+## Tokens
+
+<TokenTable names={['surface', 'surface-2', 'accent-soft', 'border', 'border-fuerte', 'text', 'text-2', 'text-3', 'link', 'r-card', 'fs-dense', 'fs-meta', 'sp-2', 'sp-3']} />
+
+## Relacionados
+
+- [Fila desplegable](/componentes/fila-desplegable/)
+- [Barra de selección](/componentes/barra-seleccion/)
+- [Menú de acciones](/componentes/menu-acciones/)
+- [Filtrar y buscar](/patrones/filtrar-y-buscar/)

@@ -1,0 +1,160 @@
+---
+title: Fila de cifras
+description: Agrupa hasta cuatro cifras de un mismo conjunto con nombre, con la cifra y el rótulo alineados en toda la fila.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+
+<Example>
+	<section class="tarjeta" aria-labelledby="cif-ot">
+		<header><h3 id="cif-ot">Órdenes de instalación</h3></header>
+		<div class="interior">
+			<div class="cifras">
+				<div class="kpi">
+					<span class="valor tnum">18</span>
+					<div class="etq"><span class="rotulo">Nuevas</span><span class="apoyo">esta semana</span></div>
+				</div>
+				<div class="kpi">
+					<span class="valor tnum">42</span>
+					<div class="etq"><span class="rotulo">Programadas</span><span class="apoyo">7 para hoy</span></div>
+				</div>
+				<div class="kpi">
+					<span class="valor tnum">6</span>
+					<div class="etq"><span class="rotulo">En visita</span></div>
+				</div>
+				<div class="kpi">
+					<span class="valor tnum">311</span>
+					<div class="etq"><span class="rotulo">Concluidas</span><span class="apoyo">este mes</span></div>
+				</div>
+			</div>
+		</div>
+	</section>
+</Example>
+
+## Cuándo usarlo
+
+- Para dos a cuatro cifras que cuentan partes del mismo conjunto y se leen juntas.
+- Para una sola cifra, usa un `.kpi` en su propia [tarjeta](/componentes/tarjeta/), con el rótulo
+  en la cabecera. Una cifra suelta dentro de `.cifras` se estira a todo el ancho.
+- Si las cifras reparten un mismo total (en proceso, concluidas, por vencer, vencidas), usa una
+  barra apilada con su leyenda: enseña la proporción, que es lo que se pregunta. Ver
+  [Dashboard](/patrones/dashboard/).
+- Si son dos familias distintas, son dos grupos, cada uno con su nombre.
+
+## Anatomía
+
+<Example noCode>
+	<div class="cifras" style="max-width:220px">
+		<div class="kpi">
+			<span class="valor tnum">42</span>
+			<div class="etq"><span class="rotulo">Programadas</span><span class="apoyo">7 para hoy</span></div>
+		</div>
+	</div>
+</Example>
+
+1. **Fila** (`.cifras`) — rejilla `auto-fit` de columnas de 150px como mínimo y dos filas
+   compartidas por todas las cifras.
+2. **Cifra** (`.kpi`) — relleno `--surface-2`, sin borde visible; ocupa las dos filas con `subgrid`.
+3. **Valor** (`.valor`) — `--fs-kpi` (30px), peso 600, cifras tabulares.
+4. **Etiqueta** (`.etq`) — rótulo a `--fs-base` en `--text`, peso 500.
+5. **Apoyo** (`.apoyo`, opcional) — una línea a `--fs-meta` en `--text-3`, pegada al rótulo
+   (interlineado 1,4, sin separación).
+
+## Comportamiento
+
+- **Dos ranuras compartidas por la fila: valor y etiqueta.** El apoyo va dentro de `.etq`, no en una
+  ranura propia. Con `subgrid`, cada rótulo empieza a la misma altura en todas las cifras, tenga o
+  no apoyo. Igualar la altura de las cajas no basta: lo que se iguala es dónde empieza cada ranura.
+- **No se recorta con puntos suspensivos.** Un apoyo largo pasa a dos líneas y la fila crece por
+  igual para todas; no se pierde ningún carácter.
+- **Una referencia sin espacios no rompe la caja.** El rótulo lleva `overflow-wrap: anywhere`.
+- **En alto contraste del sistema, el relleno desaparece.** El borde va siempre declarado
+  transparente y pasa a `CanvasText` en `forced-colors`; así la geometría no cambia entre modos.
+- Sin soporte de `subgrid`, cada cifra vuelve a su propia rejilla.
+
+```css
+.cifras { display: grid; gap: var(--sp-3); align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-rows: auto auto; }
+.cifras > .kpi { grid-row: span 2; display: grid; grid-template-rows: subgrid;
+  border: 1px solid transparent; }
+@media (forced-colors: active) {
+  .cifras > .kpi { border-color: CanvasText; }
+}
+```
+
+## Uso
+
+**Cuatro cifras por grupo como máximo.** La rejilla de doce columnas reparte cuatro (`.w-3`) o tres
+(`.w-4`) por fila; cinco y seis no caben, y `auto-fit` deja una cifra sola al final de la fila que
+se lee como error o como destacada.
+
+**El apoyo es de una línea.** A la cifra mínima de 150px le caben unos 18 caracteres a 12px. Si no
+cabe, no es apoyo: es la definición de la medida y va en una nota debajo de la fila.
+
+<Guidelines>
+	<Guideline type="do" caption="Cada familia es un grupo con nombre.">
+		<section class="tarjeta" aria-labelledby="cif-tram" style="width:100%">
+			<header><h3 id="cif-tram">Trámites</h3></header>
+			<div class="interior">
+				<div class="cifras">
+					<div class="kpi"><span class="valor tnum">24</span><div class="etq"><span class="rotulo">En revisión</span></div></div>
+					<div class="kpi"><span class="valor tnum">9</span><div class="etq"><span class="rotulo">Aprobados</span></div></div>
+				</div>
+			</div>
+		</section>
+	</Guideline>
+	<Guideline type="dont" caption="Dos «totales» contiguos sin grupo: nada dice que cuentan cosas distintas.">
+		<div class="cifras" style="width:100%">
+			<div class="kpi"><span class="valor tnum">367</span><div class="etq"><span class="rotulo">Total</span></div></div>
+			<div class="kpi"><span class="valor tnum">33</span><div class="etq"><span class="rotulo">Total</span></div></div>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="Un grupo entero en cero se dice con una frase.">
+		<section class="tarjeta" aria-labelledby="cif-venc" style="width:100%">
+			<header><h3 id="cif-venc">Órdenes vencidas</h3></header>
+			<div class="interior">Ninguna orden vencida esta semana.</div>
+		</section>
+	</Guideline>
+	<Guideline type="dont" caption="Cuatro cajas en cero ocupan el espacio de un dato para decir que no hay nada.">
+		<div class="cifras" style="width:100%">
+			<div class="kpi"><span class="valor tnum">0</span><div class="etq"><span class="rotulo">Por vencer</span></div></div>
+			<div class="kpi"><span class="valor tnum">0</span><div class="etq"><span class="rotulo">Vencidas</span></div></div>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="Un apoyo corto acompaña al número.">
+		<div class="cifras" style="width:100%;max-width:180px">
+			<div class="kpi"><span class="valor tnum">796</span><div class="etq"><span class="rotulo">En proceso</span><span class="apoyo">94% del total</span></div></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Una definición en el apoyo: va en la nota de método, debajo de la fila.">
+		<div class="cifras" style="width:100%;max-width:180px">
+			<div class="kpi"><span class="valor tnum">796</span><div class="etq"><span class="rotulo">En proceso</span><span class="apoyo">Nueva, pendiente, programada o en visita</span></div></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- El grupo tiene nombre: la cabecera de su tarjeta, enlazada con `aria-labelledby`.
+- El valor va antes que su rótulo en el marcado, en el mismo orden en que se lee.
+- Contraste del texto sobre el relleno: rótulo 13,27:1 (claro) y 12,68:1 (oscuro); apoyo 4,93:1 y
+  5,03:1.
+- El relleno queda a 1,15:1 (claro) y 1,10:1 (oscuro) de la tarjeta. Es aceptable porque ninguna
+  información depende de ver la caja: agrupan la proximidad y el hueco de `--sp-3`. Si el reparto en
+  cajas llegara a significar algo, el relleno tendría que medir 3:1.
+- En `forced-colors`, el borde `CanvasText` es lo único que separa cada cifra.
+
+## Tokens
+
+<TokenTable names={['surface-2', 'text', 'text-3', 'fs-kpi', 'fs-base', 'fs-meta', 'sp-1', 'sp-3', 'sp-4', 'r-card']} />
+
+## Relacionados
+
+- [Tarjeta](/componentes/tarjeta/)
+- [Ámbito de datos](/componentes/ambito/)
+- [Dashboard](/patrones/dashboard/)
+- [Vistas de estado](/patrones/vistas-de-estado/)

@@ -1,0 +1,62 @@
+/* Muestras de la página Fundamentos › Espaciado. */
+.dpe .esp-escala {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-2);
+	width: 100%;
+}
+.dpe .esp-escala > div {
+	display: grid;
+	grid-template-columns: 4.5rem 3rem minmax(0, 1fr);
+	align-items: center;
+	gap: var(--sp-3);
+	font-size: var(--fs-dense);
+}
+.dpe .esp-escala code {
+	font-size: var(--fs-meta);
+	color: var(--text);
+}
+.dpe .esp-escala span {
+	color: var(--text-2);
+	font-variant-numeric: tabular-nums;
+}
+.dpe .esp-escala i {
+	display: block;
+	height: 16px;
+	background: var(--accent);
+	border-radius: 2px;
+}
+
+/* Cabecera de pantalla con filas opcionales */
+.dpe .esp-cab {
+	width: 100%;
+	max-width: 30rem;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-card);
+	overflow: hidden;
+}
+.dpe .esp-cab header {
+	display: flex;
+	flex-direction: column;
+	padding: 0 var(--sp-4);
+	border-bottom: 1px solid var(--border-fuerte);
+}
+.dpe .esp-cab header > * {
+	padding-top: var(--sp-3);
+}
+.dpe .esp-cab.bien header {
+	padding-bottom: var(--sp-3);
+}
+.dpe .esp-cab.mal header > .chips {
+	padding-bottom: var(--sp-3);
+}
+.dpe .esp-cab h4 {
+	font-size: var(--fs-sub);
+	font-weight: 600;
+}
+.dpe .esp-cab .cuerpo {
+	padding: var(--sp-3) var(--sp-4);
+	font-size: var(--fs-dense);
+	color: var(--text-2);
+}

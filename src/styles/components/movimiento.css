@@ -1,0 +1,74 @@
+/* Comparador de curvas de la página Fundamentos › Movimiento. Solo CSS: los interruptores
+   aria-pressed ya los cablea demos.ts. */
+.dpe .mov-demo {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-4);
+	width: 100%;
+}
+.dpe .mov-carril {
+	display: grid;
+	grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr);
+	align-items: center;
+	gap: var(--sp-3);
+	font-size: var(--fs-dense);
+}
+.dpe .mov-carril code {
+	font-size: var(--fs-meta);
+	color: var(--text);
+}
+.dpe .mov-carril small {
+	display: block;
+	font-size: var(--fs-meta);
+	color: var(--text-3);
+}
+.dpe .mov-pista {
+	height: 24px;
+	padding: 2px;
+	background: var(--surface-2);
+	border: 1px solid var(--border);
+	border-radius: var(--r-pill);
+}
+.dpe .mov-viaje {
+	width: calc(100% - 18px);
+	height: 18px;
+	transition-property: transform;
+	transition-duration: var(--dur-enter);
+}
+.dpe .mov-viaje::before {
+	content: '';
+	display: block;
+	width: 18px;
+	height: 18px;
+	border-radius: 50%;
+	background: var(--text-3);
+	transition: background-color var(--dur-micro) var(--ease-out);
+}
+.dpe .mov-out .mov-viaje {
+	transition-timing-function: var(--ease-out);
+}
+.dpe .mov-in-out .mov-viaje {
+	transition-timing-function: var(--ease-in-out);
+}
+.dpe .mov-spring .mov-viaje {
+	transition-timing-function: var(--ease-spring);
+}
+.dpe .mov-demo:has(.mov-ir[aria-pressed='true']) .mov-viaje {
+	transform: translateX(100%);
+}
+.dpe .mov-demo:has(.mov-ir[aria-pressed='true']) .mov-viaje::before {
+	background: var(--accent);
+}
+.dpe .mov-demo:has(.mov-lento[aria-pressed='true']) .mov-viaje {
+	transition-duration: calc(var(--dur-enter) * 5);
+}
+.dpe .mov-demo .mov-lento[aria-pressed='true'] {
+	background: var(--accent-soft);
+	border-color: var(--accent);
+}
+@media (prefers-reduced-motion: reduce) {
+	.dpe .mov-viaje,
+	.dpe .mov-demo:has(.mov-ir[aria-pressed='true']) .mov-viaje {
+		transform: none;
+	}
+}

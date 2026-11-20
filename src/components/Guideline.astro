@@ -1,0 +1,66 @@
+---
+/** Hacer / No hacer. Se usa dentro de <Guidelines>. */
+interface Props {
+	type: 'do' | 'dont';
+	/** Por qué, en una frase. */
+	caption: string;
+}
+const { type, caption } = Astro.props;
+const label = type === 'do' ? 'Hacer' : 'No hacer';
+---
+
+<figure class:list={['dpe-guia not-content', `dpe-guia--${type}`]}>
+	<div class="dpe-guia__lienzo dpe"><slot /></div>
+	<figcaption>
+		<strong>{label}</strong>
+		<span>{caption}</span>
+	</figcaption>
+</figure>
+
+<style>
+	.dpe-guia {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		border: 1px solid var(--sl-color-hairline);
+		border-radius: var(--r-card);
+		overflow: hidden;
+	}
+	.dpe-guia__lienzo {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		padding: 1.75rem 1.25rem;
+		background: var(--bg);
+	}
+	figcaption {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+		padding: 0.75rem 1rem;
+		border-top: 3px solid;
+		font-size: var(--fs-dense);
+		line-height: var(--lh-texto);
+		color: var(--sl-color-gray-2);
+	}
+	strong {
+		font-size: var(--fs-meta);
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+	.dpe-guia--do figcaption {
+		border-top-color: var(--ok);
+	}
+	.dpe-guia--do strong {
+		color: var(--ok-ink);
+	}
+	.dpe-guia--dont figcaption {
+		border-top-color: var(--err);
+	}
+	.dpe-guia--dont strong {
+		color: var(--err-ink);
+	}
+</style>

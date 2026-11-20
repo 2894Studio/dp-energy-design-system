@@ -1,0 +1,73 @@
+---
+title: Radios
+description: Cuatro radios según el tipo de objeto, de control a diálogo. El radio crece con el objeto.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/radios.css';
+
+<Example noCode bg="surface">
+	<div class="radio-muestras">
+		<figure><div class="forma" style="border-radius:var(--r-ctrl)"></div><figcaption><code>{'--r-ctrl'}</code>6px · controles</figcaption></figure>
+		<figure><div class="forma" style="border-radius:var(--r-card)"></div><figcaption><code>{'--r-card'}</code>10px · tarjetas y paneles</figcaption></figure>
+		<figure><div class="forma" style="border-radius:var(--r-modal)"></div><figcaption><code>{'--r-modal'}</code>16px · diálogos</figcaption></figure>
+		<figure><div class="forma" style="border-radius:var(--r-pill)"></div><figcaption><code>{'--r-pill'}</code>999px · píldoras</figcaption></figure>
+	</div>
+</Example>
+
+## Cuándo usar cada uno
+
+| Token | Valor | Úsalo para |
+|---|---|---|
+| `--r-ctrl` | 6px | Botones, campos, buscador, chips, etiquetas de estado, opciones de un menú |
+| `--r-card` | 10px | Tarjetas, contenedor de tabla, menús y popovers |
+| `--r-modal` | 16px | Diálogos, tarjeta flotante de la pantalla de entrada, vistas de estado |
+| `--r-pill` | 999px | Resumen de estatus, filtros de la barra de filtros, contadores |
+
+- **El radio crece con el objeto.** Un control dentro de una tarjeta conserva `--r-ctrl`; no
+  hereda el radio de su contenedor.
+- **`--r-pill` marca una pieza de filtro o un contador.** Un botón con forma de píldora se lee como
+  un filtro; un botón usa `--r-ctrl`.
+- **Lo circular usa `50%`,** no un token: el botón de información, el botón flotante, el medallón
+  de una vista de estado. Su radio depende del tamaño, no del tipo de objeto.
+
+<Example title="Cada objeto con su radio">
+	<div class="tarjeta" style="max-width:26rem">
+		<header><h4>Solar del Norte</h4><span class="n">3 órdenes</span></header>
+		<div class="interior pila">
+			<div class="fila">
+				<button class="schip c-warn" type="button" aria-pressed="false"><b>2</b>Por vencer</button>
+				<span class="pill p-ok"><Icon name="check_circle" />Vigente</span>
+			</div>
+			<div class="fila">
+				<button class="btn p" type="button">Nueva orden</button>
+				<button class="btn" type="button">Exportar</button>
+			</div>
+		</div>
+	</div>
+</Example>
+
+<Guidelines>
+	<Guideline type="do" caption="El botón con --r-ctrl; la píldora queda para filtros y contadores.">
+		<button class="btn p" type="button">Guardar</button>
+		<span class="f"><b>Estado:</b> Vigente</span>
+	</Guideline>
+	<Guideline type="dont" caption="Un botón en píldora se confunde con un filtro de la barra.">
+		<button class="btn p" type="button" style="border-radius:var(--r-pill)">Guardar</button>
+		<span class="f"><b>Estado:</b> Vigente</span>
+	</Guideline>
+</Guidelines>
+
+## Tokens
+
+<TokenTable groups={['radio']} />
+
+## Relacionados
+
+- [Espaciado](/fundamentos/espaciado/)
+- [Elevación](/fundamentos/elevacion/)
+- [Tarjeta](/componentes/tarjeta/)

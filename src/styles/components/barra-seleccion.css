@@ -1,0 +1,9 @@
+/* Barra de selección: queda fija arriba mientras haya selección. */
+.dpe .barra-sel {
+	position: sticky;
+	top: 0;
+	z-index: 8;
+}
+.dpe .col-sel {
+	width: 1%;
+}

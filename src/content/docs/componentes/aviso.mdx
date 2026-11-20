@@ -1,0 +1,121 @@
+---
+title: Aviso y banda
+description: Mensajes dentro de la página. El aviso acompaña a un control con información tranquila; la banda califica todo lo que viene debajo.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="pila" style="max-width:560px">
+		<div class="banda b-warn" role="status"><Icon name="warning" /><span><b>Faltan 2 documentos.</b> Puedes editar al cliente, pero no programar instalaciones hasta subirlos.</span></div>
+		<div class="note"><Icon name="info" size="sm" /><span>Los cambios se guardan al salir de cada campo.</span></div>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- **Aviso (`.note`)** — una aclaración tranquila junto a un control o un bloque: cómo se guarda,
+  qué pasa después. Nunca una alerta.
+- **Banda (`.banda`)** — un mensaje de ancho completo que cambia cómo se lee lo que viene debajo:
+  un dato incompleto, un error de carga, una regla que aplica a toda la sección.
+- Para una aclaración de una cifra que no cabe en la fila, usa un [toggletip](/componentes/toggletip/).
+- Para el estado de un registro, usa una [etiqueta](/componentes/etiqueta/).
+- Para una pantalla completa sin datos o con error, usa las
+  [vistas de estado](/patrones/vistas-de-estado/).
+
+## Anatomía
+
+<Example noCode>
+	<div class="banda b-info" style="max-width:560px"><Icon name="info" /><span><b>Vista por región.</b> Solo ves los clientes de tu región asignada.</span></div>
+</Example>
+
+1. **Ícono** — coincide con la variante. Un triángulo de advertencia sobre una banda neutra es una
+   señal mixta.
+2. **Texto** — primera frase en negrita con el hecho; después, la consecuencia o qué hacer.
+3. **Contenedor** — `.banda`, radio `--r-ctrl`, relleno `--sp-3` `--sp-4`. Sin margen propio.
+
+## Variantes
+
+<Example title="Cuatro bandas">
+	<div class="pila" style="max-width:560px">
+		<div class="banda b-info"><Icon name="info" /><span><b>Información.</b> Solo el responsable de la cuenta puede reasignar esta orden.</span></div>
+		<div class="banda b-warn"><Icon name="warning" /><span><b>Por vencer.</b> El contrato de Grupo Industrial Bajío vence en 12 días.</span></div>
+		<div class="banda b-err"><Icon name="error" /><span><b>No se pudo cargar la bitácora.</b> Recarga la página o inténtalo en unos minutos.</span></div>
+		<div class="banda b-ok"><Icon name="check_circle" /><span><b>Expediente completo.</b> Ya puedes programar la instalación.</span></div>
+	</div>
+</Example>
+
+| Variante | Clase | Ícono | Úsala para |
+|---|---|---|---|
+| Aviso | `.note` | `info` | Información tranquilizadora junto a un control. |
+| Información | `.banda.b-info` | `info` | Contexto o reglas que aplican a la sección: alcance, permisos. |
+| Atención | `.banda.b-warn` | `warning` | Falta algo o vence pronto. |
+| Error | `.banda.b-err` | `error` | Algo impide operar o no se pudo cargar. |
+| Correcto | `.banda.b-ok` | `check_circle` | Confirmación de un estado alcanzado. |
+
+**Antes de escribir una clase nueva para un aviso de ancho completo, comprueba si `.banda` y una de
+sus cuatro variantes ya lo cubre.** Un componente reinventado con otro nombre duplica CSS y deja dos
+nombres para lo mismo.
+
+## Comportamiento
+
+### Posición
+
+Un aviso que cambia cómo se interpreta lo de abajo va **antes del título de esa sección**, no
+después ni al pie. Si la lista está recortada por permisos, cada cero que sigue significa otra
+cosa: el lector debe saberlo antes de leerlos.
+
+### Margen
+
+`.banda` **no lleva margen propio**, salvo como hijo directo de la zona que la aloja. Un selector
+de descendiente alcanza cualquier banda dentro del contenedor, también la que ya vive dentro de un
+bloque con relleno: el margen se suma al relleno.
+
+```css
+/* Mal: alcanza también a la banda de un bloque interior con relleno */
+.detalle .banda { margin-bottom: var(--sp-4); }
+
+/* Bien: solo la banda que es hija directa de la zona */
+.detalle > .banda { margin-bottom: var(--sp-4); }
+```
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Una regla de permisos informa: no hay nada que venza ni que falte.">
+		<div class="banda b-info"><Icon name="info" /><span>Solo el responsable de la cuenta puede reasignar esta orden.</span></div>
+	</Guideline>
+	<Guideline type="dont" caption="Una regla de permisos con el color de «vence pronto» alarma sin motivo.">
+		<div class="banda b-warn"><Icon name="warning" /><span>Solo el responsable de la cuenta puede reasignar esta orden.</span></div>
+	</Guideline>
+	<Guideline type="do" caption="El ícono coincide con la variante.">
+		<div class="banda b-warn"><Icon name="warning" /><span>Falta la constancia de situación fiscal.</span></div>
+	</Guideline>
+	<Guideline type="dont" caption="Triángulo de advertencia sobre una banda neutra: el lector no sabe si preocuparse.">
+		<div class="banda b-info"><Icon name="warning" /><span>Falta la constancia de situación fiscal.</span></div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Una banda que aparece o cambia tras una acción lleva `role="status"`; una de error que exige
+  atención inmediata, `role="alert"`.
+- Una banda presente desde la carga no necesita rol vivo: va antes del título que califica, en el
+  orden de lectura.
+- El ícono es decorativo; la primera frase en negrita dice el hecho.
+- Cada variante usa su par `-ink` sobre `-bg`, que cumple AA en los dos temas.
+
+## Tokens
+
+<TokenTable names={['accent', 'accent-soft', 'surface-2', 'border', 'text-2', 'warn-bg', 'warn-ink', 'err-bg', 'err-ink', 'ok-bg', 'ok-ink', 'r-ctrl', 'sp-3', 'sp-4', 'fs-dense', 'fs-meta']} />
+
+## Relacionados
+
+- [Etiqueta](/componentes/etiqueta/)
+- [Toggletip](/componentes/toggletip/)
+- [Vistas de estado](/patrones/vistas-de-estado/)
+- [Voz de producto](/contenido/voz/)

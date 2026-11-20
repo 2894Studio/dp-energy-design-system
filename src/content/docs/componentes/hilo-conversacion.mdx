@@ -1,0 +1,148 @@
+---
+title: Hilo de conversación
+description: Muestra los turnos entre una persona y el asistente, rotulados con quién habla y cuándo, con el compositor debajo.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div style="max-width:620px">
+		<div class="hilo" id="hilo-demo" role="log" aria-label="Conversación con el asistente" tabindex="0">
+			<div class="turno yo">
+				<span class="quien">Tú · hoy 10:31</span>
+				<p class="tx">¿Qué órdenes de Solar del Norte vencen esta semana?</p>
+			</div>
+			<div class="turno ia">
+				<span class="quien">Asistente · hoy 10:31</span>
+				<article class="tarjeta">
+					<div class="interior">Dos: OT-1042 en Planta Monterrey, programada para el lunes, y OT-1045 en Planta Saltillo, que está en pausa desde el día 12.</div>
+					<div class="pie">De dónde salió: <a href="#hilo-demo">OT-1042</a> · <a href="#hilo-demo">OT-1045</a></div>
+				</article>
+			</div>
+			<div class="turno yo">
+				<span class="quien">Tú · hoy 10:33</span>
+				<p class="tx">¿Y las de Grupo Industrial Bajío?</p>
+			</div>
+			<div class="turno ia">
+				<span class="quien">Asistente · respondiendo</span>
+				<div class="tarjeta" role="status" aria-label="El asistente está respondiendo">
+					<div class="escribiendo">
+						<span class="skel" style="width:92%;height:10px"></span>
+						<span class="skel" style="width:78%;height:10px"></span>
+						<span class="skel" style="width:54%;height:10px"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="compositor">
+			<label class="sr" for="hilo-msg">Escribe tu pregunta</label>
+			<textarea id="hilo-msg" rows="1" placeholder="Pregunta sobre órdenes, clientes o visitas"></textarea>
+			<button class="btn p" type="button"><Icon name="send" />Enviar</button>
+		</div>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para una conversación con el asistente del producto: preguntas sobre órdenes, clientes, visitas.
+- Para comentarios sobre un registro que no esperan respuesta inmediata, usa una lista de notas en
+  la [ficha de detalle](/componentes/ficha-detalle/).
+- Para avisar de algo que pasó sin que nadie preguntara, usa un [aviso](/componentes/aviso/).
+
+## Anatomía
+
+<Example noCode>
+	<div class="hilo" style="max-height:none">
+		<div class="turno yo">
+			<span class="quien">Tú · hoy 10:31</span>
+			<p class="tx">¿Qué órdenes vencen esta semana?</p>
+		</div>
+		<div class="turno ia">
+			<span class="quien">Asistente · hoy 10:31</span>
+			<article class="tarjeta">
+				<div class="interior">Dos: OT-1042 y OT-1045.</div>
+				<div class="pie">De dónde salió: <a href="#hilo-demo">OT-1042</a> · <a href="#hilo-demo">OT-1045</a></div>
+			</article>
+		</div>
+	</div>
+</Example>
+
+1. **Hilo** (`.hilo`) — contenedor `role="log"` sobre `--bg`; desplaza por dentro a partir de 420px.
+2. **Rótulo del turno** (`.quien`) — quién y cuándo, a `--fs-meta` en `--text-3`.
+3. **Turno propio** (`.turno.yo`) — a la derecha, texto sobre `--surface-2`.
+4. **Respuesta** (`.turno.ia`) — una [tarjeta](/componentes/tarjeta/) con cuerpo (`.interior`) y pie.
+5. **Pie** (`.pie`) — la procedencia, como enlaces de lectura.
+6. **Compositor** (`.compositor`) — área de texto y botón de enviar.
+
+## Estados
+
+| Estado | Cómo se presenta |
+|---|---|
+| Respondiendo | Tarjeta con `role="status"` y barras de [esqueleto](/componentes/esqueleto/), sin texto dentro. |
+| Respuesta | Tarjeta con cuerpo y pie de procedencia. |
+| Fallida | Dice qué pasó, qué no se perdió y qué hacer; el paso a seguir va en el pie como botón. |
+
+<Example title="Respuesta fallida">
+	<div class="hilo" style="max-height:none" role="log" aria-label="Conversación con el asistente, respuesta fallida">
+		<div class="turno ia">
+			<span class="quien">Asistente · hoy 10:34</span>
+			<article class="tarjeta">
+				<div class="interior"><div class="banda b-err"><Icon name="error" size="sm" /><span>No pude terminar la respuesta: se perdió la conexión. Tu pregunta sigue en el hilo; no hace falta escribirla de nuevo.</span></div></div>
+				<div class="pie"><button class="btn mini" type="button"><Icon name="refresh" size="sm" />Reintentar</button></div>
+			</article>
+		</div>
+	</div>
+</Example>
+
+**El pie dice una sola cosa.** La procedencia («De dónde salió») son enlaces; el paso a seguir son
+botones `.btn.mini`. Se distinguen por la forma, no solo por el rótulo. El pie es una zona hermana
+del cuerpo, con su propio relleno: no se sangra con márgenes negativos.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Cada turno dice quién habla y cuándo.">
+		<div class="hilo" style="max-height:none;width:100%">
+			<div class="turno yo"><span class="quien">Tú · hoy 10:31</span><p class="tx">¿Qué vence hoy?</p></div>
+			<div class="turno ia"><span class="quien">Asistente · hoy 10:31</span><p class="tx">Nada vence hoy.</p></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Sin rótulo, el tono del fondo no basta: las dos superficies están a 1,06–1,15:1 entre sí.">
+		<div class="hilo" style="max-height:none;width:100%">
+			<div class="turno yo"><p class="tx">¿Qué vence hoy?</p></div>
+			<div class="turno ia"><p class="tx" style="padding:8px 12px;background:var(--surface);border-radius:var(--r-card)">Nada vence hoy.</p></div>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="El fallo dice qué pasó, qué se conserva y qué hacer.">
+		<div class="banda b-err" style="width:100%"><Icon name="error" size="sm" /><span>Se perdió la conexión. Tu pregunta sigue en el hilo. Pulsa «Reintentar».</span></div>
+	</Guideline>
+	<Guideline type="dont" caption="Un error genérico no dice si hay que volver a escribir la pregunta.">
+		<div class="banda b-err" style="width:100%"><Icon name="error" size="sm" /><span>Algo salió mal.</span></div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- El hilo lleva `role="log"` y un nombre (`aria-label="Conversación con el asistente"`): un lector
+  anuncia cada mensaje nuevo sin que nadie esté mirando la pantalla.
+- Si el hilo desplaza por dentro, lleva `tabindex="0"` para poder desplazarlo con teclado.
+- Cada turno empieza con su rótulo de quién y cuándo; el color nunca identifica al hablante.
+- La respuesta en curso es una región `role="status"` con nombre; las barras de carga no llevan
+  texto dentro, ni siquiera transparente.
+- El área de texto del compositor tiene rótulo (visible u oculto con `.sr`) y el botón dice
+  «Enviar».
+- Al enviar, el foco se queda en el compositor; no salta al último mensaje.
+
+## Tokens
+
+<TokenTable names={['bg', 'surface', 'surface-2', 'border', 'border-ctrl', 'text', 'text-3', 'r-card', 'r-ctrl', 'fs-dense', 'fs-meta', 'sp-2', 'sp-3', 'sp-4']} />
+
+## Relacionados
+
+- [Tarjeta](/componentes/tarjeta/)
+- [Esqueleto](/componentes/esqueleto/)
+- [Vistas de estado](/patrones/vistas-de-estado/)

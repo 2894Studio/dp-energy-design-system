@@ -1,0 +1,112 @@
+/* Starlight vestido con los tokens de D.P. Energy. */
+
+:root {
+	--sl-font: var(--font-ui);
+	--sl-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+	--sl-content-width: 52rem;
+	--sl-sidebar-width: 17rem;
+	--sl-text-h1: 2.25rem;
+	--sl-text-h2: 1.6rem;
+	--sl-text-h3: 1.2rem;
+	--sl-text-h4: 1rem;
+}
+
+:root,
+:root[data-theme='dark'] {
+	--sl-color-accent-low: #173226;
+	--sl-color-accent: #4a8f5a;
+	--sl-color-accent-high: #cfe8d5;
+	--sl-color-white: #e7ecf2;
+	--sl-color-gray-1: #d2d9e2;
+	--sl-color-gray-2: #a8b3c2;
+	--sl-color-gray-3: #8b96a6;
+	--sl-color-gray-4: #4a5566;
+	--sl-color-gray-5: #2a3546;
+	--sl-color-gray-6: #1d2735;
+	--sl-color-gray-7: #171f2c;
+	--sl-color-black: #10161f;
+}
+
+:root[data-theme='light'] {
+	--sl-color-accent-low: #dcefe1;
+	--sl-color-accent: #3e7a4c;
+	--sl-color-accent-high: #1f4a2b;
+	--sl-color-white: #1b2430;
+	--sl-color-gray-1: #2a3542;
+	--sl-color-gray-2: #4c5a6b;
+	--sl-color-gray-3: #5c6675;
+	--sl-color-gray-4: #8c97a5;
+	--sl-color-gray-5: #c6ced8;
+	--sl-color-gray-6: #e7edf3;
+	--sl-color-gray-7: #f2f5f7;
+	--sl-color-black: #fafcfd;
+}
+
+/* Barra superior en el color del cromo, en los dos temas. */
+header.header {
+	--sl-color-bg-nav: var(--chrome);
+	--sl-color-hairline-shade: var(--chrome);
+	--sl-color-white: var(--chrome-ink);
+	--sl-color-gray-1: var(--chrome-ink);
+	--sl-color-gray-2: var(--chrome-dim);
+	--sl-color-gray-3: var(--chrome-dim);
+	--sl-color-gray-5: var(--chrome-line);
+	--sl-color-gray-6: rgba(255, 255, 255, 0.08);
+	--sl-color-black: var(--chrome);
+	--sl-color-text-accent: var(--chrome-ink);
+	color: var(--chrome-ink);
+}
+header.header .dpe-site-tag {
+	color: var(--chrome-dim);
+	border-color: var(--chrome-line);
+}
+header.header :focus-visible {
+	outline-color: var(--chrome-focus);
+}
+
+/* Encabezados de página: sobrios, sin color de acento. */
+.sl-markdown-content :is(h2, h3, h4) {
+	letter-spacing: -0.01em;
+}
+.sl-markdown-content .sl-heading-wrapper.level-h2 {
+	margin-top: 3rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--sl-color-hairline);
+}
+.sl-markdown-content > .sl-heading-wrapper.level-h2:first-child {
+	border-top: 0;
+	padding-top: 0;
+	margin-top: 0;
+}
+
+/* Tablas de referencia más densas, como en el producto. */
+.sl-markdown-content table {
+	font-size: var(--fs-dense);
+}
+@media (min-width: 72rem) {
+	.sl-markdown-content table {
+		display: table;
+		width: 100%;
+	}
+}
+.sl-markdown-content table code {
+	white-space: nowrap;
+}
+
+/* Insignias del sidebar. */
+.sidebar-content .sl-badge {
+	font-size: 0.65rem;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+}
+
+/* Portada. */
+.dpe-hero-version {
+	display: inline-block;
+	font-size: var(--fs-meta);
+	font-weight: 600;
+	color: var(--sl-color-gray-2);
+	background: var(--sl-color-gray-6);
+	border-radius: var(--r-pill);
+	padding: 0.25em 0.75em;
+}

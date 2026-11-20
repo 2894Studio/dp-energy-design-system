@@ -1,0 +1,198 @@
+---
+title: Agenda
+description: Rejilla persona × día para comparar la carga de cada instalador en la semana. Es una tabla y nunca pasa a modo tarjeta.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+
+<Example>
+	<div class="tabla-caja" role="region" aria-labelledby="ag-cap" tabindex="0">
+		<table class="agenda" style="min-width:780px">
+			<caption id="ag-cap">Visitas de instalación, semana del 23 al 27 de noviembre</caption>
+			<thead>
+				<tr>
+					<th scope="col">Instalador</th>
+					<th scope="col">Lunes 23</th>
+					<th scope="col">Martes 24</th>
+					<th scope="col">Miércoles 25</th>
+					<th scope="col">Jueves 26</th>
+					<th scope="col">Viernes 27</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">Laura Méndez Garza</th>
+					<td><span class="visita"><b>OT-1042</b><br />Planta Monterrey</span></td>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+					<td><span class="visita"><b>OT-1051</b> · día 1 de 2<br />Planta Apodaca</span></td>
+					<td><span class="visita"><b>OT-1051</b> · día 2 de 2<br />Planta Apodaca</span></td>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+				</tr>
+				<tr>
+					<th scope="row">Óscar Villarreal Treviño</th>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+					<td><span class="visita"><b>OT-1043</b><br />Planta León</span></td>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+					<td><span class="visita"><b>OT-1044</b><br />Rancho El Mezquite</span></td>
+					<td><span class="libre">No labora</span></td>
+				</tr>
+				<tr>
+					<th scope="row">Rubén Salinas Cantú</th>
+					<td><span class="visita"><b>OT-1045</b><br />Planta Saltillo</span></td>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+					<td><span class="visita"><b>OT-1046</b><br />Nave 3 Silao</span></td>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+					<td><span class="visita"><b>OT-1047</b><br />Planta Monterrey</span></td>
+				</tr>
+				<tr class="sin-asignar">
+					<th scope="row">Sin asignar</th>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+					<td><span class="visita"><b>OT-1048</b><br />Agrícola San Miguel</span></td>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+					<td><span class="visita"><b>OT-1049</b><br />Planta León</span></td>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para comparar la carga de varias personas a lo largo de los mismos días: instaladores,
+  cuadrillas, técnicos de mantenimiento.
+- Para listar visitas sin comparar entre personas, usa una [tabla densa](/componentes/tabla/)
+  ordenada por fecha.
+- Para el detalle de una visita, abre su ficha desde el folio.
+
+## Anatomía
+
+<Example noCode>
+	<div class="tabla-caja">
+		<table class="agenda">
+			<caption>Semana del 23 al 27 de noviembre</caption>
+			<thead>
+				<tr>
+					<th scope="col">Instalador</th>
+					<th scope="col">Lunes 23</th>
+					<th scope="col">Martes 24</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">Laura Méndez Garza</th>
+					<td><span class="visita"><b>OT-1042</b><br />Planta Monterrey</span></td>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+				</tr>
+				<tr class="sin-asignar">
+					<th scope="row">Sin asignar</th>
+					<td><span class="libre"><span aria-hidden="true">—</span><span class="sr">Sin visitas</span></span></td>
+					<td><span class="visita"><b>OT-1048</b><br />Agrícola San Miguel</span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+1. **Título** (`<caption>`) — qué periodo muestra la rejilla; visible.
+2. **Cabecera de día** — `<th scope="col">`.
+3. **Cabecera de persona** — `<th scope="row">`, fija al desplazar en horizontal; el nombre se parte
+   en dos líneas.
+4. **Visita** (`.visita`) — bloque con borde izquierdo `--serie-1`, folio y lugar a `--fs-meta`.
+5. **Franja libre** (`.libre`) — una raya visual y «Sin visitas» para lector de pantalla.
+6. **Fila «Sin asignar»** (`.sin-asignar`) — las visitas que aún no tienen persona.
+
+## Comportamiento
+
+- **Nunca pasa a modo tarjeta.** Convertirla en tarjetas destruye la comparación entre filas, que es
+  su único propósito. En pantallas estrechas desplaza en horizontal con la primera columna fija.
+- **Una visita que dura varias franjas marca cada franja que cubre** («día 1 de 2», «día 2 de 2»),
+  sin fusionar celdas.
+- **El calendario laborable es un dato.** Qué días trabaja cada persona se consulta y se escribe en
+  la celda («No labora»); no se codifica como una clase de la rejilla.
+- **Nada baja de 12px.** Las celdas son datos, no rótulos de orientación: la excepción de 10,5px no
+  aplica.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Lo no asignado va en su propia fila.">
+		<div class="tabla-caja" style="width:100%">
+			<table class="agenda">
+				<tbody>
+					<tr><th scope="row">Laura Méndez</th><td><span class="libre">—</span></td></tr>
+					<tr class="sin-asignar"><th scope="row">Sin asignar</th><td><span class="visita"><b>OT-1048</b></span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Colgar una visita sin instalador de una persona cualquiera le atribuye trabajo que no tiene.">
+		<div class="tabla-caja" style="width:100%">
+			<table class="agenda">
+				<tbody>
+					<tr><th scope="row">Laura Méndez</th><td><span class="visita"><b>OT-1048</b></span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="El nombre se parte en dos líneas y se lee entero.">
+		<div class="tabla-caja" style="width:100%">
+			<table class="agenda">
+				<tbody>
+					<tr><th scope="row" style="width:140px">Óscar Villarreal Treviño</th><td><span class="visita"><b>OT-1043</b></span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Con puntos suspensivos, dos personas con el mismo nombre se confunden.">
+		<div class="tabla-caja" style="width:100%">
+			<table class="agenda">
+				<tbody>
+					<tr><th scope="row"><span style="display:block;max-width:110px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">Óscar Villarreal Treviño</span></th><td><span class="visita"><b>OT-1043</b></span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="Una visita de dos días marca los dos días.">
+		<div class="tabla-caja" style="width:100%">
+			<table class="agenda">
+				<tbody>
+					<tr><td><span class="visita"><b>OT-1051</b> · día 1 de 2</span></td><td><span class="visita"><b>OT-1051</b> · día 2 de 2</span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Fusionar celdas rompe la rejilla: el segundo día deja de tener su propia celda.">
+		<div class="tabla-caja" style="width:100%">
+			<table class="agenda">
+				<tbody>
+					<tr><td colspan="2"><span class="visita"><b>OT-1051</b></span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Lleva `<caption>` visible y `<th scope>` en los dos ejes: cada celda se anuncia como «persona,
+  día».
+- La franja vacía se escribe para lector («Sin visitas»); una celda en blanco no se distingue de
+  una que no cargó.
+- Ningún texto de la rejilla baja de 12px.
+- La caja que desplaza lleva `role="region"`, nombre y `tabindex="0"`.
+- El color de la visita es de serie, no de estado: no emite un juicio. Si una visita tiene un
+  estado (retrasada, cancelada), dilo con una [etiqueta](/componentes/etiqueta/).
+
+## Tokens
+
+<TokenTable names={['serie-1', 'surface', 'border', 'text-3', 'warn-ink', 'fs-meta', 'fs-dense', 'sp-2', 'sp-3', 'r-ctrl']} />
+
+## Relacionados
+
+- [Tabla densa](/componentes/tabla/)
+- [Etiqueta](/componentes/etiqueta/)
+- [Color](/fundamentos/color/#series-de-gráfica)

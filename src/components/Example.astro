@@ -1,0 +1,118 @@
+---
+/**
+ * Demo viva + código. El código se genera del mismo marcado que se pinta,
+ * así nunca se desincronizan.
+ */
+import { Code } from '@astrojs/starlight/components';
+import { format } from 'prettier/standalone';
+import * as htmlPlugin from 'prettier/plugins/html';
+
+interface Props {
+	/** Rótulo opcional sobre la demo. */
+	title?: string;
+	/** Fondo del lienzo: superficie de página o de tarjeta. */
+	bg?: 'bg' | 'surface';
+	/** Centra el contenido. */
+	center?: boolean;
+	/** Alto mínimo del lienzo (para demos con posición absoluta). */
+	minHeight?: string;
+	/** Oculta el bloque de código. */
+	noCode?: boolean;
+	/** Código alternativo a mostrar en lugar del marcado de la demo. */
+	code?: string;
+	lang?: string;
+}
+
+const { title, bg = 'bg', center = false, minHeight, noCode = false, code, lang = 'html' } = Astro.props;
+const html = await Astro.slots.render('default');
+
+async function toSource(raw: string) {
+	const clean = raw
+		.replaceAll('/icons.svg#', '#')
+		.replace(/ data-astro-[a-z-]+(="[^"]*")?/g, '');
+	const formatted = await format(clean, {
+		parser: 'html',
+		plugins: [htmlPlugin],
+		printWidth: 88,
+		htmlWhitespaceSensitivity: 'ignore',
+	});
+	return formatted.trim();
+}
+
+const source = code ?? (await toSource(html));
+---
+
+<figure class="dpe-example not-content">
+	{title && <figcaption class="dpe-example__title">{title}</figcaption>}
+	<div
+		class:list={['dpe-example__canvas dpe', `dpe-example__canvas--${bg}`, { 'dpe-example__canvas--center': center }]}
+		style={minHeight ? `min-height:${minHeight}` : undefined}
+		set:html={html}
+	/>
+	{
+		!noCode && (
+			<details class="dpe-example__code">
+				<summary>Código</summary>
+				<Code code={source} lang={lang} />
+			</details>
+		)
+	}
+</figure>
+
+<script>
+	import '../scripts/demos';
+</script>
+
+<style>
+	.dpe-example {
+		margin: 1.5rem 0;
+		border: 1px solid var(--sl-color-hairline);
+		border-radius: var(--r-card);
+		overflow: hidden;
+	}
+	.dpe-example__title {
+		padding: 0.5rem 1rem;
+		font-size: var(--fs-meta);
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--sl-color-gray-3);
+		border-bottom: 1px solid var(--sl-color-hairline);
+	}
+	.dpe-example__canvas {
+		position: relative;
+		padding: 2rem 1.5rem;
+		overflow-x: auto;
+	}
+	.dpe-example__canvas--bg {
+		background: var(--bg);
+	}
+	.dpe-example__canvas--surface {
+		background: var(--surface);
+	}
+	.dpe-example__canvas--center {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.dpe-example__code {
+		border-top: 1px solid var(--sl-color-hairline);
+		background: var(--sl-color-gray-7, var(--sl-color-black));
+	}
+	.dpe-example__code summary {
+		cursor: pointer;
+		padding: 0.6rem 1rem;
+		font-size: var(--fs-meta);
+		font-weight: 600;
+		color: var(--sl-color-gray-2);
+		list-style-position: inside;
+	}
+	.dpe-example__code :global(.expressive-code) {
+		margin: 0;
+	}
+	.dpe-example__code :global(.expressive-code figure) {
+		border-radius: 0;
+		border-inline: 0;
+		border-bottom: 0;
+	}
+</style>

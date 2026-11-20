@@ -1,0 +1,58 @@
+/* Barra de filtros: panel desplegable, «Agregar filtro», filtros aplicados y filtros registrados. */
+.dpe .fwrap {
+	position: relative;
+	display: inline-block;
+}
+.dpe .f.agregar {
+	border-style: dashed;
+}
+.dpe .f[data-activo='true'] > .ico {
+	color: var(--accent);
+}
+.dpe .pop .buscador {
+	width: 100%;
+	min-width: 0;
+	max-width: none;
+	margin-bottom: var(--sp-2);
+}
+.dpe .pop ul {
+	list-style: none;
+	max-height: 220px;
+	overflow-y: auto;
+}
+.dpe .pop .pop-vacio {
+	padding: var(--sp-2);
+	font-size: var(--fs-dense);
+	color: var(--text-3);
+}
+.dpe .pop .pop-pie {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--sp-2);
+	margin-top: var(--sp-2);
+	padding: var(--sp-2) var(--sp-2) 0;
+	border-top: 1px solid var(--border);
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+}
+.dpe .aplicados {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--sp-2);
+}
+.dpe .aplicados .f,
+.dpe .f.registro {
+	cursor: default;
+}
+.dpe .f button.quitar {
+	padding: 0;
+	border: 0;
+	background: none;
+	cursor: pointer;
+}
+.dpe .f button.quitar:hover {
+	background: var(--surface-hover);
+	color: var(--text);
+}

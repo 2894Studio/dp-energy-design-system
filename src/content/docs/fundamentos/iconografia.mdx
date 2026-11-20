@@ -1,0 +1,121 @@
+---
+title: Iconografía
+description: Un sprite SVG en línea, 41 íconos de Material Symbols Rounded rellenos, tres tamaños fijos. El ícono acompaña al texto.
+---
+
+import Example from '../../../components/Example.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import icons from '../../../tokens/icons.json';
+import '../../../styles/components/iconografia.css';
+
+<Example>
+	<div class="fila">
+		<button class="btn" type="button"><Icon name="refresh" />Reintentar</button>
+		<span class="pill p-warn"><Icon name="schedule" size="sm" />Por vencer</span>
+		<button class="iconbtn" type="button" aria-label="Más acciones para OT-1042" title="Más acciones"><Icon name="more_vert" /></button>
+	</div>
+</Example>
+
+Los íconos salen de **Material Symbols Rounded**, versión rellena, peso 400. El sprite completo se
+descarga en [Descargas](/recursos/descargas/).
+
+## Sprite
+
+Declara el sprite **una sola vez, al inicio del `<body>`**: un `<svg>` oculto con un `<symbol>` por
+ícono. Cada símbolo se llama `i-` más el nombre del ícono.
+
+```html
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-check_circle" viewBox="0 -960 960 960">…</symbol>
+    <symbol id="i-error" viewBox="0 -960 960 960">…</symbol>
+  </defs>
+</svg>
+```
+
+Úsalo con `<use>`:
+
+```html
+<svg class="ico" aria-hidden="true"><use href="#i-refresh"/></svg>Reintentar
+```
+
+- El ícono hereda `currentColor` del elemento que lo contiene. No le pongas color propio: un botón
+  con texto blanco tiene íconos blancos sin hacer nada.
+- No se cargan íconos desde un CDN ni con una fuente de íconos. Si el CDN falla, la pantalla
+  muestra el nombre del ícono en letras («dashboard», «group») sin ningún error visible.
+- Este sitio sirve el sprite como archivo (`/icons.svg`); en producto va en línea, para que no
+  dependa de una petición más.
+
+## Tamaños
+
+Tres tamaños fijos, no una escala libre.
+
+<Example noCode>
+	<div class="ico-tamanos">
+		<figure><Icon name="notifications" /><code>.ico</code>18px</figure>
+		<figure><Icon name="notifications" size="sm" /><code>.ico-sm</code>14px</figure>
+		<figure><Icon name="notifications" size="xs" /><code>.ico-xs</code>12px</figure>
+	</div>
+</Example>
+
+| Clase | Tamaño | Úsala para |
+|---|---|---|
+| `.ico` | 18px | Ícono junto a texto o en un botón |
+| `.ico-sm` | 14px | Dentro de una fila densa o una etiqueta de estado |
+| `.ico-xs` | 12px | Un glifo dentro de un control ya diminuto, como el botón de un [toggletip](/componentes/toggletip/) |
+
+Dimensiona con estas clases o con `width` y `height` iguales en el propio `.ico`. Nunca estires el
+`viewBox`: un ancho distinto del alto deforma el dibujo.
+
+## Uso
+
+- **El ícono acompaña al texto.** Nunca es la única forma de entender un control, salvo en un
+  [botón-icono](/componentes/boton-icono/) con nombre accesible.
+- **Un ícono decorativo lleva `aria-hidden="true"`.** El nombre lo da el texto que lo acompaña.
+- **Un ícono sin texto visible** lleva `aria-label` en su botón y una etiqueta emergente
+  (`title`). El `aria-label` nombra el dato concreto: en una lista de cuatro correos, cuatro
+  botones «Copiar» son indistinguibles al tabular.
+- **Un ícono significa lo mismo en toda la pantalla.** Si la misma posición de una fila muestra un
+  marcador en unas filas y una flecha en otras, el usuario no sabe qué hace.
+- **Una regla que tiñe íconos por contexto se acota a hijo directo** (`.estado > .ico`). Un
+  selector descendiente alcanza también los íconos de los botones. Ver [Contraste](/fundamentos/color/#contraste).
+
+<Guidelines>
+	<Guideline type="do" caption="El botón-icono nombra el dato concreto y lleva etiqueta emergente.">
+		<button class="iconbtn" type="button" aria-label="Copiar el correo contacto@ejemplo.com" title="Copiar"><Icon name="content_copy" /></button>
+	</Guideline>
+	<Guideline type="dont" caption="Un ícono suelto, sin nombre: nadie sabe qué hace, y el lector de pantalla tampoco.">
+		<span class="muted" style="display:inline-flex;gap:8px"><Icon name="smart_toy" /><Icon name="sort" /><Icon name="block" /></span>
+	</Guideline>
+</Guidelines>
+
+## Comprobar el sprite
+
+Un `<use>` que apunta a un símbolo inexistente no da error de red: no dibuja nada. Compruébalo en el
+DOM de cada pantalla; esta línea en la consola tiene que devolver una lista vacía:
+
+```js
+[...document.querySelectorAll('use')]
+  .filter((u) => !document.querySelector(u.getAttribute('href')));
+```
+
+## Íconos disponibles
+
+Estos son todos. Si una pantalla necesita otro, se añade al sprite desde la misma librería; no se
+dibuja a mano ni se toma de otra familia.
+
+<Example noCode>
+	<ul class="ico-rejilla">
+		{icons.map((n) => (
+			<li><Icon name={n} /><code>{n}</code></li>
+		))}
+	</ul>
+</Example>
+
+## Relacionados
+
+- [Botón-icono](/componentes/boton-icono/)
+- [Toggletip](/componentes/toggletip/)
+- [Descargas](/recursos/descargas/)

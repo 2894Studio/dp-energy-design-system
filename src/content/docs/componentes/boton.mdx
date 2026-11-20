@@ -1,0 +1,126 @@
+---
+title: Botón
+description: Dispara una acción. Una variante primaria por vista, una secundaria para todo lo demás.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="fila">
+		<button class="btn p" type="button"><Icon name="add" />Nuevo cliente</button>
+		<button class="btn" type="button">Exportar</button>
+		<button class="btn mini" type="button">Ver detalle</button>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para ejecutar una acción: guardar, crear, enviar, exportar.
+- Para navegar a otra vista, usa un enlace. Un botón que solo lleva a otra página es un enlace mal
+  vestido.
+- Para un control que solo muestra un ícono, usa el [botón-icono](/componentes/boton-icono/).
+- Para la acción de entrada al sistema, usa el [botón de acceso](/componentes/boton-acceso/).
+
+## Anatomía
+
+<Example noCode center>
+	<button class="btn p" type="button"><Icon name="add" />Nuevo cliente</button>
+</Example>
+
+1. **Contenedor** — alto mínimo declarado, radio `--r-ctrl`.
+2. **Ícono** (opcional) — a la izquierda del texto; hereda el color del botón.
+3. **Texto** — verbo en infinitivo + objeto: «Guardar cambios», «Nuevo cliente».
+
+## Variantes
+
+| Variante | Clase | Úsala para |
+|---|---|---|
+| Primario | `.btn.p` | La acción principal de la vista. Una sola por vista. |
+| Secundario | `.btn` | Cualquier otra acción. |
+| Compacto | `.btn.mini` | Acciones dentro de una fila de tabla o de una tarjeta, junto a otros destinos. |
+| Peligro | `.btn.peligro` | Acciones destructivas (eliminar, cancelar un trámite). Siempre con confirmación. |
+
+<Example title="Peligro">
+	<button class="btn peligro" type="button"><Icon name="delete" />Eliminar registro</button>
+</Example>
+
+## Tamaño
+
+| Variante | Alto mínimo | Texto |
+|---|---|---|
+| `.btn` | 36px | `--fs-dense` (13px), peso 600 |
+| `.btn.mini` | 28px | `--fs-meta` (12px), peso 600 |
+
+En la pantalla de acceso los botones suben a 44px: son las dos o tres acciones de toda la
+pantalla. En [modo táctil](/layout/objetivos-tactiles/) todos suben a 46px.
+
+**Declara el alto mínimo con `min-height`.** No lo confíes al relleno: con el relleno solo, el botón
+queda un píxel por debajo del suelo y nadie lo detecta leyendo el CSS.
+
+## Estados
+
+<Example title="Reposo, desactivado">
+	<div class="fila">
+		<button class="btn p" type="button">Guardar</button>
+		<button class="btn p" type="button" disabled>Guardar</button>
+		<button class="btn" type="button" aria-disabled="true">Exportar</button>
+	</div>
+</Example>
+
+| Estado | Comportamiento |
+|---|---|
+| Sobrevuelo | El secundario pasa a `--surface-hover`; el primario se oscurece. |
+| Foco | Anillo `--focus-w` en `--accent`, separado `--focus-offset`. |
+| Desactivado | Opacidad reducida y cursor `not-allowed`. Explica por qué cerca del botón. |
+| Ocupado | Ver el [botón de acceso](/componentes/boton-acceso/#estados). |
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Una acción primaria; el resto, secundarias.">
+		<button class="btn p" type="button">Guardar</button>
+		<button class="btn" type="button">Cancelar</button>
+	</Guideline>
+	<Guideline type="dont" caption="Dos primarias compiten: el usuario no sabe cuál es la acción.">
+		<button class="btn p" type="button">Guardar</button>
+		<button class="btn p" type="button">Enviar</button>
+	</Guideline>
+	<Guideline type="do" caption="El texto nombra lo que pasa al pulsar.">
+		<button class="btn p" type="button">Crear orden</button>
+	</Guideline>
+	<Guideline type="dont" caption="Un texto genérico obliga a leer el contexto para saber qué hace.">
+		<button class="btn p" type="button">Aceptar</button>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Usa `<button type="button">` (o `type="submit"` en formularios). Nunca un `<div>` con clic.
+- El ícono decorativo lleva `aria-hidden="true"`; el nombre accesible es el texto.
+- El ícono **hereda** el color del botón. Si una regla de contexto tiñe íconos, acótala a hijo
+  directo para que no alcance al botón: un ícono gris sobre el primario verde queda a 1,03:1.
+- Desactivado con `aria-disabled="true"` si el botón debe seguir recibiendo foco para explicar por
+  qué no está disponible.
+
+```css
+/* Mal: alcanza también al ícono del botón */
+.estado .ico { color: var(--text-3); }
+
+/* Bien: solo el ícono propio del bloque */
+.estado > .ico { color: var(--text-3); }
+```
+
+## Tokens
+
+<TokenTable names={['accent', 'accent-ink', 'surface', 'surface-hover', 'border-2', 'text', 'r-ctrl', 'fs-dense', 'fs-meta', 'focus-w', 'focus-offset']} />
+
+## Relacionados
+
+- [Botón-icono](/componentes/boton-icono/)
+- [Botón de acceso](/componentes/boton-acceso/)
+- [Menú de acciones](/componentes/menu-acciones/)
+- [Objetivos táctiles](/layout/objetivos-tactiles/)

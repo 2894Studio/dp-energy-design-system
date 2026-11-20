@@ -1,0 +1,149 @@
+---
+title: Barra de selección
+description: Aparece al seleccionar una o más filas, dice cuántas hay y reúne las acciones sobre ellas, con la destructiva aparte.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/barra-seleccion.css';
+
+<Example>
+	<div class="tabla-caja">
+		<div class="barra-sel" data-hay="false" role="region" aria-label="Acciones sobre la selección">
+			<b data-cuenta aria-live="polite">0 seleccionados</b>
+			<button class="btn mini" type="button"><Icon name="download" />Exportar selección</button>
+			<button class="btn mini" type="button">Quitar selección</button>
+			<button class="btn mini peligro destructiva" type="button"><Icon name="block" />Desactivar</button>
+		</div>
+		<table>
+			<caption class="sr">Clientes con sucursal principal, órdenes abiertas y estado</caption>
+			<thead>
+				<tr>
+					<th scope="col" class="col-sel"><input type="checkbox" data-sel-todo aria-label="Seleccionar todos los clientes" /></th>
+					<th scope="col">Cliente</th>
+					<th scope="col">Sucursal principal</th>
+					<th scope="col" class="num">Órdenes abiertas</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="col-sel"><input type="checkbox" data-sel aria-label="Seleccionar Solar del Norte" /></td>
+					<th scope="row">Solar del Norte</th>
+					<td>Planta Monterrey</td>
+					<td class="num">5</td>
+				</tr>
+				<tr>
+					<td class="col-sel"><input type="checkbox" data-sel aria-label="Seleccionar Grupo Industrial Bajío" /></td>
+					<th scope="row">Grupo Industrial Bajío</th>
+					<td>Planta León</td>
+					<td class="num">2</td>
+				</tr>
+				<tr>
+					<td class="col-sel"><input type="checkbox" data-sel aria-label="Seleccionar Agrícola San Miguel" /></td>
+					<th scope="row">Agrícola San Miguel</th>
+					<td>Rancho El Mezquite</td>
+					<td class="num">1</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para aplicar una misma acción a varias filas de una [tabla](/componentes/tabla/): exportar,
+  reasignar, desactivar.
+- Para una acción sobre una sola fila, usa el [menú de acciones](/componentes/menu-acciones/) de
+  esa fila.
+- No la dejes visible sin selección: sin nada seleccionado, sus acciones no tienen sobre qué actuar.
+
+## Anatomía
+
+<Example noCode>
+	<div class="barra-sel" data-hay="true">
+		<b>2 seleccionados</b>
+		<button class="btn mini" type="button"><Icon name="download" />Exportar selección</button>
+		<button class="btn mini" type="button">Quitar selección</button>
+		<button class="btn mini peligro destructiva" type="button"><Icon name="block" />Desactivar</button>
+	</div>
+</Example>
+
+1. **Banda** (`.barra-sel`) — fondo `--accent-soft` con bordes arriba y abajo; queda fija arriba
+   mientras haya selección.
+2. **Cuenta** — cuántos elementos hay seleccionados, siempre visible.
+3. **Acciones** — botones `.btn.mini`; incluye la forma de deshacer la selección.
+4. **Acción destructiva** (`.destructiva`) — la última, separada a la derecha.
+
+## Comportamiento
+
+| Momento | Qué pasa |
+|---|---|
+| Sin selección | La barra no existe (`data-hay="false"`). |
+| Primera casilla marcada | Aparece la barra con la cuenta. Que se note que apareció. |
+| Casilla de cabecera | Marca o desmarca todas las filas visibles. |
+| Acción destructiva | Pide confirmación diciendo a cuántos y a quiénes afecta. |
+| Tras la acción | Se puede deshacer. |
+
+La confirmación nombra a los afectados y la consecuencia en una línea:
+
+<Example title="Confirmación" noCode>
+	<div class="velo-muestra">
+		<div class="modal-muestra" role="dialog" aria-labelledby="sel-conf-t">
+			<header><h2 id="sel-conf-t">Desactivar 2 clientes</h2></header>
+			<div class="cuerpo"><p>Vas a desactivar 2 clientes: Solar del Norte y Agrícola San Miguel. Dejarán de aparecer en la lista de clientes activos; sus órdenes siguen consultables.</p></div>
+			<footer>
+				<button class="btn" type="button">Cancelar</button>
+				<button class="btn peligro" type="button">Desactivar 2 clientes</button>
+			</footer>
+		</div>
+	</div>
+</Example>
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="La destructiva al final, separada: no queda a un clic de una acción inocua.">
+		<div class="barra-sel" data-hay="true" style="width:100%">
+			<b>2 seleccionados</b>
+			<button class="btn mini" type="button">Exportar selección</button>
+			<button class="btn mini peligro destructiva" type="button">Desactivar</button>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="La destructiva pegada a «Exportar»: un error de puntería desactiva clientes.">
+		<div class="barra-sel" data-hay="true" style="width:100%">
+			<b>2 seleccionados</b>
+			<button class="btn mini peligro" type="button">Desactivar</button>
+			<button class="btn mini" type="button">Exportar selección</button>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="La confirmación dice a quiénes afecta y qué pasa después.">
+		<p class="muted" style="font-size:var(--fs-dense)">Vas a desactivar 2 clientes: Solar del Norte y Agrícola San Miguel. Dejarán de aparecer en la lista de clientes activos.</p>
+	</Guideline>
+	<Guideline type="dont" caption="Una pregunta genérica obliga a recordar qué se había seleccionado.">
+		<p class="muted" style="font-size:var(--fs-dense)">¿Estás seguro de que deseas continuar?</p>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Las acciones son `<button>`, no enlaces: ejecutan, no navegan. Un enlace se anuncia como «lleva a
+  otra página» y no responde igual al teclado.
+- La cuenta vive en una región `aria-live="polite"`: quien usa lector de pantalla oye cuántos lleva
+  seleccionados sin buscar la barra.
+- Cada casilla nombra su fila: `aria-label="Seleccionar Solar del Norte"`. La de cabecera,
+  «Seleccionar todos los clientes».
+- La fila seleccionada lleva `aria-selected="true"`; el fondo pasa a `--accent-soft`.
+- Al desaparecer la barra, el foco no se pierde: vuelve a la casilla o a la tabla.
+
+## Tokens
+
+<TokenTable names={['accent-soft', 'border', 'err-ink', 'err', 'sp-3', 'sp-4', 'fs-dense']} />
+
+## Relacionados
+
+- [Tabla densa](/componentes/tabla/)
+- [Diálogo](/componentes/dialogo/)
+- [Menú de acciones](/componentes/menu-acciones/)

@@ -1,0 +1,95 @@
+---
+title: Entrada al sistema
+description: Pantalla dividida en una columna de marca y una columna de acceso. Reutilizable en cualquier pantalla de entrada.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="split">
+		<div class="brand">
+			<div class="fila"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:32px" /><span class="wordmark">D.P. Energy</span></div>
+			<p style="font-size:var(--fs-title);line-height:var(--lh-compacto);max-width:22ch">Instalaciones solares, de la visita a la puesta en marcha.</p>
+		</div>
+		<div class="access">
+			<p style="font-size:21px;font-weight:600">Entra a D.P. Energy</p>
+			<p style="color:var(--text-2);line-height:var(--lh-texto)">Usa la cuenta de tu empresa. Si no tienes acceso, escribe a contacto@ejemplo.com.</p>
+			<button class="gbtn" type="button" data-demo-busy><span class="spin" aria-hidden="true"></span><Icon name="person" />Continuar con la cuenta de la empresa</button>
+		</div>
+	</div>
+</Example>
+
+## Estructura
+
+1. **Columna de marca** (`.brand`) — fondo `--marca-lienzo`, texto `--marca-lienzo-ink`, lockup en
+   su variante reversa y, si la hay, la ilustración de la escena. No lleva controles.
+2. **Columna de acceso** (`.access`) — superficie clara, título, una frase de ayuda y la acción de
+   entrada.
+
+Las dos columnas van lado a lado desde 920px; por debajo se apilan y la columna de marca baja a un
+alto fijo, para que la acción de entrada quede a la vista sin desplazarse.
+
+```css
+.split  { display: flex; flex: 1; min-height: 0; }
+.brand  { flex: 1.05; min-height: 520px; padding: var(--sp-6) var(--sp-8);
+          background: var(--marca-lienzo); color: var(--marca-lienzo-ink); }
+.access { flex: 1; padding: var(--sp-6) var(--sp-8); }
+
+@media (max-width: 920px) {
+  .split { flex-direction: column; }
+  .brand { flex: none; min-height: 300px; }
+}
+```
+
+## Columna de acceso
+
+- **Una sola acción primaria:** el [botón de acceso](/componentes/boton-acceso/) (`.gbtn`), de 48px
+  de alto. El resto de botones de la pantalla sube a 44px: son las dos o tres acciones de toda la
+  pantalla.
+- El botón de acceso se bloquea en el manejador de JS mientras comprueba, no solo con CSS:
+  `pointer-events: none` detiene el ratón, no el teclado.
+- El título de la tarjeta va a 21px, fuera de la escala: es el único título de la pantalla.
+- **Un solo contenedor para todos los estados.** Acceso, comprobando, sin permiso y error viven
+  dentro de la misma tarjeta; la pantalla no cambia de forma según lo que tenga que decir. Ver
+  [Vistas de estado](/patrones/vistas-de-estado/).
+- Si el acceso flota sobre la escena de marca, la tarjeta usa la
+  [superficie translúcida](/fundamentos/elevacion/) `.glass`, con su respaldo opaco.
+
+<Guidelines>
+	<Guideline type="do" caption="Una acción de entrada y una frase que dice qué cuenta usar.">
+		<div class="pila" style="width:100%;max-width:280px">
+			<button class="gbtn" type="button"><Icon name="person" />Continuar con la cuenta de la empresa</button>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Dos acciones primarias compiten: nadie sabe por dónde se entra.">
+		<div class="pila" style="width:100%;max-width:280px">
+			<button class="btn p" type="button" style="min-height:44px">Entrar</button>
+			<button class="btn p" type="button" style="min-height:44px">Continuar con la cuenta</button>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- La columna de acceso es el `<main>` de la pantalla; la de marca es decorativa y su ilustración
+  lleva `aria-hidden="true"` o `alt=""`.
+- El título es el `<h1>` de la pantalla.
+- Mientras comprueba, el botón lleva `aria-busy="true"` y el cambio de estado se anuncia en una
+  región `role="status"`.
+- Una ilustración animada en la columna de marca se pausa pulsándola. Ver
+  [Movimiento](/fundamentos/movimiento/).
+
+## Tokens
+
+<TokenTable names={['marca-lienzo', 'marca-lienzo-ink', 'surface', 'sp-6', 'sp-8', 'r-modal', 'sh-modal']} />
+
+## Relacionados
+
+- [Botón de acceso](/componentes/boton-acceso/)
+- [Vistas de estado](/patrones/vistas-de-estado/)
+- [Logotipo](/fundamentos/logotipo/)
+- [Elevación](/fundamentos/elevacion/)

@@ -1,0 +1,74 @@
+---
+title: Pasos
+description: Una secuencia de dos a cuatro acciones, cada una con ícono, título y descripción, unidas por un conector vertical.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<ol class="pasos" role="list" style="max-width:420px">
+		<li><span class="paso-ico"><Icon name="upload" /></span><span class="paso-txt"><b>Sube la constancia de situación fiscal.</b> En PDF, hasta 10 MB.</span></li>
+		<li><span class="paso-ico"><Icon name="visibility" /></span><span class="paso-txt"><b>Revisa los datos detectados.</b> Corrige la razón social o el RFC si no coinciden.</span></li>
+		<li><span class="paso-ico"><Icon name="send" /></span><span class="paso-txt"><b>Envía el expediente a validación.</b> Te avisamos cuando quede completo.</span></li>
+	</ol>
+</Example>
+
+## Cuándo usarlo
+
+- En lugar de un párrafo de instrucciones corrido, cuando hay una secuencia de **2 a 4** acciones
+  que seguir en orden.
+- En una [vista de estado](/patrones/vistas-de-estado/) vacía, para explicar cómo empezar.
+- Con una sola acción, escribe una frase y un [botón](/componentes/boton/).
+- Con más de cuatro pasos o con campos que llenar, usa un [formulario](/componentes/formulario/)
+  dividido en secciones.
+
+## Anatomía
+
+<Example noCode>
+	<ol class="pasos" role="list" style="max-width:420px">
+		<li><span class="paso-ico"><Icon name="calendar_month" /></span><span class="paso-txt"><b>Elige la fecha de la visita.</b> Solo aparecen los días con cuadrilla libre.</span></li>
+		<li><span class="paso-ico"><Icon name="check" /></span><span class="paso-txt"><b>Confirma con el cliente.</b> Se envía un correo a contacto@ejemplo.com.</span></li>
+	</ol>
+</Example>
+
+1. **Ícono** — `.paso-ico`: círculo de 32px en `--accent-soft`, ícono en `--accent`.
+2. **Título** — `<b>` dentro de `.paso-txt`, en `--text`, peso 600. Verbo en imperativo.
+3. **Descripción** — el resto de `.paso-txt`, en `--text-2`, `--fs-dense`.
+4. **Conector** — línea vertical de 2px en `--border` entre un ícono y el siguiente; el último paso
+   no lleva.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Cada paso empieza por un verbo y dice una sola acción.">
+		<ol class="pasos" role="list">
+			<li><span class="paso-ico"><Icon name="upload" /></span><span class="paso-txt"><b>Sube el contrato firmado.</b></span></li>
+			<li><span class="paso-ico"><Icon name="send" /></span><span class="paso-txt"><b>Envíalo a validación.</b></span></li>
+		</ol>
+	</Guideline>
+	<Guideline type="dont" caption="Las mismas instrucciones en un párrafo: el orden se pierde al leer en diagonal.">
+		<p class="muted" style="max-width:32ch">Para continuar es necesario que subas el contrato firmado y después lo envíes a validación.</p>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Usa `<ol>`: el orden es parte del contenido.
+- `list-style: none` hace que algunos lectores de pantalla dejen de anunciar la lista; añade
+  `role="list"` al `<ol>`.
+- El ícono es decorativo (`aria-hidden="true"`); el título dice el paso.
+- El conector es decorativo y no lleva contenido.
+
+## Tokens
+
+<TokenTable names={['accent', 'accent-soft', 'border', 'text', 'text-2', 'fs-dense', 'sp-3']} />
+
+## Relacionados
+
+- [Vistas de estado](/patrones/vistas-de-estado/)
+- [Formulario](/componentes/formulario/)
+- [Subida de archivo](/componentes/subida-archivo/)

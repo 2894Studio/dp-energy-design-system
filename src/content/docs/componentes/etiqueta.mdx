@@ -1,0 +1,160 @@
+---
+title: Etiqueta
+description: Dos familias que se parecen y no son lo mismo. La etiqueta de estado dice cómo está algo; la de clasificación, qué es.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="fila">
+		<span class="p-type p-s1">Empresa</span>
+		<span class="pill p-ok"><Icon name="check_circle" />Vigente</span>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+| Si el dato… | Usa | Ejemplo |
+|---|---|---|
+| Puede cambiar solo y emite un juicio | `.pill` — estado | «Vigente», «Por vencer», «Inactivo» |
+| Dice lo que la cosa es; no cambia solo ni es bueno o malo | `.p-type` — clasificación | «Empresa», «Particular», «Agrícola» |
+
+- Para filtrar una lista por estado, usa el [resumen de estatus](/componentes/resumen-estatus/).
+- Para un mensaje que necesita una frase, usa un [aviso](/componentes/aviso/).
+
+## Anatomía
+
+<Example noCode center>
+	<div class="fila">
+		<span class="pill p-warn"><Icon name="schedule" />Por vencer</span>
+		<span class="p-type p-s2">Particular</span>
+	</div>
+</Example>
+
+1. **Etiqueta de estado** — `.pill`: fondo `-bg` opaco, **ícono + texto** en `-ink`, peso 700.
+   Nunca color a secas.
+2. **Etiqueta de clasificación** — `.p-type`: punto de color de la serie, texto en `--text-2`,
+   peso 600. Menos peso visual que un estado.
+
+## Variantes
+
+### Estado
+
+Cinco estados del [semáforo](/fundamentos/color/#semáforo) y uno para «sin dato».
+
+<Example title="Estados">
+	<div class="fila">
+		<span class="pill p-ok"><Icon name="check_circle" />Vigente</span>
+		<span class="pill p-warn"><Icon name="warning" />Falta un documento</span>
+		<span class="pill p-err"><Icon name="error" />Vencido</span>
+		<span class="pill p-block"><Icon name="block" />Retenido</span>
+		<span class="pill p-pause"><Icon name="pause_circle" />Inactivo</span>
+		<span class="pill p-neutro"><Icon name="remove" />Sin calcular</span>
+	</div>
+</Example>
+
+| Variante | Clase | Úsala para |
+|---|---|---|
+| Correcto | `.pill.p-ok` | Completo, vigente, al día. |
+| Atención | `.pill.p-warn` | Falta algo o vence pronto, y el registro se puede seguir trabajando. |
+| Error | `.pill.p-err` | Lo que impide operar en la pantalla donde se muestra. |
+| Bloqueado | `.pill.p-block` | Una condición externa que no depende de quien mira. |
+| En pausa | `.pill.p-pause` | Inactivo, apagado. Un estado real que no es un fallo. |
+| Sin dato | `.pill.p-neutro` | No hay nada que evaluar todavía: «Sin calcular», «Sin sucursales». |
+
+**Dónde pasa `warn` a `err`.** `warn` mientras el registro se pueda seguir trabajando; `err` solo
+cuando ya no se puede operar nada en esa pantalla sin resolverlo. Un documento que falta es `warn`
+si el cliente se puede consultar y editar, aunque bloquee la acción puntual que lo exige.
+
+### Clasificación
+
+Usa la paleta de [series de gráfica](/fundamentos/color/#series-de-gráfica), nunca el semáforo.
+
+<Example title="Clasificación">
+	<div class="fila">
+		<span class="p-type p-s1">Empresa</span>
+		<span class="p-type p-s2">Particular</span>
+		<span class="p-type p-s0">Agrícola</span>
+	</div>
+</Example>
+
+| Variante | Clase | Úsala para |
+|---|---|---|
+| Serie 1 | `.p-type.p-s1` | Primera categoría. |
+| Serie 2 | `.p-type.p-s2` | Segunda categoría. |
+| Neutra | `.p-type.p-s0` | Tercera categoría o resto; conserva el punto gris. |
+
+**Todas las de una familia se ven como una familia.** O todas llevan punto, o ninguna. La
+categoría sin color propio lleva el punto gris neutro: distingue sin inventar otra serie y mantiene
+el texto alineado.
+
+## Comportamiento
+
+### Un estado por eje
+
+Una fila muestra **un estado por eje**, no uno por causa. «Falta un documento» y «falta otro» son
+el mismo estado: el detalle de cuál falta es un dato, en una línea de **hasta 40 caracteres** bajo
+la etiqueta.
+
+<Example title="El detalle es un dato, no un estado nuevo">
+	<span class="rz"><span class="pill p-warn"><Icon name="warning" />Falta un documento</span><small>Constancia de situación fiscal</small></span>
+</Example>
+
+**Un estado que depende de un dato que el producto aún no calcula no se dibuja.** No le inventes
+una etiqueta «sin calcular» distinta para cada caso.
+
+### Varias etiquetas juntas
+
+Agrúpalas por significado y sepáralas: primero la clasificación, después el estado, con una
+separación clara entre los dos grupos y, si hay sitio, un rótulo por grupo.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="«Inactivo» es un estado real: en pausa.">
+		<span class="pill p-pause"><Icon name="pause_circle" />Inactivo</span>
+	</Guideline>
+	<Guideline type="dont" caption="«Inactivo» con el estilo de «sin dato»: quien mira ya no distingue apagado de vacío.">
+		<span class="pill p-neutro"><Icon name="remove" />Inactivo</span>
+	</Guideline>
+	<Guideline type="do" caption="Clasificación con series, estado con semáforo, en dos grupos separados.">
+		<span class="p-type p-s1">Empresa</span>
+		<span class="muted">·</span>
+		<span class="pill p-ok"><Icon name="check_circle" />Vigente</span>
+	</Guideline>
+	<Guideline type="dont" caption="Todo con la misma forma: parecen valores del mismo campo, y «Empresa» se lee como un juicio.">
+		<span class="pill p-ok">Empresa</span>
+		<span class="pill p-ok">Vigente</span>
+		<span class="pill p-block">Grupo Bajío</span>
+	</Guideline>
+	<Guideline type="do" caption="Un estado y el detalle como dato.">
+		<span class="rz"><span class="pill p-warn"><Icon name="warning" />Falta un documento</span><small>Comprobante de domicilio</small></span>
+	</Guideline>
+	<Guideline type="dont" caption="Una etiqueta por causa convierte un eje en cinco estados.">
+		<span class="pill p-warn">Falta 1</span>
+		<span class="pill p-err">Faltan los 2</span>
+		<span class="pill p-neutro">Sin calcular</span>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- El estado se dice con ícono y texto; el color lo refuerza. Nunca color a secas.
+- El ícono de la etiqueta es decorativo (`aria-hidden="true"`): el texto ya nombra el estado.
+- Cada `-ink` cumple AA sobre su `-bg` en los dos temas; `.p-neutro` también.
+- El fondo `-bg` es opaco: el contraste no depende del contenedor donde caiga la etiqueta.
+
+## Tokens
+
+<TokenTable names={['ok-bg', 'ok-ink', 'warn-bg', 'warn-ink', 'err-bg', 'err-ink', 'block-bg', 'block-ink', 'pause-bg', 'pause-ink', 'surface-2', 'text-2', 'text-3', 'serie-1', 'serie-2', 'r-ctrl', 'fs-meta']} />
+
+## Relacionados
+
+- [Color: semáforo](/fundamentos/color/#semáforo)
+- [Resumen de estatus](/componentes/resumen-estatus/)
+- [Aviso](/componentes/aviso/)
+- [Tabla](/componentes/tabla/)

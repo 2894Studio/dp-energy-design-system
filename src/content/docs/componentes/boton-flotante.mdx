@@ -1,0 +1,126 @@
+---
+title: Botón flotante
+description: Abre el asistente desde cualquier pantalla. Flota sobre el contenido y exige una zona segura al final del desplazamiento.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/boton-flotante.css';
+
+<Example minHeight="260px">
+	<div class="marco-fab">
+		<div class="panel" tabindex="0" role="region" aria-label="Órdenes de instalación">
+			<div class="renglon"><span class="folio">OT-1040</span><span>Solar del Norte</span><button class="btn mini" type="button">Ver detalle</button></div>
+			<div class="renglon"><span class="folio">OT-1041</span><span>Grupo Industrial Bajío</span><button class="btn mini" type="button">Ver detalle</button></div>
+			<div class="renglon"><span class="folio">OT-1042</span><span>Agrícola San Miguel</span><button class="btn mini" type="button">Ver detalle</button></div>
+			<div class="renglon"><span class="folio">OT-1043</span><span>Planta Monterrey</span><button class="btn mini" type="button">Ver detalle</button></div>
+			<div class="renglon"><span class="folio">OT-1044</span><span>Solar del Norte</span><button class="btn mini" type="button">Ver detalle</button></div>
+		</div>
+		<button class="fab" type="button" title="Abrir asistente" aria-label="Abrir asistente"><Icon name="smart_toy" /></button>
+	</div>
+</Example>
+
+Desplaza el panel hasta el final: la franja rayada es el relleno reservado. La última fila y su
+botón quedan por encima del botón flotante.
+
+## Cuándo usarlo
+
+- Solo para abrir el asistente. Es el único botón flotante del sistema y aparece en la misma
+  posición en todas las pantallas.
+- Para la acción principal de una vista, usa un [botón primario](/componentes/boton/) en la
+  cabecera. Un botón flotante tapa contenido; la acción principal no debe competir con él.
+- Para acciones de fila, usa el [botón-icono](/componentes/boton-icono/) o el
+  [menú de acciones](/componentes/menu-acciones/).
+
+## Anatomía
+
+<Example noCode center>
+	<button class="fab" type="button" style="position:static" title="Abrir asistente" aria-label="Abrir asistente"><Icon name="smart_toy" /></button>
+</Example>
+
+1. **Contenedor** — círculo de 52px en `--accent`, sombra `--sh-float`.
+2. **Ícono** — `smart_toy` a 24px en `--accent-ink`.
+3. **Posición** — absoluta, 26px del borde derecho e inferior.
+
+## Medidas
+
+| Ancho de pantalla | Diámetro | Distancia a los bordes |
+|---|---|---|
+| Más de 480px | 52px | 26px |
+| Hasta 480px | 46px | 16px |
+
+La distancia nunca baja del área segura del dispositivo: `max(26px, env(safe-area-inset-right))` y
+su equivalente inferior, para que no quede bajo la barra de gestos ni el recorte de la pantalla.
+
+```css
+.fab {
+	position: absolute;
+	right: max(26px, env(safe-area-inset-right));
+	bottom: max(26px, env(safe-area-inset-bottom));
+	width: 52px;
+	height: 52px;
+	border-radius: 50%;
+}
+@media (max-width: 480px) {
+	.fab {
+		right: max(16px, env(safe-area-inset-right));
+		bottom: max(16px, env(safe-area-inset-bottom));
+		width: 46px;
+		height: 46px;
+	}
+}
+```
+
+## Zona segura
+
+El contenedor que desplaza por debajo del botón reserva, al final de su contenido, un
+`padding-bottom` que cubre el alto del botón, su margen y un respiro:
+
+`52px + 26px + var(--sp-3)` ≥ **90px**.
+
+**Ningún control ni dato de la última fila queda bajo el botón.** El relleno va en el contenedor
+que desplaza, no en el último hijo: si la última fila cambia o desaparece, la reserva sigue ahí.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="El contenedor reserva 90px al final: la última fila queda por encima del botón.">
+		<div class="marco-fab" style="height:150px;width:100%">
+			<div class="panel">
+				<div class="renglon"><span class="folio">OT-1044</span><span>Solar del Norte</span><button class="btn mini" type="button">Ver detalle</button></div>
+			</div>
+			<button class="fab" type="button" aria-label="Abrir asistente"><Icon name="smart_toy" /></button>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Sin reserva, el botón tapa la acción y los datos de la última fila.">
+		<div class="marco-fab" style="height:150px;width:100%">
+			<div class="panel" style="padding-bottom:0;background:var(--surface)">
+				<div class="renglon"><span class="folio">OT-1042</span><span>Agrícola San Miguel</span><button class="btn mini" type="button">Ver detalle</button></div>
+				<div class="renglon"><span class="folio">OT-1043</span><span>Planta Monterrey</span><button class="btn mini" type="button">Ver detalle</button></div>
+				<div class="renglon"><span class="folio">OT-1044</span><span>Solar del Norte</span><button class="btn mini" type="button">Ver detalle</button></div>
+			</div>
+			<button class="fab" type="button" aria-label="Abrir asistente"><Icon name="smart_toy" /></button>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- `aria-label="Abrir asistente"` y `title`; el ícono lleva `aria-hidden="true"`.
+- El ícono en `--accent-ink` sobre `--accent` cumple 3:1 como elemento gráfico.
+- Destino de 52px (46px en pantallas angostas), por encima del mínimo táctil.
+- La zona segura también protege el foco: un control enfocado en la última fila nunca queda
+  oculto bajo el botón.
+
+## Tokens
+
+<TokenTable names={['accent', 'accent-ink', 'sh-float', 'sp-3', 'focus-w', 'focus-offset']} />
+
+## Relacionados
+
+- [Hilo de conversación](/componentes/hilo-conversacion/)
+- [Botón-icono](/componentes/boton-icono/)
+- [Composición](/layout/composicion/)

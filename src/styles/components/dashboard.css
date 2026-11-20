@@ -1,0 +1,278 @@
+/*
+ * Capa de dashboard: rejilla, widget, KPI, barra apilada, leyenda, progreso
+ * y figura de gráfico con su tabla equivalente.
+ * Se importa desde patrones/dashboard.mdx.
+ */
+
+/* Rejilla de 12 columnas. Responde al ancho de su contenedor, no al de la ventana.
+   align-items:start: una tarjeta alta no estira a sus vecinas. */
+.dpe .dash {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	gap: var(--sp-4);
+	align-items: start;
+	container-type: inline-size;
+}
+.dpe .dash.pares {
+	align-items: stretch;
+}
+.dpe .dash > * {
+	grid-column: span 12;
+}
+@container (min-width: 480px) {
+	.dpe .dash > :is(.w-3, .w-4) {
+		grid-column: span 6;
+	}
+}
+@container (min-width: 640px) {
+	.dpe .dash > .w-3 {
+		grid-column: span 3;
+	}
+	.dpe .dash > .w-4 {
+		grid-column: span 4;
+	}
+	.dpe .dash > .w-6 {
+		grid-column: span 6;
+	}
+	.dpe .dash > .w-8 {
+		grid-column: span 8;
+	}
+}
+
+/* Tarjeta de widget: la receta de superficie de la tarjeta. No se anidan tarjetas. */
+.dpe .widget {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-3);
+	min-width: 0;
+	padding: var(--sp-4);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-card);
+	box-shadow: var(--sh-rest);
+}
+.dpe .widget > header {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--sp-2);
+}
+.dpe .widget > header .t {
+	font-size: var(--fs-meta);
+	font-weight: 700;
+	line-height: var(--lh-compacto);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--text-2);
+}
+.dpe .widget > .pie {
+	font-size: var(--fs-meta);
+	line-height: var(--lh-texto);
+	color: var(--text-3);
+}
+
+/* KPI de widget: una cifra; la variación va debajo, no al lado. */
+.dpe .widget > .kpi {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-1);
+}
+.dpe .widget > .kpi .cifra {
+	font-size: var(--fs-kpi);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.02em;
+	font-variant-numeric: tabular-nums;
+}
+.dpe .widget > .kpi .unidad {
+	margin-left: 6px;
+	font-size: var(--fs-dense);
+	font-weight: 600;
+	color: var(--text-2);
+}
+.dpe .widget > .kpi .var {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	font-size: var(--fs-meta);
+	font-weight: 700;
+	font-variant-numeric: tabular-nums;
+}
+.dpe .widget > .kpi .var.sube {
+	color: var(--ok-ink);
+}
+.dpe .widget > .kpi .var.baja {
+	color: var(--err-ink);
+}
+.dpe .widget > .kpi .var .ctx {
+	font-weight: 400;
+	color: var(--text-3);
+}
+
+/* Barra apilada de estado. Segmentos separados con superficie, no con hueco. */
+.dpe .barra {
+	display: flex;
+	height: 10px;
+	border-radius: var(--r-pill);
+	overflow: hidden;
+	background: var(--surface-2);
+}
+.dpe .barra > span {
+	display: block;
+}
+.dpe .barra > span + span {
+	border-left: 2px solid var(--surface);
+}
+.dpe :is(.barra, .leyenda) .s-ok {
+	background: var(--ok);
+}
+.dpe :is(.barra, .leyenda) .s-warn {
+	background: var(--warn);
+}
+.dpe :is(.barra, .leyenda) .s-err {
+	background: var(--err);
+}
+.dpe :is(.barra, .leyenda) .s-block {
+	background: var(--block);
+}
+.dpe :is(.barra, .leyenda) .s-pause {
+	background: var(--pause);
+}
+.dpe .leyenda .s-1 {
+	background: var(--serie-1);
+}
+.dpe .leyenda .s-2 {
+	background: var(--serie-2);
+}
+.dpe .leyenda .s-3 {
+	background: var(--serie-3);
+}
+.dpe .leyenda .s-4 {
+	background: var(--serie-4);
+}
+
+/* Leyenda inline. El texto va en tinta de texto; el color lo lleva la marca. */
+.dpe .leyenda {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sp-3);
+	font-size: var(--fs-meta);
+}
+.dpe .leyenda > span {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--text-2);
+}
+.dpe .leyenda .mu {
+	width: 9px;
+	height: 9px;
+	border-radius: 3px;
+	flex: none;
+}
+.dpe .leyenda b {
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Barra de progreso contra una meta declarada. */
+.dpe .progreso {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+.dpe .progreso .via {
+	height: 8px;
+	border-radius: var(--r-pill);
+	background: var(--surface-2);
+	overflow: hidden;
+}
+.dpe .progreso .via > i {
+	display: block;
+	height: 100%;
+	border-radius: var(--r-pill);
+	background: var(--accent);
+}
+.dpe .progreso .lectura {
+	display: flex;
+	justify-content: space-between;
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+}
+.dpe .progreso .lectura b {
+	color: var(--text);
+	font-variant-numeric: tabular-nums;
+}
+
+/* Figura de gráfico: lienzo + tabla equivalente, que es la fuente de verdad. */
+.dpe .viz {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-2);
+	min-width: 0;
+}
+.dpe .viz-lienzo {
+	position: relative;
+	width: 100%;
+	height: 180px;
+}
+.dpe .viz-tabla > summary {
+	padding: 2px 0;
+	border-radius: var(--r-ctrl);
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+	cursor: pointer;
+}
+.dpe .viz-tabla > summary:hover {
+	color: var(--accent);
+}
+.dpe .viz-tabla table {
+	margin-top: var(--sp-2);
+	font-size: var(--fs-meta);
+}
+.dpe .viz-tabla :is(th, td) {
+	height: auto;
+	padding: 5px var(--sp-2);
+	border-bottom: 1px solid var(--border);
+	text-align: left;
+}
+.dpe .viz-tabla th {
+	color: var(--text-2);
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+.dpe .viz-tabla td {
+	font-variant-numeric: tabular-nums;
+}
+.dpe .viz-tabla tbody tr:last-child > * {
+	border-bottom: 0;
+}
+/* El total no es una fila más de la serie: línea encima y peso. */
+.dpe .viz-tabla tfoot :is(th, td) {
+	border-top: 1px solid var(--border-2);
+	border-bottom: 0;
+	font-weight: 700;
+	color: var(--text);
+}
+.dpe .aviso-cdn {
+	display: none;
+	padding: 6px var(--sp-2);
+	border: 1px solid var(--warn-ink);
+	border-radius: var(--r-ctrl);
+	background: var(--warn-bg);
+	color: var(--warn-ink);
+	font-size: var(--fs-meta);
+}
+/* Sin librería: el lienzo desaparece y la tabla se abre. */
+.dpe .viz.sin-libreria .viz-lienzo,
+.dpe .viz.sin-libreria .viz-tabla > summary {
+	display: none;
+}
+.dpe .viz.sin-libreria .aviso-cdn {
+	display: block;
+}
+/* Gráfico de apoyo: la tabla sigue plegada. list-item, no block: block borra la flecha. */
+.dpe .viz.apoyo.sin-libreria .viz-tabla > summary {
+	display: list-item;
+}

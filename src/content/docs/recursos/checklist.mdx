@@ -1,0 +1,106 @@
+---
+title: Checklist de componente nuevo
+description: Las preguntas que una pantalla o un componente nuevo responde antes de darse por terminado.
+---
+
+Recorre la lista antes de publicar un componente o una pantalla. Cada pregunta se responde midiendo o
+probando, no leyendo el CSS. Las de la última sección solo se detectan en el navegador.
+
+## Color y tipografía
+
+- [ ] ¿El contraste está **medido**, no supuesto? 4,5:1 para texto y 3:1 para gráficos, en los dos
+      temas.
+- [ ] ¿Se midió también sobre `--surface-2`, y no solo sobre `--surface`?
+- [ ] ¿Ningún texto baja de 12px?
+- [ ] ¿Los íconos dentro de un botón heredan el color del botón?
+
+## Estados y jerarquía
+
+- [ ] ¿Cada estado se comunica con color **+ ícono + texto**, nunca con color solo?
+- [ ] ¿Las etiquetas de estado y las de clasificación se distinguen a simple vista?
+- [ ] ¿Un filtro se resalta solo cuando su valor difiere del predeterminado?
+- [ ] ¿Cada filtro tiene una sola vía de entrada y un solo sitio donde se ve su estado?
+
+## Interacción
+
+- [ ] ¿Todo objetivo interactivo mide 24px o más? (44px si es la acción principal.)
+- [ ] ¿La regla táctil lleva `:root`, y ninguna variante de tamaño del componente la anula por ir
+      después con la misma especificidad? Compruébalo midiendo con `data-tacto="dedo"` puesto.
+- [ ] ¿Una acción que confirma en el sitio cambia el ícono **y** la etiqueta **y** lo anuncia por
+      `aria-live`? Un ícono que cambia no lo percibe quien usa lector de pantalla.
+- [ ] ¿Un cambio de vista se anuncia (`aria-live`) y mueve el foco?
+- [ ] ¿Toda acción destructiva confirma, dice a cuántos registros afecta y se puede deshacer?
+- [ ] ¿Un botón ocupado se bloquea en el manejador, y no solo con `pointer-events`?
+- [ ] ¿Lo que ejecuta es un `<button>` y lo que navega es un `<a>`?
+- [ ] ¿Si la interfaz dice «quita uno», existe la forma de quitarlo?
+- [ ] ¿El nombre del botón coincide con lo que hace el diálogo que abre?
+- [ ] ¿Todo control con `aria-pressed` o `data-activo` filtra de verdad? Si no, preséntalo como cifra
+      de lectura.
+
+## Estructura
+
+- [ ] ¿Cada pantalla o vista tiene un encabezado real, no solo texto en negrita?
+- [ ] ¿Los estados vacío y error van en tarjeta, con su medallón, y no sueltos sobre el fondo?
+- [ ] ¿Todos los `id` son únicos, y cada `aria-describedby` o `aria-controls` apunta a algo que
+      existe?
+- [ ] ¿Toda columna ordenable declara `aria-sort`, incluidas las que aún no ordenan?
+- [ ] ¿Cada ícono va acompañado de texto o, como mínimo, de `aria-label`?
+- [ ] ¿El error deja a la vista el trabajo que la persona ya había hecho?
+
+## Espaciado
+
+- [ ] ¿La cabecera mide 12px o más bajo su última línea, medida sola, sin búsqueda ni filtros? Ver
+      [espaciado](/fundamentos/espaciado/#el-relleno-de-un-contenedor-vive-en-el-contenedor).
+- [ ] Si la cabecera ganó aire, ¿volviste a medir qué queda sobre la barra fija a 390 × 844?
+- [ ] ¿Algún `margin` negativo compensa el relleno de un contenedor? Si es así, el relleno está en el
+      sitio equivocado.
+
+## Movimiento y voz
+
+- [ ] ¿Toda animación que dure más de 5 s se puede pausar pulsándola, sin botón aparte?
+- [ ] ¿El texto en pantalla dice qué se puede hacer, y no por qué se decidió así?
+- [ ] ¿Cada aviso nuevo es una sola frase, de menos de 140 caracteres, y bloquea la acción
+      inmediata? Si explica, educa o cita un documento, bórralo o pásalo a un toggletip. Ver
+      [voz de producto](/contenido/voz/).
+- [ ] ¿Lo que es andamiaje de maqueta lleva `data-andamio` y está rotulado?
+
+## Comprobado en el navegador
+
+Ver [errores comunes](/recursos/errores-comunes/).
+
+- [ ] ¿El tamaño de texto se midió con el estilo calculado, y no buscando `font-size` en la hoja?
+- [ ] ¿El selector cubre por exclusión, de modo que no deje fuera un tipo de campo que se añada
+      después?
+- [ ] ¿Ninguna vista de estado lleva `hidden` en el HTML, que anularía la regla del estado?
+- [ ] ¿El destino de 24px es el contenedor que acepta la pulsación, y ese contenedor es pulsable?
+- [ ] ¿Todo `<use href="#i-…">` apunta a un `<symbol>` que existe en el sprite?
+- [ ] ¿Ningún ícono se dimensiona estirando su `viewBox`, solo con `.ico`, `.ico-sm` o `.ico-xs`?
+- [ ] ¿El esqueleto mide **lo mismo de alto** que el contenido que sustituye, y no solo lo mismo de
+      ancho? Mide las dos cajas.
+- [ ] ¿Los botones llegan a su alto mínimo (36px, 28px en `.mini`) con `min-height` declarado, y no por
+      el relleno?
+- [ ] ¿El isotipo lleva sus medidas en el `<use>` y ningún `viewBox` repetido en el `<svg>`? La caja
+      del `<use>` empieza donde empieza la del `<svg>`.
+- [ ] ¿Todo `var(--x)` que usa el componente existe en `tokens.json`? Un token inexistente invalida la
+      declaración entera sin aviso.
+
+## Andamiaje de maqueta
+
+Una maqueta suele llevar un conmutador para ver la pantalla en sus estados: «Con datos · Cargando ·
+Vacío · Error». **No es una función del producto**: son las formas en que la pantalla responde según
+lo que devuelva el sistema. Si se lee como parte del producto, parece un filtro más.
+
+- Márcalo siempre con `data-andamio`.
+- Sepáralo visualmente del producto y rotúlalo («Vista de maqueta»).
+- Todo lo que lleve `data-andamio` se retira en la versión real. Un solo selector lo encuentra.
+
+```html
+<aside class="demo" data-andamio role="group"
+       aria-label="Controles de la maqueta: ver la pantalla en sus distintos estados">
+  <span class="et-g">Vista de maqueta</span>
+  <button type="button" data-vista="ok" aria-pressed="true">Con datos</button>
+  <button type="button" data-vista="cargando" aria-pressed="false">Cargando</button>
+  <button type="button" data-vista="vacio" aria-pressed="false">Vacío</button>
+  <button type="button" data-vista="error" aria-pressed="false">Error</button>
+</aside>
+```

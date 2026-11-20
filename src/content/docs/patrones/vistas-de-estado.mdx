@@ -1,0 +1,267 @@
+---
+title: Vistas de estado
+description: Toda pantalla que pide datos se presenta con datos, cargando, vacía o con error. Las cuatro forman parte de la pantalla.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="tarjeta-estado">
+		<span class="estado-ico"><Icon name="filter_list" /></span>
+		<h3>Ningún cliente coincide con los filtros</h3>
+		<p>Hay 248 clientes en Planta Monterrey, pero ninguno corporativo con documentos pendientes.</p>
+		<div class="acc">
+			<button class="btn p" type="button"><Icon name="close" size="sm" />Quitar filtros</button>
+		</div>
+	</div>
+</Example>
+
+## Las vistas
+
+Diseña todas las vistas de una pantalla antes de darla por terminada. Cada una tiene su mensaje y su
+salida.
+
+| Vista | Cuándo aparece | Qué muestra |
+|---|---|---|
+| Con datos | El sistema respondió y hay registros. | El contenido: tabla, ficha, tablero. |
+| Cargando | La petición está en curso. | Un [esqueleto](/componentes/esqueleto/) con la forma de lo que va a llegar. |
+| Vacía | El sistema respondió y no hay nada que mostrar. | Tarjeta de estado con el motivo y una acción. Ver [tipos de vacío](#tipos-de-vacío). |
+| Error | El sistema no pudo responder. | Tarjeta de estado con qué pasó, qué no se perdió, qué hacer y una referencia. |
+| Sin permiso | El dato existe, pero no es de quien mira. | Tarjeta de estado con el [ámbito](/componentes/ambito/) que sí alcanza. Nunca un 0. |
+| Restaurar sesión | La persona vuelve al sistema. | Es una vista «cargando»: cromo pintado y esqueleto en la zona de contenido. |
+
+## Un contenedor, vistas hermanas
+
+Pon todas las vistas dentro del mismo contenedor, como hermanas. La pantalla no cambia de forma según
+lo que tenga que decir, y quien mira no pierde la referencia al pasar de cargando a error.
+
+- **En la pantalla de entrada**, el contenedor es la propia tarjeta de acceso.
+- **En la aplicación**, el estado ocupa la zona de contenido. La barra lateral, la barra superior y el
+  título de la página siguen en su sitio: siguen siendo verdad.
+
+Conmuta con un atributo en el contenedor y deja que el CSS muestre la vista que corresponde:
+
+```html
+<main id="contenido" data-vista="ok" tabindex="-1">
+  <div class="vista v-ok">…la tabla…</div>
+  <div class="vista v-cargando" role="status" aria-label="Cargando clientes">…</div>
+  <div class="vista estado v-vacio">…</div>
+  <div class="vista estado v-error">…</div>
+  <div class="vista estado v-sin-permiso">…</div>
+</main>
+<p class="sr" aria-live="polite" id="aviso-vista"></p>
+```
+
+```css
+.vista { display: none; }
+main[data-vista='ok'] .v-ok,
+main[data-vista='cargando'] .v-cargando { display: block; }
+main[data-vista='vacio'] .v-vacio,
+main[data-vista='error'] .v-error,
+main[data-vista='sin-permiso'] .v-sin-permiso { display: flex; }
+.estado { align-items: center; justify-content: center; flex: 1; padding: var(--sp-8) var(--sp-4); }
+```
+
+No pongas `hidden` en el HTML de una vista que gobierna el estado: `[hidden]` gana a cualquier regla y
+la vista no aparece nunca, sin error visible.
+
+## Tarjeta de estado
+
+Vacío, error y sin permiso van dentro de una `.tarjeta-estado`. Un mensaje suelto en una zona de
+contenido grande se lee como una pantalla que no terminó de cargar; la tarjeta le da forma de
+respuesta del sistema. El contenedor centra; la tarjeta tiene la forma.
+
+<Example noCode>
+	<div class="tarjeta-estado es-err">
+		<span class="estado-ico"><Icon name="error" /></span>
+		<h3>No se pudieron cargar los clientes</h3>
+		<p>Tus filtros y la búsqueda siguen guardados. Vuelve a intentarlo en unos segundos.</p>
+		<p class="ref" translate="no">Referencia del error: CLI-20261120-0942</p>
+		<div class="acc">
+			<button class="btn p" type="button"><Icon name="refresh" size="sm" />Reintentar</button>
+		</div>
+	</div>
+</Example>
+
+1. **Medallón** `.estado-ico` — círculo de 52px con relleno sólido del color de estado (`--accent`, o
+   `--err` con `.es-err`) y glifo de 28px en `--on-state`, que voltea por tema. El error solo cambia
+   el relleno.
+2. **Encabezado** — un `<h3>` real, nunca un `<b>`.
+3. **Mensaje** — en `--text-2`, con un ancho máximo de 36 caracteres.
+4. **Referencia** `.ref` (solo en error) — código con el que abrir un ticket; lleva `translate="no"`.
+5. **Acciones** `.acc` — botones a su ancho natural.
+
+| Propiedad | Valor | Por qué |
+|---|---|---|
+| Radio | `--r-modal` (16px) | Con el radio de `.tarjeta` sale plana y de esquinas duras. |
+| Sombra | `--sh-modal` | Se separa del fondo como respuesta del sistema. |
+| Fondo | `--surface`, opaco | El translúcido es exclusivo de la pantalla de entrada. |
+| Ancho | 480px como máximo | El mensaje se lee de un vistazo. |
+
+- **El medallón lleva el peso visual.** Sin él, el ícono queda como texto gris apagado y el estado no
+  se distingue de un hueco.
+- **El botón no se estira.** Dentro de la tarjeta, `.btn` conserva su ancho de contenido. Un
+  «Reintentar» de 480px no se parece a ningún otro botón del sistema.
+
+## Tipos de vacío
+
+Una pantalla vacía tiene tres causas distintas. Cada una lleva su propio mensaje y su propia acción;
+nunca uses el mismo texto para las tres.
+
+| Caso | Qué pasa | Mensaje | Acción |
+|---|---|---|---|
+| Por filtro | Hay datos, pero ninguno pasa los filtros o la búsqueda. | «Ningún cliente coincide con los filtros». Di cuántos hay sin filtrar. | «Quitar filtros». |
+| Por ámbito | Hay datos, pero no en el alcance de quien mira. | «No hay órdenes en tu alcance» + el ámbito que sí alcanza. | Ninguna, o el camino para pedir acceso. Nunca «Ver la lista». |
+| Realmente vacío | Todavía no existe ningún registro. | «Aún no hay órdenes de trabajo». | La acción que crea el primero: «Crear orden». |
+
+<Example title="Vacío por ámbito">
+	<div class="tarjeta-estado">
+		<span class="estado-ico"><Icon name="lock" /></span>
+		<h3>No hay órdenes en tu alcance</h3>
+		<p>Las órdenes de esta planta las gestiona otro equipo.</p>
+		<span class="ambito"><Icon name="location_on" />Tu alcance: Planta Monterrey</span>
+	</div>
+</Example>
+
+<Example title="Realmente vacío">
+	<div class="tarjeta-estado">
+		<span class="estado-ico"><Icon name="description" /></span>
+		<h3>Aún no hay órdenes de trabajo</h3>
+		<p>Crea la primera para programar una instalación o una visita de mantenimiento.</p>
+		<div class="acc">
+			<button class="btn p" type="button"><Icon name="add" size="sm" />Crear orden</button>
+		</div>
+	</div>
+</Example>
+
+- **Sin permiso no es cero.** Un 0 afirma que se midió. Si quien mira no alcanza el dato, muestra la
+  vista vacía con el ámbito; si lo alcanza y vale cero, muestra la cifra con su cero.
+- **No ofrezcas ver una lista que no se puede ver.**
+
+## Error
+
+Escribe el mensaje en este orden:
+
+1. **Qué pasó.** «No se pudieron cargar los clientes».
+2. **Qué no se perdió.** «Tus filtros y la búsqueda siguen guardados».
+3. **Qué hacer.** «Vuelve a intentarlo en unos segundos».
+4. **Referencia** con la que abrir un ticket: `CLI-20261120-0942`.
+
+**El error no se lleva el trabajo de la persona.** Si hay datos capturados en pantalla (un formulario,
+una selección), el error va encima como [banda](/componentes/aviso/), con los campos visibles y
+rellenos. Ocultarlos en el momento de más incertidumbre retira la prueba de que el trabajo sigue ahí.
+
+<Guidelines>
+	<Guideline type="do" caption="El error va encima; los datos capturados siguen a la vista.">
+		<div class="pila" style="width:100%">
+			<div class="banda b-err" role="alert"><Icon name="error" /><span><b>No se pudo guardar.</b> Tus datos siguen aquí; vuelve a intentarlo.</span></div>
+			<div class="ctrl"><label for="ve-razon">Razón social</label><input id="ve-razon" type="text" value="Agrícola San Miguel" /></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Sustituir el formulario por el error: la persona no sabe si perdió lo capturado.">
+		<div class="tarjeta-estado es-err">
+			<span class="estado-ico"><Icon name="error" /></span>
+			<h3>No se pudo guardar</h3>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Cargando
+
+<Example title="Esqueleto de tabla">
+	<div class="tabla-caja sk-tabla" role="status" aria-label="Cargando clientes">
+		<div class="sk-fila sk-cab" style="grid-template-columns:2.2fr 1fr 1fr 1.3fr"><span class="skel" style="width:38%"></span><span class="skel" style="width:52%"></span><span class="skel" style="width:44%"></span><span class="skel" style="width:30%"></span></div>
+		<div class="sk-fila" style="grid-template-columns:2.2fr 1fr 1fr 1.3fr"><span class="celda"><span class="skel" style="width:72%;height:12px"></span><span class="skel" style="width:40%;height:10px"></span></span><span class="skel" style="width:64%;height:12px"></span><span class="skel" style="width:48%;height:20px"></span><span class="skel" style="width:58%;height:12px"></span></div>
+		<div class="sk-fila" style="grid-template-columns:2.2fr 1fr 1fr 1.3fr"><span class="celda"><span class="skel" style="width:56%;height:12px"></span><span class="skel" style="width:34%;height:10px"></span></span><span class="skel" style="width:80%;height:12px"></span><span class="skel" style="width:56%;height:20px"></span><span class="skel" style="width:42%;height:12px"></span></div>
+		<div class="sk-fila" style="grid-template-columns:2.2fr 1fr 1fr 1.3fr"><span class="celda"><span class="skel" style="width:84%;height:12px"></span><span class="skel" style="width:46%;height:10px"></span></span><span class="skel" style="width:52%;height:12px"></span><span class="skel" style="width:44%;height:20px"></span><span class="skel" style="width:66%;height:12px"></span></div>
+	</div>
+</Example>
+
+- **Anticipa la forma.** Mismas columnas, mismos anchos (en `fr`) y **mismo alto** que el contenido
+  real. Si el menú tiene ocho filas, el esqueleto tiene ocho. Uno que no coincide engaña al ojo y la
+  pantalla salta al llegar los datos.
+- **Anchos irregulares.** Todas las barras al 100% se leen como papel cuadriculado.
+- **Cambia de forma en el mismo punto de ruptura** que el contenido que sustituye.
+- **Sin texto dentro de las barras.** Basta `role="status"` con `aria-label` en el contenedor; un
+  texto oculto con color transparente sigue siendo anunciado.
+- **Tiene salida.** Pasados unos segundos sin respuesta, cambia a la vista de error con su reintento.
+  Sin salida, nadie distingue «tarda» de «se colgó».
+
+### Restaurar sesión
+
+Al volver al sistema, pinta el cromo de inmediato con sus etiquetas reales (no dependen de la sesión)
+y pon el esqueleto en la zona de contenido, como en cualquier otra carga. No uses una pantalla aparte
+ni un esqueleto sobre la barra lateral.
+
+## Cabecera
+
+**El título de la página persiste en todas las vistas; el resumen de datos, no.** En vacío, error y
+cargando, retira la línea de resumen («2 visitas · 7 h de trabajo»): decir «2 visitas» sobre «No
+tienes visitas hoy» contradice la propia pantalla.
+
+<Guidelines>
+	<Guideline type="do" caption="En vacío queda el título; el resumen se retira.">
+		<div class="pila" style="width:100%">
+			<p style="font-size:var(--fs-title);font-weight:600">Mi día</p>
+			<div class="tarjeta-estado"><span class="estado-ico"><Icon name="calendar_month" /></span><p>No tienes visitas hoy.</p></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="El resumen contradice el estado vacío que tiene debajo.">
+		<div class="pila" style="width:100%">
+			<p style="font-size:var(--fs-title);font-weight:600">Mi día</p>
+			<p class="muted">2 visitas · 7 h de trabajo</p>
+			<div class="tarjeta-estado"><span class="estado-ico"><Icon name="calendar_month" /></span><p>No tienes visitas hoy.</p></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- **Anuncia el cambio y mueve el foco.** Sin esto, quien usa lector de pantalla no se entera de que
+  la pantalla cambió. El contenedor lleva `tabindex="-1"` para recibir el foco.
+
+  ```js
+  const VISTAS = {
+    ok: 'Clientes, 248 registros.',
+    cargando: 'Cargando clientes.',
+    vacio: 'Ningún cliente coincide con los filtros activos.',
+    error: 'No se pudieron cargar los clientes.',
+  };
+  function muestra(clave, mueveFoco) {
+    main.dataset.vista = clave;
+    aviso.textContent = VISTAS[clave]; // <p class="sr" aria-live="polite">
+    if (mueveFoco) main.focus();
+  }
+  ```
+
+- **Cada vista lleva un encabezado real** (`<h2>` o `<h3>`), para navegar saltando de encabezado en
+  encabezado.
+- **La vista cargando** lleva `role="status"` y un `aria-label` que dice qué se carga.
+- **Un hilo que recibe mensajes** sin que nadie los pida lleva `role="log"`. Ver
+  [hilo de conversación](/componentes/hilo-conversacion/).
+- **El tinte del ícono de estado se acota a hijo directo.** Un selector descendiente alcanza también
+  los íconos de los botones de `.acc` y pinta de gris el ícono del botón primario.
+
+  ```css
+  /* Mal: tiñe también el ícono del botón «Reintentar» */
+  .tarjeta-estado .ico { color: var(--text-3); }
+
+  /* Bien: solo el ícono propio del bloque */
+  .tarjeta-estado > .ico,
+  .tarjeta-estado > .estado-ico > .ico { color: inherit; }
+  ```
+
+## Tokens
+
+<TokenTable names={['surface', 'border', 'r-modal', 'sh-modal', 'accent', 'err', 'on-state', 'text-2', 'text-3', 'fs-sub', 'fs-dense', 'fs-meta', 'lh-lectura', 'sp-3', 'sp-8']} />
+
+## Relacionados
+
+- [Esqueleto](/componentes/esqueleto/)
+- [Aviso](/componentes/aviso/)
+- [Ámbito de datos](/componentes/ambito/)
+- [Filtrar y buscar](/patrones/filtrar-y-buscar/)

@@ -1,0 +1,207 @@
+---
+title: Fila desplegable
+description: Abre el detalle de un registro dentro de su propia fila, como una banda que ocupa el ancho visible de la tabla.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="tabla-caja" id="clientes-demo" role="region" aria-label="Clientes y sucursales" tabindex="0">
+		<table style="min-width:820px">
+			<caption class="sr">Clientes con sucursales, órdenes abiertas, contacto y estado</caption>
+			<thead>
+				<tr>
+					<th scope="col">Cliente</th>
+					<th scope="col" class="num">Sucursales</th>
+					<th scope="col" class="num">Órdenes abiertas</th>
+					<th scope="col">Contacto</th>
+					<th scope="col">Estado</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row"><button class="expandir" type="button" aria-expanded="false" aria-controls="suc-solar"><Icon name="expand_more" />Solar del Norte<span class="sr">, 3 sucursales</span></button></th>
+					<td class="num">3</td>
+					<td class="num">5</td>
+					<td>contacto@ejemplo.com</td>
+					<td><span class="pill p-ok"><Icon name="check_circle" />Activo</span></td>
+				</tr>
+				<tr class="hijas" id="suc-solar" hidden>
+					<td colspan="5">
+						<ul class="suc-lista" aria-label="Sucursales de Solar del Norte">
+							<li><span>Planta Monterrey</span><span class="muted">Monterrey, N.L.</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta Monterrey">Ver órdenes</a></li>
+							<li><span>Planta Saltillo</span><span class="muted">Saltillo, Coah.</span><span class="pill p-block"><Icon name="block" />Bloqueada</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta Saltillo">Ver órdenes</a></li>
+							<li><span>Planta Apodaca</span><span class="muted">Apodaca, N.L.</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta Apodaca">Ver órdenes</a></li>
+						</ul>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row"><button class="expandir" type="button" aria-expanded="false" aria-controls="suc-bajio"><Icon name="expand_more" />Grupo Industrial Bajío<span class="sr">, 2 sucursales</span></button></th>
+					<td class="num">2</td>
+					<td class="num">2</td>
+					<td>contacto@ejemplo.com</td>
+					<td><span class="pill p-ok"><Icon name="check_circle" />Activo</span></td>
+				</tr>
+				<tr class="hijas" id="suc-bajio" hidden>
+					<td colspan="5">
+						<ul class="suc-lista" aria-label="Sucursales de Grupo Industrial Bajío">
+							<li><span>Planta León</span><span class="muted">León, Gto.</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta León">Ver órdenes</a></li>
+							<li><span>Nave 3 Silao</span><span class="muted">Silao, Gto.</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Nave 3 Silao">Ver órdenes</a></li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para consultar datos subordinados a una fila (sucursales de un cliente, partidas de una orden)
+  sin salir de la lista.
+- Para datos que hoy obligan a abrir la ficha solo para echar un vistazo.
+- Si el detalle tiene secciones, formularios o más de una acción por renglón, abre la
+  [ficha de detalle](/componentes/ficha-detalle/).
+- Para acciones sobre la fila, usa el [menú de acciones](/componentes/menu-acciones/).
+
+## Anatomía
+
+<Example noCode>
+	<div class="tabla-caja">
+		<table>
+			<tbody>
+				<tr>
+					<th scope="row"><button class="expandir" type="button" aria-expanded="true" aria-controls="suc-anatomia"><Icon name="expand_more" />Solar del Norte</button></th>
+					<td class="num">3</td>
+				</tr>
+				<tr class="hijas" id="suc-anatomia">
+					<td colspan="2">
+						<ul class="suc-lista" aria-label="Sucursales de Solar del Norte">
+							<li><span>Planta Monterrey</span><span class="muted">Monterrey, N.L.</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta Monterrey">Ver órdenes</a></li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</Example>
+
+1. **Control** (`.expandir`) — botón con chevron dentro de la celda identificadora; el chevron gira
+   180° al abrir.
+2. **Fila hija** (`tr.hijas`) — una sola celda con `colspan` igual al número de columnas, fondo
+   `--surface-2`.
+3. **Lista** (`.suc-lista`) — renglones de 40px con divisorias que llegan al final de la fila.
+4. **Acción del renglón** — siempre al final, a la vista aunque la tabla desplace.
+
+## Comportamiento
+
+- **La lista ocupa el ancho visible de la tabla, no el de su `colspan`.** `.tabla-caja` declara
+  `container-type: inline-size` y la lista mide `100cqw` con `position: sticky; left: 0`. Así las
+  divisorias llegan al borde y la acción no cae fuera de la vista cuando la tabla es más ancha que
+  la caja.
+- **No la acotes a un ancho fijo.** Un ancho fijo deja las líneas a medias y la acción lejos del
+  borde. Es la excepción a «el contenido crece con su contenedor»: una lista de renglones cortos
+  sobre una banda se acota al área visible.
+- **Es una banda, no una tarjeta.** La tabla no va en tarjeta y la fila hija tampoco anida una.
+- **El estado del renglón aparece solo cuando es una excepción** («Bloqueada»). Repetir «Puede
+  recibir órdenes» en cada renglón no informa.
+- `Escape` cierra la fila hija y devuelve el foco al botón que la abrió.
+
+```css
+.tabla-caja { container-type: inline-size; }
+.suc-lista { list-style: none; position: sticky; left: 0; width: 100cqw; }
+```
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Una banda: las divisorias llegan al final y la acción cierra cada renglón.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr class="hijas">
+						<td>
+							<ul class="suc-lista" aria-label="Sucursales de ejemplo">
+								<li><span>Planta León</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta León">Ver órdenes</a></li>
+								<li><span>Nave 3 Silao</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Nave 3 Silao">Ver órdenes</a></li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Una tarjeta dentro de la fila: dos contenedores para una sola lista.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr class="hijas">
+						<td style="padding:12px">
+							<div class="tarjeta">
+								<ul class="suc-lista" aria-label="Sucursales de ejemplo">
+									<li><span>Planta León</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta León">Ver órdenes</a></li>
+								</ul>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="El estado solo donde es excepción: se ve de un vistazo.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr class="hijas">
+						<td>
+							<ul class="suc-lista" aria-label="Sucursales de ejemplo">
+								<li><span>Planta Monterrey</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta Monterrey">Ver órdenes</a></li>
+								<li><span>Planta Saltillo</span><span class="pill p-block"><Icon name="block" />Bloqueada</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta Saltillo">Ver órdenes</a></li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="El mismo estado en cada renglón esconde la única excepción.">
+		<div class="tabla-caja" style="width:100%">
+			<table>
+				<tbody>
+					<tr class="hijas">
+						<td>
+							<ul class="suc-lista" aria-label="Sucursales de ejemplo">
+								<li><span>Planta Monterrey</span><span class="pill p-ok">Puede recibir órdenes</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta Monterrey">Ver órdenes</a></li>
+								<li><span>Planta Saltillo</span><span class="pill p-block">Bloqueada</span><a class="btn mini" href="#clientes-demo" aria-label="Ver órdenes de Planta Saltillo">Ver órdenes</a></li>
+							</ul>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- El control es un `<button>` con `aria-expanded` y `aria-controls`. **`aria-controls` apunta a un
+  `id` que existe**: un control que apunta a la nada anuncia «contraído» y no hace nada.
+- La fila hija cerrada lleva `hidden`; no basta con ocultarla visualmente.
+- El nombre del botón dice qué abre: «Solar del Norte, 3 sucursales».
+- `Escape` cierra y devuelve el foco al botón.
+- La lista lleva `aria-label` («Sucursales de Solar del Norte») y cada renglón nombra su acción con
+  su sucursal si hay varias iguales: `aria-label="Ver órdenes de Planta Monterrey"`.
+
+## Tokens
+
+<TokenTable names={['surface-2', 'border', 'text', 'sp-3', 'sp-4', 'dur-base', 'ease-out']} />
+
+## Relacionados
+
+- [Tabla densa](/componentes/tabla/)
+- [Ficha de detalle](/componentes/ficha-detalle/)
+- [Menú de acciones](/componentes/menu-acciones/)

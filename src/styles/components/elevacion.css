@@ -1,0 +1,61 @@
+/* Muestras de la página Fundamentos › Elevación. */
+.dpe .elev-muestras {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	gap: var(--sp-6);
+	width: 100%;
+}
+.dpe .elev-muestras figure {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	gap: var(--sp-1);
+	min-height: 96px;
+	padding: var(--sp-4);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--r-card);
+	font-size: var(--fs-meta);
+	color: var(--text-2);
+}
+.dpe .elev-muestras figure code {
+	font-size: var(--fs-dense);
+	font-weight: 600;
+	color: var(--text);
+}
+.dpe .elev-fondo {
+	display: grid;
+	place-items: center;
+	width: 100%;
+	padding: var(--sp-8) var(--sp-4);
+	border-radius: var(--r-card);
+	background:
+		radial-gradient(circle at 20% 30%, var(--marca-4) 0 18%, transparent 19%),
+		radial-gradient(circle at 78% 70%, var(--marca-6) 0 22%, transparent 23%),
+		var(--marca-lienzo);
+}
+.dpe .elev-fondo .glass {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-3);
+	width: 100%;
+	max-width: 320px;
+	padding: var(--sp-6);
+	color: var(--text);
+}
+.dpe .elev-fondo .glass h4 {
+	font-size: var(--fs-sub);
+	font-weight: 600;
+}
+.dpe .elev-fondo .glass p {
+	font-size: var(--fs-dense);
+	line-height: var(--lh-texto);
+	color: var(--text-2);
+}
+.dpe .elev-anidada {
+	width: 100%;
+	max-width: 18rem;
+}
+.dpe .elev-anidada .interior .tarjeta {
+	margin-top: var(--sp-2);
+}

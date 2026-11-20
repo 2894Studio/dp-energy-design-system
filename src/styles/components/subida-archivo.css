@@ -1,0 +1,18 @@
+/* Subida de archivo: el input real queda oculto a la vista y su etiqueta-botón muestra el foco. */
+.dpe :is(.subida, .archivo) {
+	position: relative;
+}
+.dpe :is(.subida, .archivo) input[type='file']:focus-visible + label {
+	outline: var(--focus-w) solid var(--accent);
+	outline-offset: var(--focus-offset);
+}
+.dpe :is(.subida, .archivo) label.btn {
+	cursor: pointer;
+}
+.dpe .archivo .rz {
+	min-width: 0;
+	overflow-wrap: anywhere;
+}
+.dpe .archivo > .ico {
+	color: var(--text-3);
+}

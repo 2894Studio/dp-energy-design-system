@@ -1,0 +1,193 @@
+---
+title: Formulario
+description: Secciones en tarjeta con campos en rejilla; cada campo con su rótulo, su ayuda y su error enlazados.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<div class="pila">
+		<section class="tarjeta" aria-labelledby="fm-s1">
+			<header><h3 id="fm-s1">Datos fiscales</h3><span class="n">Falta el domicilio fiscal</span></header>
+			<div class="rejilla">
+				<div class="ctrl">
+					<label for="fm-razon">Razón social</label>
+					<input type="text" id="fm-razon" value="Solar del Norte" required aria-required="true" autocomplete="organization" />
+				</div>
+				<div class="ctrl">
+					<label for="fm-rfc">RFC</label>
+					<input type="text" id="fm-rfc" value="SNO180512AB3" required aria-required="true" aria-describedby="fm-rfc-a" />
+					<span class="ayuda" id="fm-rfc-a">12 caracteres si es empresa, 13 si es persona física.</span>
+				</div>
+				<div class="dato-calc">
+					<span>Tipo de cliente</span>
+					<span class="valor">Empresa</span>
+					<small class="muted">Se deduce del RFC.</small>
+				</div>
+				<div class="ctrl">
+					<label for="fm-cp">Código postal</label>
+					<input type="text" id="fm-cp" inputmode="numeric" autocomplete="postal-code" aria-describedby="fm-cp-a" />
+					<span class="ayuda" id="fm-cp-a">Necesario para facturar.</span>
+				</div>
+				<div class="ctrl ancho" data-error="true">
+					<label for="fm-dom">Domicilio fiscal</label>
+					<input type="text" id="fm-dom" required aria-required="true" aria-invalid="true" aria-describedby="fm-dom-e" autocomplete="street-address" />
+					<span class="mal" id="fm-dom-e"><Icon name="error" size="sm" />Falta el domicilio fiscal. Sin él no se puede timbrar una factura a este cliente.</span>
+				</div>
+			</div>
+		</section>
+		<section class="tarjeta" aria-labelledby="fm-s2">
+			<header><h3 id="fm-s2">Contacto</h3></header>
+			<div class="rejilla">
+				<div class="ctrl">
+					<label for="fm-correo">Correo de facturación</label>
+					<input type="email" id="fm-correo" value="contacto@ejemplo.com" autocomplete="email" aria-describedby="fm-correo-a" />
+					<span class="ayuda" id="fm-correo-a">Necesario para facturar.</span>
+				</div>
+				<div class="ctrl">
+					<label for="fm-tel">Teléfono <span class="opc">(opcional)</span></label>
+					<input type="tel" id="fm-tel" autocomplete="tel" />
+				</div>
+			</div>
+		</section>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para dar de alta o editar un registro: cliente, sucursal, orden.
+- Para adjuntar un documento, usa la [subida de archivo](/componentes/subida-archivo/) dentro del
+  formulario, nunca un campo de texto.
+- Para confirmar una sola decisión, usa un [diálogo](/componentes/dialogo/).
+
+## Anatomía
+
+<Example noCode>
+	<div class="ctrl" style="max-width:320px">
+		<label for="fm-an">Teléfono <span class="opc">(opcional)</span></label>
+		<input type="tel" id="fm-an" aria-describedby="fm-an-a" />
+		<span class="ayuda" id="fm-an-a">Diez dígitos, sin espacios.</span>
+	</div>
+</Example>
+
+1. **Sección** — una [tarjeta](/componentes/tarjeta/) con cabecera; la cabecera dice qué falta, en
+   palabras.
+2. **Rejilla** (`.rejilla`) — columnas `auto-fit` de 230px como mínimo; `.ctrl.ancho` ocupa la fila
+   entera.
+3. **Rótulo** (`<label>`) — `--fs-meta`, peso 600, en `--text-2`. Lo opcional lleva «(opcional)»
+   en `.opc`.
+4. **Control** — alto mínimo 38px, borde `--border-ctrl`, fondo `--bg`.
+5. **Ayuda** (`.ayuda`) — `--fs-meta` en `--text-2`, enlazada con `aria-describedby`.
+6. **Error** (`.mal`) — ícono y texto en `--err-ink`, peso 600; sustituye o acompaña a la ayuda.
+
+## Variantes
+
+| Variante | Clase | Úsala para |
+|---|---|---|
+| Campo | `.ctrl` | Un dato que escribe quien llena el formulario. |
+| Campo ancho | `.ctrl.ancho` | Domicilios, notas: textos que no caben en una columna. |
+| Dato calculado | `.dato-calc` | Un valor que el sistema deduce. Se muestra como dato, no como campo. |
+
+**Un dato calculado no es un campo.** Un campo editable con el texto «Se calcula solo» se puede
+borrar y enviar como dato. Muestra rótulo y valor real («Empresa») y una nota corta de dónde se
+deduce.
+
+## Estados
+
+<Example title="Error y botón no disponible">
+	<div class="pila" style="max-width:420px">
+		<div class="ctrl" data-error="true">
+			<label for="fm-cp2">Código postal</label>
+			<input type="text" id="fm-cp2" inputmode="numeric" value="6400" aria-invalid="true" aria-describedby="fm-cp2-e" />
+			<span class="mal" id="fm-cp2-e"><Icon name="error" size="sm" />El código postal tiene 5 dígitos.</span>
+		</div>
+		<div class="fila">
+			<button class="btn mini" type="button" aria-disabled="true" aria-describedby="fm-tope">Añadir correo</button>
+			<span class="muted" id="fm-tope">Tope: 4 correos. Quita uno para añadir otro.</span>
+		</div>
+	</div>
+</Example>
+
+| Estado | Comportamiento |
+|---|---|
+| Reposo | Borde `--border-ctrl`. |
+| Foco | Anillo `--focus-w` en `--accent`. |
+| Error | `data-error="true"`: borde y halo de 1px en `--err`; mensaje `.mal` debajo. |
+| No disponible | Botón con `aria-disabled="true"` y el motivo junto a él, enlazado con `aria-describedby`. |
+
+- **No hay error antes de la interacción.** El error aparece cuando la persona ya pasó por el
+  campo, no al cargar el formulario vacío.
+- **El error dice qué falta y por qué importa**: «Falta el domicilio fiscal. Sin él no se puede
+  timbrar una factura a este cliente».
+- **Un botón deshabilitado no recibe foco**, y quien navega con teclado nunca llega a la explicación.
+  Usa `aria-disabled="true"` y explica el motivo al pulsarlo.
+- **Si el motivo dice «quita uno», la forma de quitarlo existe.** Si no se quiere borrar, ofrece
+  «Archivar» o «Marcar como no vigente».
+
+## Uso
+
+**Dos niveles de obligatoriedad, con palabras distintas.** «Obligatorio para dar de alta» (sin esto
+no hay registro) lleva `required`. «Necesario para facturar» (el registro existe pero no opera) lo
+dice en la ayuda. Lo demás se marca «(opcional)».
+
+<Guidelines>
+	<Guideline type="do" caption="El dato calculado se lee como dato, con su origen.">
+		<div class="dato-calc">
+			<span>Tipo de cliente</span>
+			<span class="valor">Empresa</span>
+			<small class="muted">Se deduce del RFC.</small>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Un campo editable con la descripción del mecanismo: se puede borrar y enviar.">
+		<div class="ctrl" style="width:100%">
+			<label for="fm-mal1">Tipo de cliente</label>
+			<input type="text" id="fm-mal1" value="Se calcula solo" />
+		</div>
+	</Guideline>
+	<Guideline type="do" caption="La cabecera dice qué falta, en palabras.">
+		<section class="tarjeta" aria-labelledby="fm-g1" style="width:100%">
+			<header><h3 id="fm-g1">Datos fiscales</h3><span class="n">Falta el domicilio fiscal</span></header>
+		</section>
+	</Guideline>
+	<Guideline type="dont" caption="Una cuenta obliga a traducir qué falta.">
+		<section class="tarjeta" aria-labelledby="fm-g2" style="width:100%">
+			<header><h3 id="fm-g2">Datos fiscales</h3><span class="n">2 de 3 obligatorios · 0 de 2 documentos</span></header>
+		</section>
+	</Guideline>
+	<Guideline type="do" caption="Si guarda solo, lo dice y no ofrece un botón de guardar.">
+		<span class="muted"><Icon name="check" size="sm" /> Guardado hace 1 min</span>
+	</Guideline>
+	<Guideline type="dont" caption="Guardado automático y botón de guardar: uno de los dos engaña.">
+		<span class="muted">Borrador guardado hace 1 min</span>
+		<button class="btn mini" type="button">Guardar borrador</button>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Cada control tiene `<label for>`. El rótulo visible es el nombre accesible.
+- Lo obligatorio lleva `required` y `aria-required="true"`. Si usas asterisco, va con
+  `aria-hidden="true"` y una leyenda al inicio del formulario.
+- El error se enlaza, no se coloca al lado: `aria-invalid="true"` en el control y
+  `aria-describedby` con el `id` del mensaje. La ayuda se enlaza igual.
+- El tipo del campo es el tipo del dato: `type="email"`, `type="tel"`, `inputmode="numeric"` en el
+  código postal, y `autocomplete` donde corresponda. En teléfono sale el teclado correcto.
+- En pantallas táctiles el texto de los controles sube a 16px como mínimo: por debajo, el navegador
+  amplía la página al enfocar.
+- Cada `id` es único en la página. Dos mensajes con el mismo `id` hacen que `aria-describedby`
+  resuelva siempre al primero.
+
+## Tokens
+
+<TokenTable names={['bg', 'border-ctrl', 'text', 'text-2', 'text-3', 'err', 'err-ink', 'r-ctrl', 'fs-base', 'fs-dense', 'fs-meta', 'sp-4', 'focus-w']} />
+
+## Relacionados
+
+- [Subida de archivo](/componentes/subida-archivo/)
+- [Tarjeta](/componentes/tarjeta/)
+- [Botón](/componentes/boton/)
+- [Voz de producto](/contenido/voz/)

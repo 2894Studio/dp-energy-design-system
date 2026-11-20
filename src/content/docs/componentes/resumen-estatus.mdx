@@ -1,0 +1,154 @@
+---
+title: Resumen de estatus
+description: Cuenta cuántos registros hay en cada estado y, al pulsarlo, filtra la tabla por ese estado. Encabeza la pantalla, antes de los filtros.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/resumen-estatus.css';
+
+<Example>
+	<div class="pila">
+		<div class="resumen" role="group" aria-label="Clientes por estado">
+			<button class="schip c-ok" type="button" aria-pressed="false"><Icon name="check_circle" size="sm" /><b>312</b> activos</button>
+			<button class="schip c-warn" type="button" aria-pressed="false"><Icon name="schedule" size="sm" /><b>42</b> con documentos pendientes</button>
+			<button class="schip c-pause" type="button" aria-pressed="false"><Icon name="pause_circle" size="sm" /><b>17</b> inactivos</button>
+		</div>
+		<div class="filtros" role="group" aria-label="Filtros">
+			<label class="buscador"><Icon name="search" size="sm" /><span class="sr">Buscar cliente</span><input type="search" placeholder="Buscar cliente o sucursal" /></label>
+			<button class="f" type="button" aria-haspopup="true" aria-expanded="false">Tipo: <b>Todos</b><Icon name="expand_more" size="sm" /></button>
+			<button class="f" type="button" aria-haspopup="true" aria-expanded="false">Sucursal: <b>Todas</b><Icon name="expand_more" size="sm" /></button>
+			<button class="f" type="button" aria-haspopup="true" aria-expanded="false">Vendedor: <b>Todos</b><Icon name="expand_more" size="sm" /></button>
+		</div>
+		<div class="tabla-caja">
+			<table>
+				<caption class="sr">Clientes con sucursal principal y estado</caption>
+				<thead>
+					<tr><th scope="col">Cliente</th><th scope="col">Sucursal principal</th><th scope="col">Estado</th></tr>
+				</thead>
+				<tbody>
+					<tr><th scope="row">Solar del Norte</th><td>Planta Monterrey</td><td><span class="pill p-ok"><Icon name="check_circle" />Activo</span></td></tr>
+					<tr><th scope="row">Grupo Industrial Bajío</th><td>Planta León</td><td><span class="pill p-warn"><Icon name="schedule" />Documentos pendientes</span></td></tr>
+					<tr><th scope="row">Agrícola San Miguel</th><td>Rancho El Mezquite</td><td><span class="pill p-pause"><Icon name="pause_circle" />Inactivo</span></td></tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Para decir, antes que nada, cuántos registros hay en cada estado, y ofrecer ese conteo como atajo
+  de filtro.
+- Solo cuando ningún filtro de la barra cubre ese mismo campo. Si la barra ya tiene un filtro
+  «Estado», el resumen sobra: los conteos viven en el [dashboard](/patrones/dashboard/).
+- Para acotar por otros campos, usa la [barra de filtros](/componentes/barra-filtros/).
+- Para tres o cuatro cifras sin filtrado detrás, usa la [fila de cifras](/componentes/fila-cifras/).
+
+## Anatomía
+
+<Example noCode>
+	<div class="resumen">
+		<button class="schip c-warn" type="button" aria-pressed="true"><Icon name="schedule" size="sm" /><b>42</b> con documentos pendientes</button>
+	</div>
+</Example>
+
+1. **Contenedor** (`.resumen`) — fila flexible con `role="group"` y nombre.
+2. **Chip** (`.schip`) — botón de radio `--r-pill`; el color de texto es la tinta del estado.
+3. **Ícono** — el mismo que lleva la [etiqueta](/componentes/etiqueta/) de ese estado.
+4. **Cuenta** (`<b>`) — `--fs-dense`, peso 800, cifras tabulares.
+5. **Rótulo** — la misma palabra que la etiqueta que filtra.
+
+## Variantes
+
+| Variante | Clase | Úsala para |
+|---|---|---|
+| Atajo de filtro | `button.schip` con `aria-pressed` | El resumen filtra la tabla. Pulsado, toma el fondo del estado. |
+| Lectura | `span.schip` | La pantalla aún no filtra por ese campo. Se ve como cifra, sin puntero. |
+| Agrupado | `.resumen` con un `role="group"` por criterio | Conteos que responden a preguntas distintas. |
+
+Cada color sale del [semáforo](/fundamentos/color/#semáforo) y coincide con la etiqueta que filtra:
+`.c-ok` con `.p-ok`, `.c-warn` con `.p-warn`, `.c-err` con `.p-err`, `.c-pause` con `.p-pause`.
+
+<Example title="Agrupado por criterio">
+	<div class="resumen">
+		<div role="group" aria-labelledby="res-g1">
+			<span class="grupo-et" id="res-g1">Estado</span>
+			<button class="schip c-ok" type="button" aria-pressed="false"><Icon name="check_circle" size="sm" /><b>312</b> activos</button>
+			<button class="schip c-pause" type="button" aria-pressed="false"><Icon name="pause_circle" size="sm" /><b>17</b> inactivos</button>
+		</div>
+		<div role="group" aria-labelledby="res-g2">
+			<span class="grupo-et" id="res-g2">Expediente</span>
+			<button class="schip c-warn" type="button" aria-pressed="false"><Icon name="schedule" size="sm" /><b>42</b> con documentos pendientes</button>
+			<button class="schip c-err" type="button" aria-pressed="false"><Icon name="error" size="sm" /><b>8</b> con documentos vencidos</button>
+		</div>
+	</div>
+</Example>
+
+<Example title="Lectura">
+	<div class="resumen" role="group" aria-label="Clientes por estado">
+		<span class="schip c-ok"><Icon name="check_circle" size="sm" /><b>312</b> activos</span>
+		<span class="schip c-pause"><Icon name="pause_circle" size="sm" /><b>17</b> inactivos</span>
+	</div>
+</Example>
+
+## Comportamiento
+
+- **El orden es fijo: resumen → buscador y filtros en una sola fila → tabla.** Primero qué hay,
+  luego con qué se acota, luego el detalle. El resumen es lectura y encabeza; el buscador acota la
+  tabla igual que los filtros y va en su fila, no suelto encima.
+- **Un filtro, un sitio.** Un conteo y un filtro del mismo campo que no se reflejan entre sí dejan el
+  estado del filtro en dos lugares. Retira el resumen o haz que pulsarlo actualice el filtro.
+- **Agrupa por criterio.** Cuatro cifras que responden a preguntas distintas, presentadas iguales,
+  parecen valores del mismo campo e invitan a compararlas. Rotula cada grupo o deja un solo
+  criterio y pasa el resto a filtros.
+- **Un control con forma de botón filtra de verdad.** Si no hay filtrado detrás, el chip es una
+  cifra de lectura: sin `aria-pressed` y sin puntero.
+- Un chip pulsado se marca con un anillo interior del color del estado y su fondo suave.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="El chip dice lo mismo que la etiqueta que filtra, con su color.">
+		<button class="schip c-warn" type="button" aria-pressed="false"><Icon name="schedule" size="sm" /><b>42</b> con documentos pendientes</button>
+		<span class="pill p-warn"><Icon name="schedule" />Documentos pendientes</span>
+	</Guideline>
+	<Guideline type="dont" caption="«Incompletos» afirma un bloqueo que no siempre existe y no se relaciona con la etiqueta de la fila.">
+		<button class="schip c-err" type="button" aria-pressed="false"><Icon name="error" size="sm" /><b>42</b> incompletos</button>
+		<span class="pill p-warn"><Icon name="schedule" />Documentos pendientes</span>
+	</Guideline>
+	<Guideline type="do" caption="El resumen cubre un campo que ningún filtro de la barra cubre.">
+		<div class="pila">
+			<div class="resumen"><button class="schip c-ok" type="button" aria-pressed="false"><b>312</b> activos</button><button class="schip c-pause" type="button" aria-pressed="false"><b>17</b> inactivos</button></div>
+			<div class="filtros"><button class="f" type="button">Tipo: <b>Todos</b><Icon name="expand_more" size="sm" /></button></div>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Resumen y filtro del mismo campo: dos controles para lo mismo, a diez píxeles uno del otro.">
+		<div class="pila">
+			<div class="resumen"><button class="schip c-ok" type="button" aria-pressed="false"><b>312</b> activos</button><button class="schip c-pause" type="button" aria-pressed="false"><b>17</b> inactivos</button></div>
+			<div class="filtros"><button class="f" type="button">Estado: <b>Todos</b><Icon name="expand_more" size="sm" /></button></div>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Cada chip es un `<button>` con `aria-pressed`; el estado pulsado no depende solo del color.
+- El nombre accesible incluye la cuenta y el rótulo: «42 con documentos pendientes».
+- El estado se distingue por palabra e ícono, no solo por color.
+- El contenedor lleva `role="group"` y nombre («Clientes por estado»); si hay varios criterios, uno
+  por grupo con su rótulo visible.
+- Al pulsar, anuncia el resultado («Mostrando 42 clientes») en una región `aria-live`.
+
+## Tokens
+
+<TokenTable names={['surface', 'border', 'ok-ink', 'ok-bg', 'warn-ink', 'warn-bg', 'err-ink', 'err-bg', 'pause-ink', 'pause-bg', 'r-pill', 'sh-rest', 'fs-meta', 'fs-dense']} />
+
+## Relacionados
+
+- [Barra de filtros](/componentes/barra-filtros/)
+- [Etiqueta](/componentes/etiqueta/)
+- [Filtrar y buscar](/patrones/filtrar-y-buscar/)

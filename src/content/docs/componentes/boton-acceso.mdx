@@ -1,0 +1,99 @@
+---
+title: Botón de acceso
+description: La acción principal de la pantalla de entrada. Ancho completo, 48px de alto y un estado ocupado que bloquea envíos repetidos.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example bg="surface">
+	<div style="max-width:360px;margin-inline:auto">
+		<button class="gbtn" type="button" data-demo-busy><span class="spin"></span><Icon name="lock" />Iniciar sesión</button>
+	</div>
+</Example>
+
+## Cuándo usarlo
+
+- Solo en la [pantalla de entrada](/layout/entrada/): iniciar sesión, continuar con la cuenta de
+  la organización. Es la acción de toda la pantalla.
+- Dentro del producto, usa el [botón](/componentes/boton/). Un botón de ancho completo en una
+  vista de trabajo pesa más que cualquier otra acción.
+
+## Anatomía
+
+<Example noCode bg="surface">
+	<div style="max-width:360px;margin-inline:auto">
+		<button class="gbtn" type="button"><span class="spin"></span><Icon name="lock" />Iniciar sesión</button>
+	</div>
+</Example>
+
+1. **Contenedor** — ancho completo, `min-height: 48px`, borde `--border-2`, sombra `--sh-rest`.
+2. **Indicador de carga** — `.spin`, oculto en reposo; aparece con `aria-busy="true"`.
+3. **Ícono** (opcional) — a la izquierda del texto.
+4. **Texto** — `--fs-base`, peso 600. Nombra la acción: «Iniciar sesión».
+
+## Estados
+
+Pulsa el botón de arriba para ver el estado ocupado.
+
+| Estado | Comportamiento |
+|---|---|
+| Reposo | Superficie con sombra `--sh-rest`. |
+| Sobrevuelo | Sombra `--sh-float`, borde `--text-3`. |
+| Foco | Anillo `--focus-w` en `--accent`, separado `--focus-offset`. |
+| Ocupado | `aria-busy="true"`: aparece el indicador, el texto pasa a `--text-2`, cursor `progress`. No acepta otro envío. |
+
+<Example title="Ocupado">
+	<div style="max-width:360px;margin-inline:auto">
+		<button class="gbtn" type="button" aria-busy="true"><span class="spin"></span>Iniciar sesión</button>
+	</div>
+</Example>
+
+**Bloquea el envío en el manejador, no solo con CSS.** `pointer-events: none` detiene el ratón,
+pero no el teclado: cada Intro sobre el botón ocupado dispara otro envío.
+
+```js
+let ocupado = false;
+boton.addEventListener('click', () => {
+	if (ocupado) return; // el guardián real: bloquea también el teclado
+	ocupado = true;
+	boton.setAttribute('aria-busy', 'true');
+	// al terminar: ocupado = false; boton.setAttribute('aria-busy', 'false');
+});
+```
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="Una sola acción de ancho completo en la pantalla de entrada.">
+		<div style="width:100%;max-width:280px">
+			<button class="gbtn" type="button">Iniciar sesión</button>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Ancho completo dentro de una vista de trabajo: domina sobre el contenido.">
+		<div class="pila" style="width:100%;max-width:280px">
+			<span class="muted">Órdenes de instalación</span>
+			<button class="gbtn" type="button">Exportar</button>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- `<button type="submit">` dentro del formulario de acceso; `type="button"` si no envía.
+- `aria-busy="true"` mientras la operación está en curso; vuelve a `false` al terminar.
+- El guardián de JS bloquea clic y teclado por igual.
+- El indicador de carga es decorativo: el estado lo comunica `aria-busy`.
+
+## Tokens
+
+<TokenTable names={['surface', 'border-2', 'text', 'text-2', 'text-3', 'accent', 'sh-rest', 'sh-float', 'r-ctrl', 'fs-base', 'focus-w', 'focus-offset']} />
+
+## Relacionados
+
+- [Entrada al sistema](/layout/entrada/)
+- [Botón](/componentes/boton/)
+- [Vistas de estado](/patrones/vistas-de-estado/)

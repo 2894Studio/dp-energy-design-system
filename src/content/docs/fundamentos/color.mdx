@@ -1,0 +1,212 @@
+---
+title: Color
+description: Superficies, acción, semáforo de estados, series de gráfica y cromo. Cada color tiene un solo trabajo.
+---
+
+import Example from '../../../components/Example.astro';
+import ColorGrid from '../../../components/ColorGrid.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+El sistema tiene dos temas, claro y oscuro. Cada color se define como token y cambia de valor
+según el tema; ningún componente usa un valor hexadecimal directo.
+
+## Elegir un color
+
+Antes de elegir un color, decide qué trabajo hace el dato:
+
+| Si el dato… | Usa | Ejemplo |
+|---|---|---|
+| Emite un juicio: va bien, falta algo, venció, está bloqueado, está en pausa | [Semáforo](#semáforo) | «Vigente», «Por vencer» |
+| Solo distingue una cosa de otra | [Series de gráfica](#series-de-gráfica) | Tipo de cliente, región, serie |
+| Describe a otro dato (de qué conjunto habla) | Tinta de texto, sin color propio | [Ámbito de datos](/componentes/ambito/) |
+| Se puede pulsar | [Acción](#acción) | Botón primario, enlace |
+
+Un color de estado nunca se reutiliza para una categoría, ni al revés.
+
+<Guidelines>
+	<Guideline type="do" caption="Las categorías usan la paleta de series: clasifican sin opinar.">
+		<span class="p-type p-s1">Corporativo</span>
+		<span class="p-type p-s2">Particular</span>
+	</Guideline>
+	<Guideline type="dont" caption="Pintar una categoría con un color de estado: «Corporativo» se lee como «retenido».">
+		<span class="pill p-block">Corporativo</span>
+		<span class="pill p-ok">Particular</span>
+	</Guideline>
+</Guidelines>
+
+## Superficies y texto
+
+<ColorGrid names={['bg', 'surface', 'surface-2', 'surface-hover', 'text', 'text-2', 'text-3']} />
+
+- `--surface` nunca es blanco puro. Un blanco absoluto fatiga en uso continuado.
+- `--text-3` cumple 4,5:1 sobre las tres superficies (`--bg`, `--surface`, `--surface-2`) en los dos
+  temas. Mide cada texto nuevo contra todas las superficies donde puede caer, no solo contra la más
+  obvia.
+- `--surface-hover` es el sobrevuelo de cualquier control fuera del cromo. No reutilices
+  `--surface-2`: ese token significa «fila inactiva», no «interacción».
+
+### Bordes
+
+Hay cuatro bordes porque hay cuatro trabajos distintos.
+
+| Token | Úsalo cuando |
+|---|---|
+| `--border` | El borde decora: separa secciones y nada depende de él. |
+| `--border-2` | El control ya tiene relleno que lo identifica (un botón). |
+| `--border-ctrl` | El borde es la única frontera del control: un campo vacío, una tarjeta sin relleno. Cumple 3:1. |
+| `--border-fuerte` | El borde carga información: separa filas en una tabla densa, delimita un estado. Cumple 3:1. |
+
+Para saber si un borde carga información, quítalo: si el dato deja de distinguirse, necesita
+`--border-fuerte`.
+
+<Example title="Borde de control frente a borde con relleno">
+	<div class="fila">
+		<button class="btn" type="button">Con relleno · --border-2</button>
+		<div class="ctrl" style="min-width:240px"><input aria-label="Campo de ejemplo" placeholder="Campo vacío · --border-ctrl" /></div>
+	</div>
+</Example>
+
+## Acción
+
+<ColorGrid names={['accent', 'accent-ink', 'accent-soft', 'link']} />
+
+`--accent` y `--ok` son los dos verdes, y nunca se intercambian. `--accent` significa «esto se
+puede pulsar»; `--ok` significa «esto está bien». Si comparten color, un botón se lee como una
+etiqueta y una etiqueta invita a pulsarla.
+
+<Guidelines>
+	<Guideline type="do" caption="El botón usa --accent; la etiqueta de estado usa la familia --ok.">
+		<button class="btn p" type="button">Guardar</button>
+		<span class="pill p-ok"><Icon name="check_circle" />Vigente</span>
+	</Guideline>
+	<Guideline type="dont" caption="Un botón con el color de estado: parece una etiqueta, no una acción.">
+		<button class="btn" type="button" style="background:var(--ok-bg);color:var(--ok-ink);border-color:transparent">Guardar</button>
+	</Guideline>
+</Guidelines>
+
+## Semáforo
+
+Cinco estados, no dos. Un registro puede estar en espera (`warn`), retenido por algo que no
+depende de quien mira (`block`) o inactivo (`pause`), que no es un error.
+
+<Example title="Los cinco estados" noCode>
+	<div class="fila">
+		<span class="pill p-ok"><Icon name="check_circle" />Vigente</span>
+		<span class="pill p-warn"><Icon name="schedule" />Por vencer</span>
+		<span class="pill p-err"><Icon name="error" />Bloqueado</span>
+		<span class="pill p-block"><Icon name="lock" />Retenido</span>
+		<span class="pill p-pause"><Icon name="pause_circle" />Inactivo</span>
+	</div>
+</Example>
+
+| Estado | Significa |
+|---|---|
+| `ok` | Correcto, completo, vigente |
+| `warn` | Falta algo, o vence pronto |
+| `err` | Falta lo que impide operar |
+| `block` | Retenido por una condición externa |
+| `pause` | Inactivo; no es un fallo |
+
+**`warn` o `err`.** Usa `warn` mientras el registro se pueda seguir trabajando. Reserva `err` para
+lo que impide operar en la pantalla donde se muestra. Un documento faltante es `warn` si solo
+bloquea la acción que lo exige.
+
+### Tres variantes por estado
+
+| Variante | Token | Úsala para |
+|---|---|---|
+| Base | `--ok` | Elementos gráficos: punto, borde, barra. Nunca texto sobre fondo claro. |
+| Tinta | `--ok-ink` | Texto e ícono de la etiqueta. Cumple AA sobre su fondo. |
+| Fondo | `--ok-bg` | Fondo opaco de la etiqueta. Opaco, para que el contraste no dependa de lo que haya detrás. |
+
+Contraste de cada tinta sobre su fondo:
+
+| | ok | warn | err | block | pause |
+|---|---|---|---|---|---|
+| Claro | 5,04:1 | 5,25:1 | 5,02:1 | 5,41:1 | 6,30:1 |
+| Oscuro | 5,67:1 | 7,14:1 | 4,59:1 | 6,10:1 | 5,25:1 |
+
+### Tinta sobre relleno sólido
+
+Un ícono o texto sobre un relleno sólido de estado (un medallón, un contador macizo) usa
+`--on-state`, que voltea con el tema. El blanco fijo no cumple 3:1 sobre los estados en tema
+oscuro.
+
+<ColorGrid names={['on-state']} />
+
+## Series de gráfica
+
+<ColorGrid names={['serie-1', 'serie-2', 'serie-3', 'serie-4']} />
+
+Las series clasifican sin opinar. Se usan en gráficas y en las
+[etiquetas de clasificación](/componentes/etiqueta/).
+
+1. **Orden fijo, sin ciclar.** Una quinta serie no genera color nuevo: agrúpala en «Otras» o
+   separa en gráficos pequeños.
+2. **El color sigue a la entidad, no a la posición.** Si un filtro retira una serie, las demás
+   conservan su color.
+3. **`--serie-4` no llega a 3:1 sobre la superficie clara.** Exige etiqueta visible o
+   [tabla equivalente](/patrones/dashboard/).
+4. **Mide cada par que aparece junto,** no solo los consecutivos. Las parejas serie 1–4 y serie
+   1–3 (en oscuro) quedan por debajo de la separación mínima: cuando coinciden, añade un segundo
+   canal — trazo discontinuo en líneas, rayas diagonales en barras y donas, y el mismo patrón en
+   la leyenda.
+
+<Guidelines>
+	<Guideline type="do" caption="Tramos de tiempo con la paleta de series: ninguno es «bueno» o «malo».">
+		<div style="display:flex;width:100%;height:14px;border-radius:4px;overflow:hidden">
+			<i style="width:57%;background:var(--serie-1)"></i><i style="width:23%;background:var(--serie-2)"></i><i style="width:12%;background:var(--serie-3)"></i><i style="width:8%;background:var(--serie-4)"></i>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Los mismos tramos con el semáforo: «0–30 días» se lee como correcto y «+90» como error.">
+		<div style="display:flex;width:100%;height:14px;border-radius:4px;overflow:hidden">
+			<i style="width:57%;background:var(--ok)"></i><i style="width:23%;background:var(--warn)"></i><i style="width:12%;background:var(--block)"></i><i style="width:8%;background:var(--err)"></i>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Cromo
+
+La barra lateral tiene paleta propia porque es oscura en los dos temas. La barra superior va en
+`--surface`, como el contenido.
+
+<ColorGrid names={['chrome', 'chrome-ink', 'chrome-dim', 'chrome-focus', 'chrome-alerta']} />
+
+- `--chrome` es solo estructura; nunca fondo de página.
+- Dentro del cromo el anillo de foco es `--chrome-focus`: `--accent` no llega a 3:1 sobre el azul.
+- Un contador de avisos sobre el cromo usa `--chrome-alerta`. El rojo de estado se funde con el
+  cromo en tema oscuro.
+
+Más en [Cromo de aplicación](/layout/cromo/).
+
+## Marca
+
+La familia `--marca-*` es el gradiente del isotipo. Se declara una sola vez, fuera de los temas:
+un logotipo no cambia de color con el tema. No se usa en controles.
+
+<div class="not-content" style="height:2.5rem;border-radius:var(--r-card);margin:1.5rem 0;background:linear-gradient(90deg,var(--marca-1),var(--marca-2),var(--marca-3),var(--marca-4),var(--marca-5),var(--marca-6),var(--marca-7))"></div>
+
+## Velos
+
+<ColorGrid names={['velo-suave', 'velo-modal']} />
+
+## Contraste
+
+| Elemento | Mínimo |
+|---|---|
+| Texto normal | 4,5:1 |
+| Texto grande (≥ 24px, o ≥ 18,66px en negrita) | 3:1 |
+| Elementos gráficos y bordes que identifican un control | 3:1 |
+
+- Mide cada color nuevo contra todos los fondos donde puede aparecer, en los dos temas.
+- Un control compuesto (un buscador con su campo dentro) lleva **un solo** anillo de foco, en el
+  envoltorio. Si un contenedor dibuja foco con `:focus-within`, ningún descendiente añade el suyo.
+- Un selector que tiñe íconos por contexto se acota a hijo directo (`.estado > .ico`). Un selector
+  descendiente alcanza también los íconos de los botones y los deja sin contraste.
+
+## Tokens
+
+<TokenTable groups={['color', 'chrome', 'velo', 'grafica', 'marca']} filter />

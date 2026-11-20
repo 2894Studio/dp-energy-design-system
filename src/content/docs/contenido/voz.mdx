@@ -1,0 +1,85 @@
+---
+title: Voz de producto
+description: La pantalla dice qué se puede hacer y qué no. El porqué de cada decisión vive en la documentación.
+---
+
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+## En pantalla o en la documentación
+
+| En pantalla | En la documentación |
+|---|---|
+| Qué puedo hacer y qué no | Por qué se decidió así |
+| «No se puede programar la instalación si faltan los datos fiscales» | La regla de negocio completa y su origen |
+| Una o dos frases accionables | El razonamiento y las alternativas descartadas |
+| — | Referencias a documentos y códigos internos del proyecto |
+
+**La prueba:** si el texto explica una decisión, no va en pantalla. Si explica una consecuencia para
+quien está mirando, sí, y en una frase.
+
+## Tres niveles de texto
+
+Un texto se queda visible solo si condiciona la acción inmediata en esa pantalla. Que sea cierto no
+basta.
+
+| Nivel | Ejemplo | Dónde vive |
+|---|---|---|
+| Bloquea la acción ahora | «Agrícola San Miguel no puede pedir una visita nueva» | Visible siempre, en una frase |
+| Aclara una consecuencia, pero no bloquea nada ahora | Qué pasa si se rechaza un comprobante; qué falta para activar un contrato | [Toggletip](/componentes/toggletip/) sobre el control o la columna relacionada |
+| Explica por qué se diseñó así, o educa sobre un caso que no aplica aquí | Referencias a documentos internos; cómo funciona un componente en general | Fuera de la interfaz |
+
+Quedan fuera de la pantalla, aunque sean ciertos:
+
+- El racional de una decisión de diseño, con o sin referencia a un documento.
+- La mecánica general de una función («el desglose baja tres niveles: planta › equipo › módulo»).
+- La educación sobre un caso que no aplica al registro que se está viendo: un aviso sobre comprobantes
+  rechazados en un registro que no tiene ninguno.
+- La descripción de la estructura del formulario («1 campo editable · 1 de solo lectura»).
+
+## Límites medibles
+
+Los tres niveles son un juicio, y quien redacta un texto tiende a creer que hace falta. Estos límites
+no dependen de interpretación:
+
+1. **Un [aviso](/componentes/aviso/) (`.note` o `.banda`) lleva una sola frase**, sin punto y coma ni
+   raya explicativa después. Si aparece una segunda oración que aclara o justifica, bórrala o muévela
+   a un toggletip sobre el control al que se refiere. Sin excepciones por importancia.
+2. **Ningún bloque de texto siempre visible pasa de unos 140 caracteres.** Un texto que no cabe está
+   explicando además de instruir. Mídelo con un contador, no a ojo.
+3. **`.note` es solo para el nivel 1**: una restricción o instrucción que bloquea la acción inmediata.
+   Nunca para racional, mecánica de un componente ni contexto de negocio.
+4. **Revisa al escribir, no después.** Antes de dar por terminada una pantalla, relee cada aviso nuevo
+   contra las reglas 1 a 3. Está en el [checklist](/recursos/checklist/).
+
+<Guidelines>
+	<Guideline type="do" caption="Una frase que bloquea la acción y dice qué falta.">
+		<div class="banda b-warn"><Icon name="warning" /><span><b>Faltan los datos fiscales.</b> Complétalos para programar la instalación.</span></div>
+	</Guideline>
+	<Guideline type="dont" caption="La instrucción queda enterrada bajo el porqué de la regla.">
+		<div class="banda b-warn"><Icon name="warning" /><span>Faltan los datos fiscales. Esta validación existe porque el área de facturación necesita emitir la factura antes de la visita; por eso, desde la revisión del proceso, ninguna instalación se programa sin RFC, régimen y domicilio fiscal completos.</span></div>
+	</Guideline>
+</Guidelines>
+
+## Ejemplos
+
+| ✓ Escribe | ✗ Evita | Por qué |
+|---|---|---|
+| «No se puede programar la instalación: faltan los datos fiscales.» | «Según el plan de operación, la programación requiere validación fiscal previa porque…» | Dice qué bloquea; no cita documentos ni explica la regla. |
+| «Guardar cambios» | «Aceptar» | El botón nombra lo que pasa al pulsarlo. |
+| «Documentos pendientes» | «Incompleto» | «Incompleto» afirma un bloqueo que no siempre existe. |
+| «Ningún cliente coincide con los filtros.» | «No hay datos.» | Dice por qué está vacío y sugiere la salida. |
+| «No se pudo guardar. Tus datos siguen aquí; vuelve a intentarlo.» | «Error 500.» | Qué pasó, qué no se perdió, qué hacer. Ver [vistas de estado](/patrones/vistas-de-estado/#error). |
+| «Faltan 2 documentos para activar el contrato.» | «Este formulario tiene 1 campo editable y 1 de solo lectura.» | Habla de la consecuencia para quien mira, no de la forma de la pantalla. |
+| «Vence el 30 de noviembre» | «La póliza vence en la fecha indicada en el campo de vigencia.» | El dato, no la descripción del dato. |
+| «Solar del Norte tiene 3 órdenes vencidas.» | «Recuerda que las órdenes vencidas afectan los indicadores del área.» | Instrucción concreta sobre este registro, no educación general. |
+
+## Convenciones
+
+- **Botones:** verbo en infinitivo + objeto: «Crear orden», «Exportar reporte», «Quitar filtros».
+- **Etiquetas de estado:** la misma palabra en la etiqueta, en el chip de resumen que la filtra y en
+  la leyenda del tablero.
+- **Errores:** qué pasó, qué no se perdió, qué hacer, y una referencia para soporte.
+- **Vacíos:** di la causa (filtro, alcance o ausencia real) y ofrece la acción que corresponde.
+- **Trato de tú**, frases cortas, sin tecnicismos internos ni códigos de proyecto.

@@ -1,0 +1,144 @@
+---
+title: Diálogo
+description: Una tarea corta que interrumpe la pantalla sin abandonarla. Usa el diálogo nativo del navegador, que da el velo, la capa superior y la trampa de foco.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+
+<Example>
+	<button class="btn p" type="button" data-abre="dlg-visita"><Icon name="calendar_month" />Programar visita</button>
+	<dialog class="modal" id="dlg-visita" aria-labelledby="dlg-visita-t">
+		<header><h2 id="dlg-visita-t">Programar visita · OT-1042</h2><button class="iconbtn" type="button" data-cierra title="Cerrar" aria-label="Cerrar sin guardar"><Icon name="close" /></button></header>
+		<div class="cuerpo">
+			<div class="dato-calc"><span>Cliente</span><span class="valor">Solar del Norte</span></div>
+			<div class="ctrl"><label for="dlg-visita-fecha">Fecha de la visita</label><input id="dlg-visita-fecha" type="date" autofocus /></div>
+			<div class="ctrl"><label for="dlg-visita-tec">Técnico asignado</label><select id="dlg-visita-tec"><option>Sin asignar</option><option>Cuadrilla norte</option><option>Cuadrilla sur</option></select></div>
+			<div class="ctrl"><label for="dlg-visita-notas">Notas <span class="opc">(opcional)</span></label><textarea id="dlg-visita-notas" rows="3"></textarea></div>
+		</div>
+		<footer><button class="btn" type="button" data-cierra>Cancelar</button><button class="btn p" type="button" data-cierra>Programar visita</button></footer>
+	</dialog>
+</Example>
+
+## Cuándo usarlo
+
+- Para una tarea corta que se resuelve sin salir de la pantalla: programar, confirmar una baja,
+  cambiar un dato puntual.
+- Para confirmar una acción destructiva lanzada desde un [menú de acciones](/componentes/menu-acciones/).
+- Para un formulario largo o con varios pasos, usa una pantalla completa de
+  [formulario](/componentes/formulario/).
+- Para informar sin pedir nada, usa un [aviso](/componentes/aviso/). Un diálogo interrumpe.
+
+## Anatomía
+
+<Example noCode>
+	<div class="velo-muestra">
+		<div class="modal-muestra" role="presentation">
+			<header><h2>Dar de baja a Agrícola San Miguel</h2><button class="iconbtn" type="button" title="Cerrar" aria-label="Cerrar sin guardar"><Icon name="close" /></button></header>
+			<div class="cuerpo">Las órdenes abiertas pasan a «En pausa». Puedes reactivar al cliente desde su ficha.</div>
+			<footer><button class="btn" type="button">Cancelar</button><button class="btn peligro" type="button">Dar de baja</button></footer>
+		</div>
+	</div>
+</Example>
+
+1. **Velo** — `::backdrop` en `--velo-modal`. Detrás se ve la pantalla real atenuada.
+2. **Contenedor** — `dialog.modal`: hasta 520px de ancho, `--surface`, radio `--r-modal`, sombra
+   `--sh-modal`. Columna flexible.
+3. **Cabecera** — título `h2` a `--fs-sub` y botón de cerrar, con borde inferior.
+4. **Cuerpo** — `.cuerpo`; desplaza por dentro si el contenido no cabe.
+5. **Pie** — acciones alineadas a la derecha, la primaria al final, con borde superior.
+
+## Comportamiento
+
+### Centrado y tamaño
+
+`margin: auto` es el centrado nativo del diálogo. **No le declares un margen propio**: lo anula y
+el diálogo se pega a la esquina superior izquierda.
+
+```css
+dialog.modal {
+	border: 0;
+	padding: 0;
+	margin: auto; /* centrado nativo: no lo sobrescribas */
+	max-width: 520px;
+	width: calc(100% - 32px);
+	max-height: calc(100dvh - 64px);
+}
+dialog.modal[open] { display: flex; flex-direction: column; }
+dialog.modal::backdrop { background: var(--velo-modal); }
+dialog.modal .cuerpo { overflow-y: auto; }
+```
+
+El alto máximo deja 32px de aire arriba y abajo. Cabecera y pie quedan fijos; solo el cuerpo
+desplaza.
+
+### Foco
+
+1. Al abrir, el foco va al **primer control que se puede rellenar**, no al diálogo ni al botón de
+   cerrar. Márcalo con `autofocus`.
+2. Mientras está abierto, `Tab` cicla dentro. Lo da `showModal()`.
+3. Al cerrar sin guardar, el foco vuelve **al control que lo abrió**.
+4. Al cerrar guardando, el foco va **a la fila o el elemento que cambió**; si ya no existe, al
+   contenedor más cercano. Nunca al `body`. Una `<tr>` necesita `tabindex="-1"` para recibirlo.
+
+### Cierre
+
+- `Escape`, el botón de cerrar y «Cancelar» cierran sin guardar.
+- **Mientras una operación está en curso, nada cierra el diálogo**: ni `Escape`, ni el botón de
+  cerrar, ni el clic en el velo. Cerrar a medio guardar deja a la persona sin saber si se guardó.
+
+```js
+dlg.addEventListener('cancel', (e) => {
+	// Escape
+	if (dlg.dataset.momento === 'guardando') e.preventDefault();
+});
+```
+
+### Contenido
+
+- **El nombre del botón y el contenido coinciden.** Si «Editar cliente» solo deja cambiar la razón
+  social, se llama «Cambiar razón social».
+- **Un campo de solo lectura se muestra como dato**, no como campo desactivado, con el motivo al
+  lado. Un campo gris sin explicación se lee como un fallo del formulario.
+- **Detrás va la pantalla real atenuada**, no un esqueleto de carga: las barras grises se leen como
+  «cargando» y hacen pensar que se perdió el sitio en la lista.
+
+## Uso
+
+<Guidelines>
+	<Guideline type="do" caption="El título y la acción repiten el mismo verbo y el mismo objeto.">
+		<div class="modal-muestra" role="presentation" style="width:100%">
+			<header><h2>Cambiar razón social</h2></header>
+			<footer><button class="btn" type="button">Cancelar</button><button class="btn p" type="button">Cambiar razón social</button></footer>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="«Aceptar» no dice qué pasa; obliga a releer el título.">
+		<div class="modal-muestra" role="presentation" style="width:100%">
+			<header><h2>Editar cliente</h2></header>
+			<footer><button class="btn" type="button">Cancelar</button><button class="btn p" type="button">Aceptar</button></footer>
+		</div>
+	</Guideline>
+</Guidelines>
+
+## Accesibilidad
+
+- Usa `<dialog>` y ábrelo con `showModal()`. Un `<div role="dialog" aria-modal="true">` obliga a
+  reimplementar velo, capa superior y trampa de foco.
+- Nombra el diálogo con `aria-labelledby` apuntando al título.
+- El botón de cerrar es un [botón-icono](/componentes/boton-icono/) con `aria-label`.
+- `Escape` cierra salvo durante una operación en curso.
+- El foco entra al primer campo y vuelve al disparador o al elemento modificado.
+
+## Tokens
+
+<TokenTable names={['surface', 'border', 'text', 'text-2', 'velo-modal', 'r-modal', 'sh-modal', 'fs-sub', 'sp-4', 'sp-5', 'sp-6']} />
+
+## Relacionados
+
+- [Menú de acciones](/componentes/menu-acciones/)
+- [Formulario](/componentes/formulario/)
+- [Botón](/componentes/boton/)
+- [Vistas de estado](/patrones/vistas-de-estado/)

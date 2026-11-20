@@ -1,0 +1,44 @@
+/* Demo de la página Diseño de página › Objetivos táctiles.
+   En producto el modo táctil es :root[data-tacto='dedo']; aquí se simula dentro de la demo
+   con un interruptor aria-pressed (ya cableado en demos.ts). */
+.dpe .tacto-demo {
+	display: flex;
+	flex-direction: column;
+	gap: var(--sp-4);
+	width: 100%;
+}
+.dpe .tacto-demo:has(.tacto-interruptor[aria-pressed='true']) :is(.btn, .it) {
+	min-height: 46px;
+}
+.dpe .tacto-demo:has(.tacto-interruptor[aria-pressed='true']) :is(.iconbtn, .infob) {
+	width: 46px;
+	height: 46px;
+}
+.dpe .tacto-demo .tacto-interruptor[aria-pressed='true'] {
+	background: var(--accent-soft);
+	border-color: var(--accent);
+}
+
+/* Casilla con área pulsable ampliada: el dibujo sigue a 16px. */
+.dpe .selfila {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 24px;
+	min-height: 24px;
+	padding: 4px;
+	margin: -4px;
+	border-radius: var(--r-ctrl);
+	cursor: pointer;
+}
+.dpe .selfila:hover {
+	background: var(--surface-hover);
+}
+
+/* Enlace primario de fila con alto pulsable de 24px. */
+.dpe .tacto-demo .folio {
+	display: inline-flex;
+	align-items: center;
+	min-height: 24px;
+	padding-block: 2px;
+}

@@ -1,0 +1,150 @@
+---
+title: Tipografía
+description: Inter para toda la interfaz, Michroma solo para el wordmark. Seis tamaños, tres interlineados y un suelo de 12px.
+---
+
+import Example from '../../../components/Example.astro';
+import TokenTable from '../../../components/TokenTable.astro';
+import Guidelines from '../../../components/Guidelines.astro';
+import Guideline from '../../../components/Guideline.astro';
+import Icon from '../../../components/Icon.astro';
+import '../../../styles/components/tipografia.css';
+
+## Familias
+
+<Example noCode>
+	<div class="tipo-familia">
+		<div>
+			<span class="glifos">Aa 0123</span>
+			<strong>Inter · <code>{'--font-ui'}</code></strong>
+			<span class="muted">Pesos 400, 500, 600 y 700. Texto, botones, tablas, formularios: toda la interfaz.</span>
+		</div>
+		<div>
+			<span class="glifos marca">D.P. Energy</span>
+			<strong>Michroma · <code>{'--font-brand'}</code></strong>
+			<span class="muted">Peso 400. Solo el wordmark y titulares de marca.</span>
+		</div>
+	</div>
+</Example>
+
+- **Inter** para todo lo que se lee o se opera en el producto.
+- **Michroma** solo para el wordmark «D.P. Energy». Nunca en un título de pantalla, un botón o
+  un dato: es una letra de marca, ancha y de un solo peso, que en texto corrido se lee mal.
+- Las cifras que se comparan en columna llevan `font-variant-numeric: tabular-nums` (clase
+  `.tnum`) para que las unidades queden alineadas.
+
+## Escala
+
+Seis tamaños, sin valores intermedios. Si un texto no encaja en ninguno, revisa la jerarquía de
+la pantalla, no la escala.
+
+<Example noCode bg="surface">
+	<div class="tipo-escala">
+		<div><span><code>{'--fs-kpi'}</code><small>30px</small></span><p class="tnum" style="font-size:var(--fs-kpi);font-weight:700">$184,500</p></div>
+		<div><span><code>{'--fs-title'}</code><small>20px</small></span><p style="font-size:var(--fs-title);font-weight:600">Solar del Norte</p></div>
+		<div><span><code>{'--fs-sub'}</code><small>16px</small></span><p style="font-size:var(--fs-sub);font-weight:600">Órdenes de instalación</p></div>
+		<div><span><code>{'--fs-base'}</code><small>14px</small></span><p style="font-size:var(--fs-base)">Instalación de 24 paneles en Planta Monterrey.</p></div>
+		<div><span><code>{'--fs-dense'}</code><small>13px</small></span><p style="font-size:var(--fs-dense)">Grupo Industrial Bajío · OT-1042 · 12 de marzo</p></div>
+		<div><span><code>{'--fs-meta'}</code><small>12px</small></span><p style="font-size:var(--fs-meta);color:var(--text-2)">Actualizado hace 5 minutos · contacto@ejemplo.com</p></div>
+	</div>
+</Example>
+
+| Token | Tamaño | Uso |
+|---|---|---|
+| `--fs-meta` | 12px | Metadatos, pies, referencias, etiquetas de campo |
+| `--fs-dense` | 13px | Tablas densas, cuerpo compacto, ayuda de campo |
+| `--fs-base` | 14px | Cuerpo por defecto |
+| `--fs-sub` | 16px | Subtítulo destacado, título de página en el cromo |
+| `--fs-title` | 20px | Título de pantalla o de ficha |
+| `--fs-kpi` | 30px | Cifra grande de un indicador |
+
+El título de una [vista de estado](/patrones/vistas-de-estado/) va a tamaño fijo según su peso
+visual: 21px en la pantalla de entrada, 18px en los estados de resultado.
+
+## El suelo son 12px
+
+`--fs-meta` es el tamaño más pequeño del sistema. Nada baja de ahí.
+
+- Si un dato se lee todos los días, va a 12–13px como mínimo: un RFC, una etiqueta de estado, una
+  cabecera de tabla, una nota al pie.
+- Si algo parece necesitar menos de 12px, sobra en esa pantalla. Quítalo; no lo encojas.
+
+### Una sola excepción: 10,5px
+
+Se admite 10,5px, con `letter-spacing`, para exactamente dos rótulos:
+
+1. **Rótulos de grupo** de la barra lateral (`.grp`), en mayúsculas o en caja de frase.
+2. **Etiquetas de campo del modo tarjeta** de una tabla densa en pantalla angosta.
+
+Son cuatro o cinco palabras que se leen una vez para orientarse; no son datos. La excepción no
+alcanza a nada más: etiquetas de estado, prioridades, fechas, vigencias, contadores y el texto de
+la [agenda](/componentes/agenda/) van a 12–13px como cualquier dato.
+
+<Guidelines>
+	<Guideline type="do" caption="Rótulo de grupo del menú a 10,5px: orienta, no informa.">
+		<div class="tipo-cromo">
+			<p class="grp">OPERACIÓN</p>
+			<span class="it"><Icon name="calendar_month" />Agenda</span>
+		</div>
+	</Guideline>
+	<Guideline type="dont" caption="Una etiqueta de estado a 10,5px: es un dato que se consulta a diario.">
+		<span class="pill p-warn" style="font-size:10.5px"><Icon name="schedule" size="xs" />Por vencer</span>
+	</Guideline>
+</Guidelines>
+
+## Interlineado
+
+| Token | Valor | Uso |
+|---|---|---|
+| `--lh-compacto` | 1,25 | Títulos y datos de una línea |
+| `--lh-texto` | 1,5 | Texto de varias líneas: notas, ayuda de campo, pasos, etiquetas emergentes |
+| `--lh-lectura` | 1,6 | Párrafos largos, como el texto de una vista de estado |
+
+**Un texto de más de una línea nunca se queda en `normal`.** El valor `normal` depende de la
+fuente y del navegador: dos bloques iguales miden distinto según dónde se pinten.
+
+<Example noCode>
+	<div class="tipo-interlineado">
+		<p style="line-height:var(--lh-compacto)"><b><code>{'--lh-compacto'}</code> · 1,25</b>Para títulos y datos de una línea. En un párrafo, las líneas se tocan y el ojo salta de renglón.</p>
+		<p style="line-height:var(--lh-texto)"><b><code>{'--lh-texto'}</code> · 1,5</b>Para texto de varias líneas: una nota, la ayuda de un campo, el paso de un proceso.</p>
+		<p style="line-height:var(--lh-lectura)"><b><code>{'--lh-lectura'}</code> · 1,6</b>Para párrafos largos, como la explicación de una vista vacía o de error.</p>
+	</div>
+</Example>
+
+## Carga de las fuentes
+
+Las fuentes se autoalojan. Nunca se cargan desde un CDN de fuentes.
+
+- Un CDN que no responde falla **en silencio**: la pantalla cae a `system-ui` sin ningún error
+  visible, y el sistema tipográfico existe solo en el CSS.
+- Un archivo autoalojado que falla da un 404 visible en la pestaña de red.
+
+En producto, declara `@font-face` con rutas locales a `.woff2`:
+
+```css
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url(/fuentes/inter-variable.woff2) format('woff2');
+}
+@font-face {
+  font-family: Michroma;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/fuentes/michroma.woff2) format('woff2');
+}
+```
+
+Este sitio las sirve con los paquetes `@fontsource-variable/inter` y `@fontsource/michroma`, que
+copian los mismos archivos al build.
+
+Declarar `--font-ui` no basta. Comprueba en las herramientas de red del navegador que la fuente
+se descargó: sin el `@font-face`, o con una ruta rota, la pantalla se ve en la fuente del sistema
+y nada avisa.
+
+## Tokens
+
+<TokenTable groups={['tipografia']} />
