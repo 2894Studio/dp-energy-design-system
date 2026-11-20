@@ -1377,8 +1377,8 @@
 	align-items: center;
 	gap: var(--sp-2);
 	padding: var(--sp-2);
-	font: 400 var(--fs-dense) var(--font-brand);
-	letter-spacing: 0.06em;
+	font: 650 var(--fs-base) var(--font-brand);
+	letter-spacing: -0.02em;
 }
 .dpe .side .marca img {
 	height: 24px;
@@ -1459,8 +1459,8 @@
 	padding: var(--sp-6) var(--sp-8);
 }
 .dpe .split .brand .wordmark {
-	font: 400 var(--fs-sub) var(--font-brand);
-	letter-spacing: 0.06em;
+	font: 650 var(--fs-sub) var(--font-brand);
+	letter-spacing: -0.02em;
 }
 .dpe .split .access {
 	flex: 1;

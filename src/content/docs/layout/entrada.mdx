@@ -12,7 +12,7 @@ import Icon from '../../../components/Icon.astro';
 <Example>
 	<div class="split">
 		<div class="brand">
-			<div class="fila"><img src="/marca/dp-energy-isotipo.svg" alt="" style="height:32px" /><span class="wordmark">D.P. Energy</span></div>
+			<div class="fila"><span class="wordmark">D.P. Energy</span></div>
 			<p style="font-size:var(--fs-title);line-height:var(--lh-compacto);max-width:22ch">Instalaciones solares, de la visita a la puesta en marcha.</p>
 		</div>
 		<div class="access">
@@ -25,8 +25,8 @@ import Icon from '../../../components/Icon.astro';
 
 ## Estructura
 
-1. **Columna de marca** (`.brand`) — fondo `--marca-lienzo`, texto `--marca-lienzo-ink`, lockup en
-   su variante reversa y, si la hay, la ilustración de la escena. No lleva controles.
+1. **Columna de marca** (`.brand`) — fondo `--marca-lienzo`, texto `--marca-lienzo-ink`, wordmark en
+   su variante para fondo oscuro y, si la hay, la ilustración de la escena. No lleva controles.
 2. **Columna de acceso** (`.access`) — superficie clara, título, una frase de ayuda y la acción de
    entrada.
 

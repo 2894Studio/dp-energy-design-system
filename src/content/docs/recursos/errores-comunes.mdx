@@ -129,12 +129,12 @@ existe.
 
 ## Marcado y valores por defecto
 
-### El isotipo sale desplazado y recortado
+### Un símbolo SVG sale desplazado y recortado
 
-**Síntoma.** La marca se pinta a la izquierda de su caja y se recorta casi entera.
+**Síntoma.** El gráfico se pinta a la izquierda de su caja y se recorta casi entera.
 
 **Causa.** Un `<symbol>` ya trae su `viewBox`. Repetirlo en el `<svg>` que lo invoca, con un `<use>`
-sin medidas, hace que el `<use>` tome el 100% del lienzo empezando en x=0, mientras la marca vive en
+sin medidas, hace que el `<use>` tome el 100% del lienzo empezando en x=0, mientras el dibujo vive en
 otro origen.
 
 **Corrección.** Las medidas van en el `<use>`; el `<svg>` envoltorio no lleva `viewBox`. Comprueba que
@@ -142,11 +142,11 @@ la caja del `<use>` empieza donde empieza la del `<svg>`.
 
 ```html
 <!-- Mal -->
-<svg viewBox="740 0 970 932" width="44" height="42"><use href="#dpe-isotipo" /></svg>
+<svg viewBox="740 0 970 932" width="44" height="42"><use href="#simbolo" /></svg>
 
 <!-- Bien -->
 <svg width="44" height="42" aria-hidden="true">
-  <use href="#dpe-isotipo" width="44" height="42" />
+  <use href="#simbolo" width="44" height="42" />
 </svg>
 ```
 

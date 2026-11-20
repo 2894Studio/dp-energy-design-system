@@ -23,8 +23,8 @@ Sitio Astro + Starlight. Una página MDX por recurso en `src/content/docs/`. Idi
 
 ## Versionado
 
-Cada cambio publicado lleva una fila en `recursos/historial.mdx` y actualiza la versión de la
-portada (`index.mdx`) y de `package.json`:
+Cada cambio publicado lleva una fila en `recursos/historial.mdx` y actualiza la versión de
+`package.json` (la portada la lee de ahí):
 
 - **patch** (3.0.N): aclaración o corrección sin cambio de comportamiento.
 - **minor** (3.N.0): regla o componente nuevo.

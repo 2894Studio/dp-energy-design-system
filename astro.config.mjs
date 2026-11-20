@@ -12,13 +12,11 @@ export default defineConfig({
 		starlight({
 			title: 'D.P. Energy',
 			description: 'Sistema de diseño de D.P. Energy: fundamentos, componentes y patrones de producto.',
-			logo: { src: './src/assets/isotipo.svg', alt: '' },
 			favicon: '/favicon.svg',
 			defaultLocale: 'root',
 			locales: { root: { label: 'Español', lang: 'es' } },
 			customCss: [
 				'@fontsource-variable/inter',
-				'@fontsource/michroma',
 				'./src/styles/tokens.css',
 				'./src/styles/theme.css',
 				'./src/styles/components.css',
@@ -29,7 +27,7 @@ export default defineConfig({
 			editLink: { baseUrl: 'https://github.com/2894Studio/dp-energy-design-system/edit/main/' },
 			lastUpdated: true,
 			tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 3 },
-			components: { SiteTitle: './src/components/SiteTitle.astro' },
+			components: { SiteTitle: './src/components/SiteTitle.astro', Hero: './src/components/Hero.astro' },
 			plugins: [starlightLinksValidator({ errorOnLocalLinks: false })],
 			sidebar: [
 				{ label: 'Inicio', items: [{ label: 'Visión general', link: '/' }, 'empezar'] },

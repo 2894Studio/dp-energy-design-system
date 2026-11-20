@@ -26,7 +26,7 @@
 	padding: var(--sp-6);
 }
 .dpe .logo-claro {
-	background: var(--marca-lienzo-ink);
+	background: var(--surface);
 }
 .dpe .logo-cromo {
 	background: var(--chrome);
@@ -34,69 +34,51 @@
 .dpe .logo-marca {
 	background: var(--marca-lienzo);
 }
-.dpe .logo-lockup {
-	display: inline-flex;
-	align-items: center;
-	gap: 12px;
-}
-.dpe .logo-lockup img {
-	display: block;
-	width: auto;
-}
 .dpe .logo-wordmark {
-	font: 400 20px / 1 var(--font-brand);
-	letter-spacing: 0.06em;
+	font: 650 24px / 1 var(--font-brand);
+	letter-spacing: -0.02em;
 	white-space: nowrap;
+	color: var(--text);
 }
-.dpe .logo-claro .logo-wordmark {
-	color: var(--marca-azul);
+.dpe .logo-cromo .logo-wordmark {
+	color: var(--chrome-ink);
 }
-.dpe :is(.logo-cromo, .logo-marca) .logo-wordmark {
+.dpe .logo-marca .logo-wordmark {
 	color: var(--marca-lienzo-ink);
 }
 
-/* Área de seguridad: una altura de isotipo alrededor del lockup. */
+/* Área de seguridad: la altura de la «D» alrededor del wordmark. */
 .dpe .logo-zona {
-	padding: 40px;
+	padding: 18px;
 	border: 1px dashed var(--accent);
 	background: repeating-linear-gradient(45deg, var(--accent-soft) 0 6px, transparent 6px 12px);
 }
-.dpe .logo-zona .logo-lockup {
-	background: var(--marca-lienzo-ink);
+.dpe .logo-zona .logo-wordmark {
+	display: block;
+	background: var(--surface);
 }
 
 /* Usos incorrectos */
-.dpe .logo-mal .logo-lienzo {
-	min-height: 96px;
-	padding: var(--sp-4);
+.dpe .logo-estirado {
+	display: inline-block;
+	transform: scaleX(1.45);
 }
-.dpe .logo-estirado img {
-	transform: scaleX(1.6);
-	transform-origin: left center;
+.dpe .logo-otra {
+	font-family: Georgia, serif;
+	font-weight: 700;
+	letter-spacing: 0.12em;
 }
-.dpe .logo-estirado .logo-wordmark {
-	margin-left: 26px;
-}
-.dpe .logo-recolor img {
-	filter: grayscale(1) brightness(0.6);
-}
-.dpe .logo-bandas {
-	display: block;
-	width: 43px;
-	height: 40px;
-	background: linear-gradient(to top, var(--marca-1) 0 34%, var(--marca-4) 34% 67%, var(--marca-7) 67%);
-	-webkit-mask: url('/marca/dp-energy-isotipo.svg') center / contain no-repeat;
-	mask: url('/marca/dp-energy-isotipo.svg') center / contain no-repeat;
+.dpe .logo-efecto {
+	background: linear-gradient(90deg, var(--serie-1), var(--serie-2));
+	-webkit-background-clip: text;
+	background-clip: text;
+	color: transparent;
+	text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 .dpe .logo-bajo {
-	background: var(--marca-5);
+	background: var(--surface-2);
 }
 .dpe .logo-bajo .logo-wordmark {
-	color: var(--marca-4);
-}
-.dpe .logo-multicolor {
-	background: linear-gradient(120deg, var(--serie-2), var(--serie-4) 35%, var(--serie-3) 65%, var(--serie-1));
-}
-.dpe .logo-multicolor .logo-wordmark {
-	color: var(--marca-lienzo-ink);
+	color: var(--text-3);
+	opacity: 0.45;
 }

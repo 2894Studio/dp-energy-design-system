@@ -1,6 +1,6 @@
 ---
 title: Tipografía
-description: Inter para toda la interfaz, Michroma solo para el wordmark. Seis tamaños, tres interlineados y un suelo de 12px.
+description: Inter para la interfaz y para el wordmark. Seis tamaños, tres interlineados y un suelo de 12px.
 ---
 
 import Example from '../../../components/Example.astro';
@@ -21,15 +21,15 @@ import '../../../styles/components/tipografia.css';
 		</div>
 		<div>
 			<span class="glifos marca">D.P. Energy</span>
-			<strong>Michroma · <code>{'--font-brand'}</code></strong>
-			<span class="muted">Peso 400. Solo el wordmark y titulares de marca.</span>
+			<strong>Inter 650 · <code>{'--font-brand'}</code></strong>
+			<span class="muted">Peso 650, espaciado -0,02em. Solo el wordmark.</span>
 		</div>
 	</div>
 </Example>
 
 - **Inter** para todo lo que se lee o se opera en el producto.
-- **Michroma** solo para el wordmark «D.P. Energy». Nunca en un título de pantalla, un botón o
-  un dato: es una letra de marca, ancha y de un solo peso, que en texto corrido se lee mal.
+- **`--font-brand`** es el wordmark «D.P. Energy». Hoy también es Inter, en peso 650; va en su
+  propio token para que la marca pueda cambiar de letra sin tocar la interfaz.
 - Las cifras que se comparan en columna llevan `font-variant-numeric: tabular-nums` (clase
   `.tnum`) para que las unidades queden alineadas.
 
@@ -125,21 +125,14 @@ En producto, declara `@font-face` con rutas locales a `.woff2`:
 @font-face {
   font-family: Inter;
   font-style: normal;
-  font-weight: 400 700;
+  font-weight: 100 900;
   font-display: swap;
   src: url(/fuentes/inter-variable.woff2) format('woff2');
 }
-@font-face {
-  font-family: Michroma;
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: url(/fuentes/michroma.woff2) format('woff2');
-}
 ```
 
-Este sitio las sirve con los paquetes `@fontsource-variable/inter` y `@fontsource/michroma`, que
-copian los mismos archivos al build.
+Este sitio la sirve con el paquete `@fontsource-variable/inter`, que copia los mismos archivos al
+build.
 
 Declarar `--font-ui` no basta. Comprueba en las herramientas de red del navegador que la fuente
 se descargó: sin el `@font-face`, o con una ruta rota, la pantalla se ve en la fuente del sistema

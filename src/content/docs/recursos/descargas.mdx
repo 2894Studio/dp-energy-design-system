@@ -14,7 +14,6 @@ contextual del navegador.
 | [dp-energy-tokens.css](/descargas/dp-energy-tokens.css) | Todos los tokens como propiedades CSS: tema claro en `:root`, oscuro con `data-theme="dark"` o según `prefers-color-scheme`, y duraciones reducidas bajo `prefers-reduced-motion`. | Cargarlo antes que cualquier otra hoja de estilos del producto. |
 | [dp-energy-tokens.json](/descargas/dp-energy-tokens.json) | La fuente de los tokens en formato DTCG, con el valor oscuro en `$extensions."com.dpenergy.theme"`. | Importarlo en herramientas de diseño o generar tokens para otra plataforma. |
 | [dp-energy-icons.svg](/descargas/dp-energy-icons.svg) | El sprite de íconos: un `<symbol>` por ícono, con id `i-{nombre}`. | Pegarlo una vez al inicio del `<body>` y referenciar cada ícono con `<use href="#i-…">`. Ver [Iconografía](/fundamentos/iconografia/). |
-| [dp-energy-isotipo.svg](/marca/dp-energy-isotipo.svg) | El isotipo de la marca en vector. | Cromo de la aplicación, pantalla de entrada, favicon. Ver [Logotipo](/fundamentos/logotipo/). |
 
 ## Fuentes
 
@@ -22,16 +21,14 @@ Las fuentes no se descargan desde aquí: se instalan como paquete o se autoaloja
 
 | Familia | Uso | Paquete |
 |---|---|---|
-| Inter Variable | Toda la interfaz | `@fontsource-variable/inter` |
-| Michroma | Solo el wordmark | `@fontsource/michroma` |
+| Inter Variable | Toda la interfaz y el wordmark | `@fontsource-variable/inter` |
 
 ```sh
-npm install @fontsource-variable/inter @fontsource/michroma
+npm install @fontsource-variable/inter
 ```
 
 ```js
 import '@fontsource-variable/inter';
-import '@fontsource/michroma';
 ```
 
 Sin empaquetador, sirve los `.woff2` desde tu propio dominio con `@font-face`. **Nunca desde un CDN**:

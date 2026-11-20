@@ -5,68 +5,106 @@
 	--sl-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
 	--sl-content-width: 52rem;
 	--sl-sidebar-width: 17rem;
-	--sl-text-h1: 2.25rem;
-	--sl-text-h2: 1.6rem;
-	--sl-text-h3: 1.2rem;
+	--sl-nav-height: 3.75rem;
+	--sl-text-h1: 2.5rem;
+	--sl-text-h2: 1.55rem;
+	--sl-text-h3: 1.15rem;
 	--sl-text-h4: 1rem;
 }
 
 :root,
 :root[data-theme='dark'] {
-	--sl-color-accent-low: #173226;
+	--sl-color-accent-low: #12261b;
 	--sl-color-accent: #4a8f5a;
-	--sl-color-accent-high: #cfe8d5;
-	--sl-color-white: #e7ecf2;
+	--sl-color-accent-high: #bfe6c9;
+	--sl-color-white: #edf1f5;
 	--sl-color-gray-1: #d2d9e2;
 	--sl-color-gray-2: #a8b3c2;
 	--sl-color-gray-3: #8b96a6;
 	--sl-color-gray-4: #4a5566;
-	--sl-color-gray-5: #2a3546;
-	--sl-color-gray-6: #1d2735;
-	--sl-color-gray-7: #171f2c;
-	--sl-color-black: #10161f;
+	--sl-color-gray-5: #263142;
+	--sl-color-gray-6: #18202c;
+	--sl-color-gray-7: #121923;
+	--sl-color-black: #0c1118;
 }
 
 :root[data-theme='light'] {
-	--sl-color-accent-low: #dcefe1;
+	--sl-color-accent-low: #e3f1e7;
 	--sl-color-accent: #3e7a4c;
 	--sl-color-accent-high: #1f4a2b;
-	--sl-color-white: #1b2430;
+	--sl-color-white: #141b24;
 	--sl-color-gray-1: #2a3542;
 	--sl-color-gray-2: #4c5a6b;
 	--sl-color-gray-3: #5c6675;
 	--sl-color-gray-4: #8c97a5;
-	--sl-color-gray-5: #c6ced8;
-	--sl-color-gray-6: #e7edf3;
-	--sl-color-gray-7: #f2f5f7;
+	--sl-color-gray-5: #d5dbe2;
+	--sl-color-gray-6: #edf1f4;
+	--sl-color-gray-7: #f5f7f9;
 	--sl-color-black: #fafcfd;
 }
 
-/* Barra superior en el color del cromo, en los dos temas. */
+/* Barra superior y lateral sobre el mismo fondo que el contenido: una sola superficie,
+   separada por líneas finas. */
+:root {
+	--sl-color-bg-nav: color-mix(in srgb, var(--sl-color-black) 82%, transparent);
+	--sl-color-bg-sidebar: var(--sl-color-black);
+	--sl-color-hairline-shade: var(--sl-color-gray-5);
+}
 header.header {
-	--sl-color-bg-nav: var(--chrome);
-	--sl-color-hairline-shade: var(--chrome);
-	--sl-color-white: var(--chrome-ink);
-	--sl-color-gray-1: var(--chrome-ink);
-	--sl-color-gray-2: var(--chrome-dim);
-	--sl-color-gray-3: var(--chrome-dim);
-	--sl-color-gray-5: var(--chrome-line);
-	--sl-color-gray-6: rgba(255, 255, 255, 0.08);
-	--sl-color-black: var(--chrome);
-	--sl-color-text-accent: var(--chrome-ink);
-	color: var(--chrome-ink);
-}
-header.header .dpe-site-tag {
-	color: var(--chrome-dim);
-	border-color: var(--chrome-line);
-}
-header.header :focus-visible {
-	outline-color: var(--chrome-focus);
+	backdrop-filter: saturate(1.4) blur(12px);
+	-webkit-backdrop-filter: saturate(1.4) blur(12px);
+	border-bottom: 1px solid var(--sl-color-hairline);
 }
 
-/* Encabezados de página: sobrios, sin color de acento. */
+/* Navegación lateral: rótulos de grupo discretos y un estado activo sin bloque de color. */
+.sidebar-content .top-level > li > details > summary .large {
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--sl-color-gray-3);
+}
+.sidebar-content details details summary .large {
+	font-size: var(--sl-text-sm);
+	font-weight: 500;
+	color: var(--sl-color-gray-1);
+}
+.sidebar-content a {
+	border-radius: 0.4rem;
+	color: var(--sl-color-gray-2);
+	transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+}
+.sidebar-content a:hover {
+	background: var(--sl-color-gray-6);
+	color: var(--sl-color-white);
+}
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover,
+.sidebar-content a[aria-current='page']:focus {
+	background: var(--sl-color-accent-low);
+	color: var(--sl-color-white);
+	font-weight: 600;
+	box-shadow: inset 2px 0 0 var(--sl-color-accent);
+}
+.sidebar-content .sl-badge {
+	font-size: 0.62rem;
+	font-weight: 600;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	background: transparent;
+	color: var(--sl-color-accent);
+	border: 1px solid color-mix(in srgb, var(--sl-color-accent) 45%, transparent);
+	padding: 0 0.4em;
+}
+
+/* Título de página. */
+.content-panel h1 {
+	font-weight: 600;
+	letter-spacing: -0.03em;
+}
 .sl-markdown-content :is(h2, h3, h4) {
-	letter-spacing: -0.01em;
+	font-weight: 600;
+	letter-spacing: -0.015em;
 }
 .sl-markdown-content .sl-heading-wrapper.level-h2 {
 	margin-top: 3rem;
@@ -93,20 +131,14 @@ header.header :focus-visible {
 	white-space: nowrap;
 }
 
-/* Insignias del sidebar. */
-.sidebar-content .sl-badge {
-	font-size: 0.65rem;
-	letter-spacing: 0.04em;
-	text-transform: uppercase;
+/* Tarjetas de enlace de la portada. */
+.sl-link-card {
+	border-radius: 0.9rem;
+	border-color: var(--sl-color-gray-5);
+	box-shadow: none;
+	transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
 }
-
-/* Portada. */
-.dpe-hero-version {
-	display: inline-block;
-	font-size: var(--fs-meta);
-	font-weight: 600;
-	color: var(--sl-color-gray-2);
-	background: var(--sl-color-gray-6);
-	border-radius: var(--r-pill);
-	padding: 0.25em 0.75em;
+.sl-link-card:hover {
+	border-color: var(--sl-color-accent);
+	background: var(--sl-color-gray-7);
 }
